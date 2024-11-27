@@ -11,7 +11,7 @@ func Routes(authControl *controllers.AuthCotroller) *gin.Engine {
 
 	// Tambahkan middleware CORS
 	r.Use(cors.New(cors.Config{
-		AllowOrigins:     []string{"http://localhost:5173/"}, // Ganti dengan domain frontend Anda
+		AllowOrigins:     []string{"http://localhost:5173"}, // Ganti dengan domain frontend Anda
 		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
 		AllowHeaders:     []string{"Origin", "Content-Type", "Accept", "Authorization"},
 		ExposeHeaders:    []string{"Content-Length"},
