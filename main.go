@@ -19,11 +19,11 @@ func main() {
 	r := gin.Default()
 
 	r.Use(cors.New(cors.Config{
-		AllowOrigins:     []string{"*"},
-		AllowMethods:     []string{"GET", "POST"},
+		AllowOrigins:     []string{"http://localhost:5173"},        // Mengizinkan hanya frontend di localhost:5173
+		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE"}, // Menambahkan metode HTTP yang diizinkan
 		AllowHeaders:     []string{"Origin", "Content-Type", "Authorization"},
 		ExposeHeaders:    []string{"Content-Length"},
-		AllowCredentials: true,
+		AllowCredentials: true, // Jika Anda menggunakan cookies atau header Authorization
 	}))
 
 	routes.Routes(authControl)
