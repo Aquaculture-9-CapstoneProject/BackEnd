@@ -52,15 +52,14 @@
 					}
 				},
 				"url": {
-					"raw": "http://34.238.42.178:8000/login",
-					"protocol": "http",
+					"raw": "https://www.bluebay.my.id/login",
+					"protocol": "https",
 					"host": [
-						"34",
-						"238",
-						"42",
-						"178"
+						"www",
+						"bluebay",
+						"my",
+						"id"
 					],
-					"port": "8000",
 					"path": [
 						"login"
 					]

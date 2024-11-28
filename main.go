@@ -8,6 +8,10 @@ import (
 	"github.com/Aquaculture-9-CapstoneProject/BackEnd.git/services"
 )
 
+// *Branch Main
+// *Dokumentasi Postman
+// *https://www.bluebay.my.id/route
+
 func main() {
 	db := config.CreateDatabase()
 	authRepo := repositories.NewAuthRepo(db)

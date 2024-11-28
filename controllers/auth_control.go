@@ -29,7 +29,7 @@ func (ctrl *AuthCotroller) DaftarAkun(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "input gagal", "status": false})
 		return
 	}
-	if len(input.Password) <= 6 {
+	if len(input.Password) <= 5 {
 		c.JSON(http.StatusBadRequest, gin.H{"Message": "Password Minimal 6 Karakter"})
 		return
 	}
