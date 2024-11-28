@@ -58,7 +58,7 @@ func (ctrl *AuthCotroller) Login(c *gin.Context) {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error(), "status": false})
 			return
 		}
-		c.JSON(http.StatusOK, gin.H{"Email": user.Email, "Message": "Berhasil Login", "Status": "User", "Token": tokenUser})
+		c.JSON(http.StatusOK, gin.H{"Email": user.Email, "Nama": user.NamaLengkap, "Alamat": user.Alamat, "Notelpon": user.NoTelpon, "Message": "Berhasil Login", "Status": "User", "Token": tokenUser})
 		return
 	}
 
