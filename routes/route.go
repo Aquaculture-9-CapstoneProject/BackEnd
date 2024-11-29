@@ -2,6 +2,8 @@ package routes
 
 import (
 	"github.com/Aquaculture-9-CapstoneProject/BackEnd.git/controllers"
+	"github.com/Aquaculture-9-CapstoneProject/BackEnd.git/repositories"
+	"github.com/Aquaculture-9-CapstoneProject/BackEnd.git/services"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 )
@@ -33,6 +35,14 @@ func Routes(authControl *controllers.AuthCotroller) *gin.Engine {
 			"message": "Halaman Login untuk Frontend",
 		})
 	})
+
+	// Route homepage
+	productRepo := repositories.NewProductRepo(db)
+	productService := services.NewProductUseCase(productRepo)
+	productControl := controllers.NewProductController(productService)
+
+	r.GET("/homepage", productControl.GetAllProducts)
+	r.GET("/homepage/:id", productControl.GetProductByID)
 
 	return r
 }
