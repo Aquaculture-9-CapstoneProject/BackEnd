@@ -58,8 +58,19 @@ func (ctrl *AuthCotroller) Login(c *gin.Context) {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error(), "status": false})
 			return
 		}
-		c.JSON(http.StatusOK, gin.H{"Email": user.Email, "Nama": user.NamaLengkap, "Alamat": user.Alamat, "Notelpon": user.NoTelpon, "Message": "Berhasil Login", "Status": "User", "Token": tokenUser})
+		c.JSON(http.StatusOK, gin.H{
+			"message": "Berhasil Login",
+			"status":  "User",
+			"token":   tokenUser,
+			"user": gin.H{
+				"email":    user.Email,
+				"nama":     user.NamaLengkap,
+				"alamat":   user.Alamat,
+				"noTelpon": user.NoTelpon,
+			},
+		})
 		return
+
 	}
 
 	admin, err := ctrl.usecase.LoginAdmin(input.Email, input.Password)
