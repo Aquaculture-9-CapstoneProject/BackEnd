@@ -21,6 +21,7 @@ func Routes(authControl *controllers.AuthCotroller) *gin.Engine {
 	// Rute untuk register dan login
 	r.POST("/register", authControl.DaftarAkun)
 	r.POST("/login", authControl.Login)
+	r.POST("/logout", authControl.Logout)
 
 	r.GET("/register", func(c *gin.Context) {
 		c.JSON(200, gin.H{

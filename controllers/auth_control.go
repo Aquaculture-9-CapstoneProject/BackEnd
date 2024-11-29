@@ -86,3 +86,12 @@ func (ctrl *AuthCotroller) Login(c *gin.Context) {
 
 	c.JSON(http.StatusUnauthorized, gin.H{"Message": "Email atau password salah", "status": false})
 }
+
+func (ctrl *AuthCotroller) Logout(c *gin.Context) {
+	// Menghapus token dari client-side (frontend)
+	// di frontend token dihapus dari local storage atau session storage
+	c.JSON(http.StatusOK, gin.H{
+		"message": "Logout berhasil",
+		"status":  true,
+	})
+}
