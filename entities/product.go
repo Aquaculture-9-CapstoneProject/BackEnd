@@ -6,12 +6,12 @@ type Product struct {
 	Deskripsi  string
 	Variasi    string
 	KategoriID int
-	// RatingID   int
-	Harga    int
-	Stok     int
-	Gambar   string
-	Kategori Category
-	// Rating    Rating
+	RatingID   int
+	Harga      int
+	Stok       int
+	Gambar     string
+	Kategori   Category
+	Rating     Rating
 }
 
 type Category struct {
@@ -20,9 +20,9 @@ type Category struct {
 	Deskripsi string
 }
 
-// type Rating struct {
-// 	ID       int
-// 	NamaUser string
-// 	Rating   int
-// 	Ulasan   string
-// }
+type Rating struct {
+	ID       int
+	NamaUser string
+	Rating   int
+	Ulasan   string
+}

@@ -6,7 +6,6 @@ import (
 
 	"github.com/Aquaculture-9-CapstoneProject/BackEnd.git/services"
 	"github.com/gin-gonic/gin"
-	// "github.com/Aquaculture-9-CapstoneProject/BackEnd.git/entities"
 )
 
 type ProductController struct {
@@ -18,7 +17,7 @@ func NewProductController(productUseCase services.ProductUseCase) *ProductContro
 }
 
 func (c *ProductController) GetAllProducts(ctx *gin.Context) {
-	products, err := c.services.GetAllProducts()
+	products, err := c.productUseCase.GetAllProducts()
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
@@ -27,8 +26,8 @@ func (c *ProductController) GetAllProducts(ctx *gin.Context) {
 }
 
 func (c *ProductController) GetProductByID(ctx *gin.Context) {
-	id, _ := strconv.ParseUint(ctx.Param("id"), 10, 32)
-	product, err := c.services.GetProductByID(uint(id))
+	id, _ := strconv.Atoi(ctx.Param("id"))
+	product, err := c.productUseCase.GetProductByID(id)
 	if err != nil {
 		ctx.JSON(http.StatusNotFound, gin.H{"error": "Product not found"})
 		return

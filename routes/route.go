@@ -2,13 +2,11 @@ package routes
 
 import (
 	"github.com/Aquaculture-9-CapstoneProject/BackEnd.git/controllers"
-	"github.com/Aquaculture-9-CapstoneProject/BackEnd.git/repositories"
-	"github.com/Aquaculture-9-CapstoneProject/BackEnd.git/services"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 )
 
-func Routes(authControl *controllers.AuthCotroller) *gin.Engine {
+func Routes(authControl *controllers.AuthCotroller, productController *controllers.ProductController) *gin.Engine {
 	r := gin.Default()
 
 	// Tambahkan middleware CORS
@@ -36,13 +34,8 @@ func Routes(authControl *controllers.AuthCotroller) *gin.Engine {
 		})
 	})
 
-	// Route homepage
-	productRepo := repositories.NewProductRepo(db)
-	productService := services.NewProductUseCase(productRepo)
-	productControl := controllers.NewProductController(productService)
-
-	r.GET("/homepage", productControl.GetAllProducts)
-	r.GET("/homepage/:id", productControl.GetProductByID)
+	r.GET("/homepage", productController.GetAllProducts)
+	r.GET("/homepage/:id", productController.GetProductByID)
 
 	return r
 }

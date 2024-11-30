@@ -7,7 +7,7 @@ import (
 
 type ProductUseCase interface {
 	GetAllProducts() ([]entities.Product, error)
-	GetProductByID(id uint) (entities.Product, error)
+	GetProductByID(id int) (entities.Product, error)
 }
 
 type productUseCase struct {
@@ -22,6 +22,6 @@ func (s *productUseCase) GetAllProducts() ([]entities.Product, error) {
 	return s.repo.FindAll()
 }
 
-func (s *productUseCase) GetProductByID(id uint) (entities.Product, error) {
+func (s *productUseCase) GetProductByID(id int) (entities.Product, error) {
 	return s.repo.FindByID(id)
 }

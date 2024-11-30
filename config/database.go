@@ -29,7 +29,7 @@ func CreateDatabase() *gorm.DB {
 	if err != nil {
 		panic(err)
 	}
-	db.AutoMigrate(entities.User{}, entities.Admin{}, entities.Product{}, entities.Category{})
+	db.AutoMigrate(entities.User{}, entities.Admin{}, entities.Product{}, entities.Category{}, entities.Rating{})
 
 	return db
 }

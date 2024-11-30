@@ -7,7 +7,7 @@ import (
 
 type ProductRepo interface {
 	FindAll() ([]entities.Product, error)
-	FindByID(id uint) (entities.Product, error)
+	FindByID(id int) (entities.Product, error)
 }
 
 type productRepo struct {
@@ -20,12 +20,12 @@ func NewProductRepo(db *gorm.DB) ProductRepo {
 
 func (r *productRepo) FindAll() ([]entities.Product, error) {
 	var products []entities.Product
-	err := r.db.Find(&products).Error
+	err := r.db.Preload("Kategori").Preload("Rating").Find(&products).Error
 	return products, err
 }
 
-func (r *productRepo) FindByID(id uint) (entities.Product, error) {
+func (r *productRepo) FindByID(id int) (entities.Product, error) {
 	var product entities.Product
-	err := r.db.First(&product, id).Error
+	err := r.db.Preload("Kategori").Preload("Rating").First(&product, id).Error
 	return product, err
 }
