@@ -6,8 +6,11 @@ import (
 )
 
 type ProductRepo interface {
-	FindAll() ([]entities.Product, error)
-	FindByID(id int) (entities.Product, error)
+	GetAllProducts() ([]entities.Product, error)
+	GetProductByID(id int) (entities.Product, error)
+	CreateProduct(product entities.Product) (entities.Product, error)
+	UpdateProduct(product entities.Product) (entities.Product, error)
+	DeleteProduct(id int) error
 }
 
 type productRepo struct {
@@ -18,14 +21,28 @@ func NewProductRepo(db *gorm.DB) ProductRepo {
 	return &productRepo{db: db}
 }
 
-func (r *productRepo) FindAll() ([]entities.Product, error) {
+func (r *productRepo) GetAllProducts() ([]entities.Product, error) {
 	var products []entities.Product
-	err := r.db.Preload("Kategori").Preload("Rating").Find(&products).Error
+	err := r.db.Preload("Ratings").Find(&products).Error
 	return products, err
 }
 
-func (r *productRepo) FindByID(id int) (entities.Product, error) {
+func (r *productRepo) GetProductByID(id int) (entities.Product, error) {
 	var product entities.Product
-	err := r.db.Preload("Kategori").Preload("Rating").First(&product, id).Error
+	err := r.db.Preload("Ratings").First(&product, id).Error
 	return product, err
+}
+
+func (r *productRepo) CreateProduct(product entities.Product) (entities.Product, error) {
+	err := r.db.Create(&product).Error
+	return product, err
+}
+
+func (r *productRepo) UpdateProduct(product entities.Product) (entities.Product, error) {
+	err := r.db.Save(&product).Error
+	return product, err
+}
+
+func (r *productRepo) DeleteProduct(id int) error {
+	return r.db.Delete(&entities.Product{}, id).Error
 }

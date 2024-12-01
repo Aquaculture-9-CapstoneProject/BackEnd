@@ -22,7 +22,11 @@ func main() {
 	productService := services.NewProductUseCase(productRepo)
 	productController := controllers.NewProductController(productService)
 
-	r := routes.Routes(authControl, productController)
+	ratingRepo := repositories.NewRatingRepo(db)
+	ratingService := services.NewRatingUseCase(ratingRepo)
+	ratingController := controllers.NewRatingController(ratingService)
+
+	r := routes.Routes(authControl, productController, ratingController)
 
 	r.Run(":8000")
 }
