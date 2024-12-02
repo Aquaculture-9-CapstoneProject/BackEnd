@@ -5,44 +5,27 @@ import (
 	"gorm.io/gorm"
 )
 
-type ProductRepo interface {
-	GetAllProducts() ([]entities.Product, error)
-	GetProductByID(id int) (entities.Product, error)
-	CreateProduct(product entities.Product) (entities.Product, error)
-	UpdateProduct(product entities.Product) (entities.Product, error)
-	DeleteProduct(id int) error
+type ProdukIkanRepo interface {
+	GetTermurah(limit int) ([]entities.Product, error)
+	GetPopuler(limit int) ([]entities.Product, error)
 }
 
-type productRepo struct {
+type produkIkanRepo struct {
 	db *gorm.DB
 }
 
-func NewProductRepo(db *gorm.DB) ProductRepo {
-	return &productRepo{db: db}
+func NewProdukIkanRepo(db *gorm.DB) ProdukIkanRepo {
+	return &produkIkanRepo{db: db}
 }
 
-func (r *productRepo) GetAllProducts() ([]entities.Product, error) {
-	var products []entities.Product
-	err := r.db.Preload("Ratings").Find(&products).Error
-	return products, err
+func (r *produkIkanRepo) GetTermurah(limit int) ([]entities.Product, error) {
+	var produk []entities.Product
+	err := r.db.Select("gambar", "nama", "jenis", "harga", "rating").Order("harga asc").Limit(limit).Find(&produk).Error
+	return produk, err
 }
 
-func (r *productRepo) GetProductByID(id int) (entities.Product, error) {
-	var product entities.Product
-	err := r.db.Preload("Ratings").First(&product, id).Error
-	return product, err
-}
-
-func (r *productRepo) CreateProduct(product entities.Product) (entities.Product, error) {
-	err := r.db.Create(&product).Error
-	return product, err
-}
-
-func (r *productRepo) UpdateProduct(product entities.Product) (entities.Product, error) {
-	err := r.db.Save(&product).Error
-	return product, err
-}
-
-func (r *productRepo) DeleteProduct(id int) error {
-	return r.db.Delete(&entities.Product{}, id).Error
+func (r *produkIkanRepo) GetPopuler(limit int) ([]entities.Product, error) {
+	var produk []entities.Product
+	err := r.db.Select("gambar", "nama", "jenis", "harga", "rating").Order("rating desc").Limit(limit).Find(&produk).Error
+	return produk, err
 }

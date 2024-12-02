@@ -18,15 +18,11 @@ func main() {
 	authServis := services.NewAuthUseCase(authRepo)
 	authControl := controllers.NewAuthController(authServis)
 
-	productRepo := repositories.NewProductRepo(db)
-	productService := services.NewProductUseCase(productRepo)
-	productController := controllers.NewProductController(productService)
+	productRepo := repositories.NewProdukIkanRepo(db)
+	productService := services.NewProductIkanServices(productRepo)
+	productController := controllers.NewProductIkanController(productService)
 
-	ratingRepo := repositories.NewRatingRepo(db)
-	ratingService := services.NewRatingUseCase(ratingRepo)
-	ratingController := controllers.NewRatingController(ratingService)
-
-	r := routes.Routes(authControl, productController, ratingController)
+	r := routes.Routes(authControl, productController)
 
 	r.Run(":8000")
 }
