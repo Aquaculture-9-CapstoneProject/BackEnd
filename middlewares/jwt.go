@@ -25,8 +25,13 @@ func JWTAuth() gin.HandlerFunc {
 			c.Abort()
 			return
 		}
-
-		tokenString := strings.Split(authHeader, " ")[1]
+		parts := strings.Split(authHeader, " ")
+		if len(parts) != 2 || parts[0] != "Bearer" {
+			c.JSON(401, gin.H{"error": "Format Authorization header salah"})
+			c.Abort()
+			return
+		}
+		tokenString := parts[1]
 
 		claims := &Claims{}
 		token, err := jwt.ParseWithClaims(tokenString, claims, func(token *jwt.Token) (interface{}, error) {
@@ -44,7 +49,7 @@ func JWTAuth() gin.HandlerFunc {
 }
 
 func GenerateJwt(userID int, role string) (string, error) {
-	WaktuToken := time.Now().Add(24 * time.Hour)
+	WaktuToken := time.Now().Add(365 * 24 * time.Hour)
 	claims := Claims{
 		UserID: userID,
 		Role:   role,
