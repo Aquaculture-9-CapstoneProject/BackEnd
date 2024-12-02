@@ -18,7 +18,11 @@ func main() {
 	authServis := services.NewAuthUseCase(authRepo)
 	authControl := controllers.NewAuthController(authServis)
 
-	r := routes.Routes(authControl)
+	productRepo := repositories.NewProdukIkanRepo(db)
+	productService := services.NewProductIkanServices(productRepo)
+	productController := controllers.NewProductIkanController(productService)
+
+	r := routes.Routes(authControl, productController)
 
 	r.Run(":8000")
 }
