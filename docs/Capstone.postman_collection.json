@@ -97,6 +97,22 @@
 				}
 			},
 			"response": []
+		},
+		{
+			"name": "ProdukTermurah",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		},
+		{
+			"name": "ProdukPopuler",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
 		}
 	]
 }
