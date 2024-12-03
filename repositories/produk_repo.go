@@ -20,12 +20,12 @@ func NewProdukIkanRepo(db *gorm.DB) ProdukIkanRepo {
 
 func (r *produkIkanRepo) GetTermurah(limit int) ([]entities.Product, error) {
 	var produk []entities.Product
-	err := r.db.Order("harga asc").Limit(limit).Find(&produk).Error
+	err := r.db.Select("id", "gambar", "nama", "jenis", "harga", "rating").Order("harga asc").Limit(limit).Find(&produk).Error
 	return produk, err
 }
 
 func (r *produkIkanRepo) GetPopuler(limit int) ([]entities.Product, error) {
 	var produk []entities.Product
-	err := r.db.Order("rating desc").Limit(limit).Find(&produk).Error
+	err := r.db.Select("id", "gambar", "nama", "jenis", "harga", "rating").Order("rating desc").Limit(limit).Find(&produk).Error
 	return produk, err
 }
