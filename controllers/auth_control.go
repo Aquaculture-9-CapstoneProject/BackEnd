@@ -38,7 +38,7 @@ func (ctrl *AuthCotroller) DaftarAkun(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error(), "status": false})
 		return
 	}
-	c.JSON(http.StatusOK, gin.H{"Message": user.Email + " Berhasil Didaftarkan", "status": true})
+	c.JSON(http.StatusOK, gin.H{"message": user.Email + " Berhasil Didaftarkan", "status": true})
 }
 
 func (ctrl *AuthCotroller) Login(c *gin.Context) {
@@ -80,11 +80,11 @@ func (ctrl *AuthCotroller) Login(c *gin.Context) {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error(), "status": false})
 			return
 		}
-		c.JSON(http.StatusOK, gin.H{"Email": admin.Email, "Message": "Berhasil Login", "Status": "Admin", "Token": tokenAdmin})
+		c.JSON(http.StatusOK, gin.H{"email": admin.Email, "message": "berhasil login", "status": "admin", "token": tokenAdmin})
 		return
 	}
 
-	c.JSON(http.StatusUnauthorized, gin.H{"Message": "Email atau password salah", "status": false})
+	c.JSON(http.StatusUnauthorized, gin.H{"message": "email atau password salah", "status": false})
 }
 
 func (ctrl *AuthCotroller) Logout(c *gin.Context) {
@@ -95,3 +95,5 @@ func (ctrl *AuthCotroller) Logout(c *gin.Context) {
 		"status":  true,
 	})
 }
+
+// data user dimasukkin ke jwt
