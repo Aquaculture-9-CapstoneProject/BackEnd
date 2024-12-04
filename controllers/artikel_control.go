@@ -65,6 +65,7 @@ func (ac *ArtikelController) Update(c *gin.Context) {
 	}
 
 	artikel.ID = existingArtikel.ID
+	artikel.CreatedAt = existingArtikel.CreatedAt
 
 	admin, err := ac.service.GetAdminByID(artikel.AdminID)
 	if err != nil {
