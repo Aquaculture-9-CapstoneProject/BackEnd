@@ -21,7 +21,7 @@ func NewProductDetailRepo(db *gorm.DB) ProductDetailRepo {
 
 func (r *productDetailRepo) CekProdukByID(ProductID int) (*entities.Product, error) {
 	var product entities.Product
-	err := r.db.Preload("OrderDetails.Product").Preload("OrderDetails.User").Preload("Reviews.User").First(&product, ProductID).Error
+	err := r.db.First(&product, ProductID).Error
 	if err != nil {
 		return nil, err
 	}
