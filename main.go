@@ -22,7 +22,11 @@ func main() {
 	productService := services.NewProductIkanServices(productRepo)
 	productController := controllers.NewProductIkanController(productService)
 
-	r := routes.Routes(authControl, productController)
+	filterRepo := repositories.NewProductFilterRepo(db)
+	filterService := services.NewProductFilterService(filterRepo)
+	filterController := controllers.NewProductFilterControl(filterService)
+
+	r := routes.Routes(authControl, productController, filterController)
 
 	r.Run(":8000")
 }

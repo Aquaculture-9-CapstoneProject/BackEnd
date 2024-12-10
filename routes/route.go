@@ -2,11 +2,12 @@ package routes
 
 import (
 	"github.com/Aquaculture-9-CapstoneProject/BackEnd.git/controllers"
+	"github.com/Aquaculture-9-CapstoneProject/BackEnd.git/middlewares"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 )
 
-func Routes(authControl *controllers.AuthCotroller, produkcontrol *controllers.ProductIkanController) *gin.Engine {
+func Routes(authControl *controllers.AuthCotroller, produkcontrol *controllers.ProductIkanController, filterproduk *controllers.ProductFilterControl) *gin.Engine {
 	r := gin.Default()
 
 	// Tambahkan middleware CORS
@@ -34,8 +35,11 @@ func Routes(authControl *controllers.AuthCotroller, produkcontrol *controllers.P
 			"message": "Halaman Login untuk Frontend",
 		})
 	})
+	route := r.Group("/")
+	route.Use(middlewares.JWTAuth())
+	route.GET("/products", filterproduk.FilterProduct)
 
-	r.GET("/produk-termurah", produkcontrol.GetTermurahProduk)
-	r.GET("/produk-populer", produkcontrol.GetPopulerProduk)
+	route.GET("/produk-termurah", produkcontrol.GetTermurahProduk)
+	route.GET("/produk-populer", produkcontrol.GetPopulerProduk)
 	return r
 }
