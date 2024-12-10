@@ -26,7 +26,11 @@ func main() {
 	filterService := services.NewProductFilterService(filterRepo)
 	filterController := controllers.NewProductFilterControl(filterService)
 
-	r := routes.Routes(authControl, productController, filterController)
+	detailProdukRepo := repositories.NewProductDetailRepo(db)
+	detailProdukServices := services.NewProductDetailServices(detailProdukRepo)
+	detailProdukControl := controllers.NewProductDetailControl(detailProdukServices)
+
+	r := routes.Routes(authControl, productController, filterController, detailProdukControl)
 
 	r.Run(":8000")
 }
