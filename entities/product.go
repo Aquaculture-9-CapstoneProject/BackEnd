@@ -13,6 +13,6 @@ type Product struct {
 	Rating       float64
 	Stok         int
 	TotalReview  int
-	Reviews      []Review      `gorm:"foreignKey:ProductID"`
-	OrderDetails []OrderDetail `gorm:"foreignKey:ProductID"`
+	Reviews      []Review      `gorm:"foreignKey:ProductID" json:"reviews"`
+	OrderDetails []OrderDetail `gorm:"foreignKey:ProductID" json:"order_details,omitempty"`
 }
