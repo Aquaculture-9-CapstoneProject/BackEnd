@@ -48,7 +48,7 @@ func Routes(authControl *controllers.AuthCotroller, produkcontrol *controllers.P
 	cartRoutes := route.Group("/cart")
 	{
 		cartRoutes.POST("/tambah", cartProduk.AddToCart)
-		cartRoutes.GET("/keranjang", cartProduk.GetCartUser)
+		cartRoutes.GET("", cartProduk.GetCartUser)
 		cartRoutes.DELETE("/:cartID", cartProduk.DeleteKeranjang)
 		// cartRoutes.POST("/checkout", cartController.Checkout)
 	}
