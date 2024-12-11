@@ -7,7 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func Routes(authControl *controllers.AuthCotroller, produkcontrol *controllers.ProductIkanController, filterproduk *controllers.ProductFilterControl, detailproduk *controllers.ProductDetailControl, cartProduk *controllers.KeranjangControl) *gin.Engine {
+func Routes(authControl *controllers.AuthCotroller, produkcontrol *controllers.ProductIkanController, filterproduk *controllers.ProductFilterControl, detailproduk *controllers.ProductDetailControl, cartProduk *controllers.KeranjangControl, orderProduk *controllers.OrderControl) *gin.Engine {
 	r := gin.Default()
 
 	// Tambahkan middleware CORS
@@ -50,7 +50,14 @@ func Routes(authControl *controllers.AuthCotroller, produkcontrol *controllers.P
 		cartRoutes.POST("/tambah", cartProduk.AddToCart)
 		cartRoutes.GET("", cartProduk.GetCartUser)
 		cartRoutes.DELETE("/:cartID", cartProduk.DeleteKeranjang)
-		// cartRoutes.POST("/checkout", cartController.Checkout)
+		cartRoutes.POST("/checkout", cartProduk.CheckOut)
 	}
+
+	orderRoutes := route.Group("/orders")
+	{
+		orderRoutes.POST("", orderProduk.PlaceOrder)
+		orderRoutes.GET("/checkout", orderProduk.GetOrderForCheckout)
+	}
+
 	return r
 }

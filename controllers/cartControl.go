@@ -33,7 +33,7 @@ func (ctrl *KeranjangControl) AddToCart(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Data Tidak ada"})
 		return
 	}
-	c.JSON(http.StatusOK, gin.H{"message": "Berhasil", "code": 200, "status": "Data Berhasil Ditambah"})
+	c.JSON(http.StatusOK, gin.H{"message": "Data Berhasil Ditambah", "code": 200, "status": "Berhasil"})
 }
 
 func (ctrl *KeranjangControl) GetCartUser(c *gin.Context) {
@@ -60,11 +60,11 @@ func (ctrl *KeranjangControl) DeleteKeranjang(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"message": "Produk berhasil dihapus dari cart"})
 }
 
-// func (ctrl *KeranjangControl) CheckOut(c *gin.Context) {
-// 	userID, _ := c.Get("userID")
-// 	if err := ctrl.cartService.Checkout(userID.(int)); err != nil {
-// 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Gagal melakukan checkout"})
-// 		return
-// 	}
-// 	c.JSON(http.StatusOK, gin.H{"message": "Berhasil", "code": 200, "status": "Berhasil Checkout"})
-// }
+func (ctrl *KeranjangControl) CheckOut(c *gin.Context) {
+	userID, _ := c.Get("userID")
+	if err := ctrl.cartService.Checkout(userID.(int)); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Gagal melakukan checkout"})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"message": "Berhasil", "code": 200, "status": "Berhasil Checkout"})
+}
