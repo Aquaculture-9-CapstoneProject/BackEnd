@@ -6,7 +6,7 @@ type Product struct {
 	Nama            string
 	Deskripsi       string
 	Keunggulan      string
-	Harga           int
+	Harga           float64
 	Variasi         string
 	Kategori        string
 	KotaAsal        string

@@ -30,7 +30,11 @@ func main() {
 	detailProdukServices := services.NewProductDetailServices(detailProdukRepo)
 	detailProdukControl := controllers.NewProductDetailControl(detailProdukServices)
 
-	r := routes.Routes(authControl, productController, filterController, detailProdukControl)
+	CartRepo := repositories.NewKeranjangRepo(db)
+	CartServices := services.NewServicesKeranjang(CartRepo, detailProdukRepo)
+	CartController := controllers.NewCartControl(CartServices)
+
+	r := routes.Routes(authControl, productController, filterController, detailProdukControl, CartController)
 
 	r.Run(":8000")
 }
