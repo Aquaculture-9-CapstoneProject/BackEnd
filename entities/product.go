@@ -4,7 +4,6 @@ type Product struct {
 	ID           int
 	Gambar       string
 	Nama         string
-	Jenis        string
 	Deskripsi    string
 	Keunggulan   string
 	Harga        int
