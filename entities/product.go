@@ -8,8 +8,6 @@ type Product struct {
 	Keunggulan   string
 	Harga        int
 	Variasi      string
-	Kuantitas    int
-	TotalHarga   float64
 	Kategori     string
 	KotaAsal     string
 	Rating       float64
