@@ -8,6 +8,7 @@ import (
 type ProdukIkanRepo interface {
 	GetTermurah(limit int) ([]entities.Product, error)
 	GetPopuler(limit int) ([]entities.Product, error)
+	GetSemuaProduk() ([]entities.Product, error)
 }
 
 type produkIkanRepo struct {
@@ -27,5 +28,11 @@ func (r *produkIkanRepo) GetTermurah(limit int) ([]entities.Product, error) {
 func (r *produkIkanRepo) GetPopuler(limit int) ([]entities.Product, error) {
 	var produk []entities.Product
 	err := r.db.Select("id", "gambar", "nama", "kategori", "harga", "rating").Order("rating desc").Limit(limit).Find(&produk).Error
+	return produk, err
+}
+
+func (r *produkIkanRepo) GetSemuaProduk() ([]entities.Product, error) {
+	var produk []entities.Product
+	err := r.db.Find(&produk).Error
 	return produk, err
 }

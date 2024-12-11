@@ -8,6 +8,7 @@ import (
 type ProductUseCase interface {
 	GetProdukTermurah(limit int) ([]entities.Product, error)
 	GetAllProductPopuler(limit int) ([]entities.Product, error)
+	GetAllProduct() ([]entities.Product, error)
 }
 
 type productUseCase struct {
@@ -24,4 +25,8 @@ func (s *productUseCase) GetProdukTermurah(limit int) ([]entities.Product, error
 
 func (s *productUseCase) GetAllProductPopuler(limit int) ([]entities.Product, error) {
 	return s.repo.GetPopuler(limit)
+}
+
+func (s *productUseCase) GetAllProduct() ([]entities.Product, error) {
+	return s.repo.GetSemuaProduk()
 }

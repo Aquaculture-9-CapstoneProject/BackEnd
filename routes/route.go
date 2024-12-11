@@ -41,6 +41,7 @@ func Routes(authControl *controllers.AuthCotroller, produkcontrol *controllers.P
 
 	route.GET("/produk-termurah", produkcontrol.GetTermurahProduk)
 	route.GET("/produk-populer", produkcontrol.GetPopulerProduk)
+	route.GET("/produk", produkcontrol.GetProductAll)
 
 	route.GET("/products/:id", detailproduk.CekDetailProdukByID)
 	return r

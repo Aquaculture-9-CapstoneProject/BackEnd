@@ -35,3 +35,12 @@ func (ctrl *ProductIkanController) GetPopulerProduk(c *gin.Context) {
 	}
 	c.JSON(http.StatusOK, gin.H{"meta": gin.H{"message": "Berhasil", "code": 200, "status": "Berhasil"}, "data": produk})
 }
+
+func (ctrl *ProductIkanController) GetProductAll(c *gin.Context) {
+	produk, err := ctrl.service.GetAllProduct()
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"meta": gin.H{"message": err.Error()}})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"meta": gin.H{"message": "Berhasil", "code": 200, "status": "Berhasil"}, "Produk": produk})
+}
