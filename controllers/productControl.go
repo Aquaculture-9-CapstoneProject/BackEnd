@@ -27,7 +27,7 @@ func (ctrl *ProductIkanController) GetTermurahProduk(c *gin.Context) {
 }
 
 func (ctrl *ProductIkanController) GetPopulerProduk(c *gin.Context) {
-	limit, _ := strconv.Atoi(c.DefaultQuery("limit", "4"))
+	limit, _ := strconv.Atoi(c.DefaultQuery("limit", "8"))
 	produk, err := ctrl.service.GetAllProductPopuler(limit)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"meta": gin.H{"message": err.Error(), "code": 401, "status": "eror"}, "data": ""})
