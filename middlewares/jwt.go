@@ -61,3 +61,15 @@ func GenerateJwt(userID int, role string) (string, error) {
 	tokenString, _ := token.SignedString(jwtKey)
 	return tokenString, nil
 }
+
+func AdminOnly() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		role, exists := c.Get("role")
+		if !exists || role != "admin" {
+			c.JSON(403, gin.H{"error": "Akses hanya untuk admin"})
+			c.Abort()
+			return
+		}
+		c.Next()
+	}
+}
