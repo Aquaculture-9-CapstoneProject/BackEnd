@@ -60,7 +60,7 @@ func (s *paymentServices) CreateInvoice(orderID int) (map[string]interface{}, er
 		return nil, errors.New("gagal menyimpan status pembayaran: " + Saveerr.Error())
 	}
 	return map[string]interface{}{
-		"id":          inv.ID,
+		"invoice_id":  inv.ID,
 		"external_id": inv.ExternalID,
 		"order_id":    orderID,
 		"status":      inv.Status,
