@@ -105,18 +105,16 @@ func Routes(authControl *controllers.AuthCotroller, produkcontrol *controllers.P
 		adminProductRoutes.DELETE("/:id", adminProductControl.DeleteAdminProduct)
 	}
 
-	//buat database totalpendapatan
 	//buat dokumentasi
-	//filter by status
 	adminRoute := route.Group("/admin", middlewares.AdminOnly())
-	adminRoute.GET("/totalpendapatanbulan", dasboard.GetAdminTotalPendapatanBulanIni)
-	adminRoute.GET("/totalpesanan", dasboard.GetAdminJumlahPesananBulanIni)
+	adminRoute.GET("/totalpendapatan/bulan", dasboard.GetAdminTotalPendapatanBulanIni)
+	adminRoute.GET("/totalpesanan/bulan", dasboard.GetAdminJumlahPesananBulanIni)
 	adminRoute.GET("/totalproduk", dasboard.GetTotalProduk)
-	adminRoute.GET("/statustransaksi", dasboard.GetJumlahStatus)
-	adminRoute.GET("/totaldikirim", dasboard.GetJumlahPesananDikirim)
-	adminRoute.GET("/totalditerima", dasboard.GetJumlahPesananDiterima)
-	adminRoute.GET("/totalpendapatan", dasboard.TampilkanTotalPendapatan)
 	adminRoute.GET("/totalartikel", dasboard.GetJumlahArtikel)
+	adminRoute.GET("/totalpendapatan", dasboard.TampilkanTotalPendapatan)
+	adminRoute.GET("/statustransaksi", dasboard.GetJumlahStatus)
+	adminRoute.GET("/totalpesanan/dikirim", dasboard.GetJumlahPesananDikirim)
+	adminRoute.GET("/totalpesanan/selesai", dasboard.GetJumlahPesananDiterima)
 	adminRoute.GET("/produkterbanyak", dasboard.GetProdukDenganKategoriStokTerbanyak)
 	//Transaksi
 	adminRoute.GET("/admintransaksi", adminTransaksi.GetPaymentDetails)
@@ -126,6 +124,6 @@ func Routes(authControl *controllers.AuthCotroller, produkcontrol *controllers.P
 	//Filter GET /admin/payments/status?status=PAID // GET /admin/payments/status?status=PENDING // GET /admin/payments/status?status=EXPIRED
 	adminRoute.GET("/payment/status", adminfilter.GetPaymentsByStatus)
 	//filter get //GET /payments?status_barang=DIKIRIM
-	adminRoute.GET("payement", adminfilter.GetPaymentsByStatusBarang)
+	adminRoute.GET("payment", adminfilter.GetPaymentsByStatusBarang)
 	return r
 }
