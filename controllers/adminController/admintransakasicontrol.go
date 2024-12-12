@@ -24,7 +24,7 @@ func (ctrl *AdminTransaksiControl) GetPaymentDetails(c *gin.Context) {
 		return
 	}
 	// Mengembalikan response dengan status OK dan data detail pembayaran
-	c.JSON(http.StatusOK, gin.H{"data": details})
+	c.JSON(http.StatusOK, gin.H{"meta": gin.H{"message": "Berhasil", "code": 200, "status": "Berhasil"}, "data": details})
 }
 
 func (ctrl *AdminTransaksiControl) DeletePaymentByID(c *gin.Context) {
@@ -44,5 +44,5 @@ func (ctrl *AdminTransaksiControl) DeletePaymentByID(c *gin.Context) {
 	}
 
 	// Response sukses
-	c.JSON(http.StatusOK, gin.H{"message": "Payment berhasil dihapus"})
+	c.JSON(http.StatusOK, gin.H{"meta": gin.H{"message": "Berhasil Dihapus", "code": 200, "status": "Berhasil"}})
 }

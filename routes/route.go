@@ -8,7 +8,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func Routes(authControl *controllers.AuthCotroller, produkcontrol *controllers.ProductIkanController, filterproduk *controllers.ProductFilterControl, detailproduk *controllers.ProductDetailControl, cartProduk *controllers.KeranjangControl, orderProduk *controllers.OrderControl, payment *controllers.PaymentControl, review *controllers.ReviewController, dasboard *admincontroller.AdminPaymentController, artikelControl *controllers.ArtikelController, chatControl *controllers.ChatController, adminProductControl *controllers.AdminProductController, adminTransaksi *admincontroller.AdminTransaksiControl) *gin.Engine {
+func Routes(authControl *controllers.AuthCotroller, produkcontrol *controllers.ProductIkanController, filterproduk *controllers.ProductFilterControl, detailproduk *controllers.ProductDetailControl, cartProduk *controllers.KeranjangControl, orderProduk *controllers.OrderControl, payment *controllers.PaymentControl, review *controllers.ReviewController, dasboard *admincontroller.AdminPaymentController, artikelControl *controllers.ArtikelController, chatControl *controllers.ChatController, adminProductControl *controllers.AdminProductController, adminTransaksi *admincontroller.AdminTransaksiControl, adminPesanan *admincontroller.AdminPesananController) *gin.Engine {
 	r := gin.Default()
 
 	// Tambahkan middleware CORS
@@ -119,6 +119,6 @@ func Routes(authControl *controllers.AuthCotroller, produkcontrol *controllers.P
 	adminRoute.GET("/admintransaksi", adminTransaksi.GetPaymentDetails)
 	adminRoute.DELETE("/hapustransaksi", adminTransaksi.DeletePaymentByID)
 	//Pesanan
-
+	adminRoute.GET("/adminpesanan", adminPesanan.GetDetailedOrders)
 	return r
 }

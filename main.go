@@ -28,6 +28,7 @@ func main() {
 	productRepo := repositories.NewProdukIkanRepo(db)
 	adminDasbordRepo := admin.NewAdminPaymentRepository(db)
 	adminTransaksiRepo := admin.NewAdminTransaksiRepo(db)
+	adminPesananRepo := admin.NewPesananRepo(db)
 
 	authServis := services.NewAuthUseCase(authRepo)
 	filterService := services.NewProductFilterService(filterRepo)
@@ -39,6 +40,7 @@ func main() {
 	ReviewServices := services.NewServiceRating(ReviewRepo, detailProdukServices)
 	adminDasbordServices := adminservices.NewAdminPaymentService(adminDasbordRepo)
 	adminTransaksiServices := adminservices.NewAdminTransaksiServices(adminTransaksiRepo)
+	adminPesananServices := adminservices.NewPesananServices(adminPesananRepo)
 
 	authControl := controllers.NewAuthController(authServis)
 	productController := controllers.NewProductIkanController(productService)
@@ -50,6 +52,7 @@ func main() {
 	detailProdukControl := controllers.NewProductDetailControl(detailProdukServices)
 	adminDasboardController := admincontroller.NewAdminPaymentController(adminDasbordServices)
 	adminTransakasiController := admincontroller.NewAdminTransaksiController(adminTransaksiServices)
+	adminPesananController := admincontroller.NewAdminPesananController(adminPesananServices)
 
 	chatRepo := repositories.NewChatRepo(db)
 	chatService := services.NewChatService(chatRepo)
@@ -63,7 +66,7 @@ func main() {
 	adminProductService := services.NewAdminProductService(adminProductRepo)
 	adminProductController := controllers.NewAdminProductController(adminProductService)
 
-	r := routes.Routes(authControl, productController, filterController, detailProdukControl, CartController, OrderDetailController, PaymentController, ReviewController, adminDasboardController, artikelController, chatController, adminProductController, adminTransakasiController)
+	r := routes.Routes(authControl, productController, filterController, detailProdukControl, CartController, OrderDetailController, PaymentController, ReviewController, adminDasboardController, artikelController, chatController, adminProductController, adminTransakasiController, adminPesananController)
 
 	r.Run(":8000")
 }
