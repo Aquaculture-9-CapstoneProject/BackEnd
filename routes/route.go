@@ -7,7 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func Routes(authControl *controllers.AuthCotroller, produkcontrol *controllers.ProductIkanController, filterproduk *controllers.ProductFilterControl, detailproduk *controllers.ProductDetailControl, cartProduk *controllers.KeranjangControl, orderProduk *controllers.OrderControl, artikelControl *controllers.ArtikelController, chatControl *controllers.ChatController) *gin.Engine {
+func Routes(authControl *controllers.AuthCotroller, produkcontrol *controllers.ProductIkanController, filterproduk *controllers.ProductFilterControl, detailproduk *controllers.ProductDetailControl, cartProduk *controllers.KeranjangControl, orderProduk *controllers.OrderControl, chatControl *controllers.ChatController, artikelControl *controllers.ArtikelController) *gin.Engine {
 	r := gin.Default()
 
 	// Tambahkan middleware CORS
@@ -59,17 +59,17 @@ func Routes(authControl *controllers.AuthCotroller, produkcontrol *controllers.P
 		orderRoutes.GET("/checkout", orderProduk.GetOrderForCheckout)
 	}
 
-	r.GET("/artikel", artikelControl.GetAll)
-	r.GET("/artikel/:id", artikelControl.GetDetails)
-	r.POST("/artikel", artikelControl.Create)
-	r.PUT("/artikel/:id", artikelControl.Update)
-	r.DELETE("/artikel/:id", artikelControl.Delete)
-
 	chatRoutes := route.Group("/chats")
 	{
 		chatRoutes.GET("", chatControl.GetAllChats)
 		chatRoutes.POST("", chatControl.ChatController)
 	}
+
+	r.GET("/artikel", artikelControl.GetAll)
+	r.GET("/artikel/:id", artikelControl.GetDetails)
+	r.POST("/artikel", artikelControl.Create)
+	r.PUT("/artikel/:id", artikelControl.Update)
+	r.DELETE("/artikel/:id", artikelControl.Delete)
 
 	return r
 }

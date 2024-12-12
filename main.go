@@ -38,15 +38,15 @@ func main() {
 	OrderDetailServices := services.NeworderService(OrderDetailRepo, detailProdukRepo)
 	OrderDetailController := controllers.NewOrderControl(OrderDetailServices)
 
-	artikelRepo := repositories.NewArtikelRepo(db)
-	artikelService := services.NewArtikelService(artikelRepo)
-	artikelController := controllers.NewArtikelController(artikelService)
-
 	chatRepo := repositories.NewChatRepo(db)
 	chatService := services.NewChatService(chatRepo)
 	chatController := controllers.NewChatController(chatService)
 
-	r := routes.Routes(authControl, productController, filterController, detailProdukControl, CartController, OrderDetailController, artikelController, chatController)
+	artikelRepo := repositories.NewArtikelRepo(db)
+	artikelService := services.NewArtikelService(artikelRepo)
+	artikelController := controllers.NewArtikelController(artikelService)
+
+	r := routes.Routes(authControl, productController, filterController, detailProdukControl, CartController, OrderDetailController, chatController, artikelController)
 
 	r.Run(":8000")
 }
