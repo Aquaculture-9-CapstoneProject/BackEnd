@@ -8,7 +8,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func Routes(authControl *controllers.AuthCotroller, produkcontrol *controllers.ProductIkanController, filterproduk *controllers.ProductFilterControl, detailproduk *controllers.ProductDetailControl, cartProduk *controllers.KeranjangControl, orderProduk *controllers.OrderControl, payment *controllers.PaymentControl, review *controllers.ReviewController, dasboard *admincontroller.AdminPaymentController, artikelControl *controllers.ArtikelController, chatControl *controllers.ChatController, adminProductControl *controllers.AdminProductController, adminTransaksi *admincontroller.AdminTransaksiControl, adminPesanan *admincontroller.AdminPesananController) *gin.Engine {
+func Routes(authControl *controllers.AuthCotroller, produkcontrol *controllers.ProductIkanController, filterproduk *controllers.ProductFilterControl, detailproduk *controllers.ProductDetailControl, cartProduk *controllers.KeranjangControl, orderProduk *controllers.OrderControl, payment *controllers.PaymentControl, review *controllers.ReviewController, dasboard *admincontroller.AdminPaymentController, artikelControl *controllers.ArtikelController, chatControl *controllers.ChatController, adminProductControl *controllers.AdminProductController, adminTransaksi *admincontroller.AdminTransaksiControl, adminPesanan *admincontroller.AdminPesananController, adminfilter *admincontroller.AdminFilterController) *gin.Engine {
 	r := gin.Default()
 
 	// Tambahkan middleware CORS
@@ -105,6 +105,9 @@ func Routes(authControl *controllers.AuthCotroller, produkcontrol *controllers.P
 		adminProductRoutes.DELETE("/:id", adminProductControl.DeleteAdminProduct)
 	}
 
+	//buat database totalpendapatan
+	//buat dokumentasi
+	//filter by status
 	adminRoute := route.Group("/admin", middlewares.AdminOnly())
 	adminRoute.GET("/totalpendapatanbulan", dasboard.GetAdminTotalPendapatanBulanIni)
 	adminRoute.GET("/totalpesanan", dasboard.GetAdminJumlahPesananBulanIni)
@@ -120,5 +123,7 @@ func Routes(authControl *controllers.AuthCotroller, produkcontrol *controllers.P
 	adminRoute.DELETE("/hapustransaksi", adminTransaksi.DeletePaymentByID)
 	//Pesanan
 	adminRoute.GET("/adminpesanan", adminPesanan.GetDetailedOrders)
+	//Filter GET /admin/payments/status?status=PAID // GET /admin/payments/status?status=PENDING // GET /admin/payments/status?status=EXPIRED
+	adminRoute.GET("/payment/status", adminfilter.GetPaymentsByStatus)
 	return r
 }

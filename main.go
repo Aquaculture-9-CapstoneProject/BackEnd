@@ -29,6 +29,7 @@ func main() {
 	adminDasbordRepo := admin.NewAdminPaymentRepository(db)
 	adminTransaksiRepo := admin.NewAdminTransaksiRepo(db)
 	adminPesananRepo := admin.NewPesananRepo(db)
+	adminFilterRepo := admin.NewAdminFilterRepo(db)
 
 	authServis := services.NewAuthUseCase(authRepo)
 	filterService := services.NewProductFilterService(filterRepo)
@@ -41,6 +42,7 @@ func main() {
 	adminDasbordServices := adminservices.NewAdminPaymentService(adminDasbordRepo)
 	adminTransaksiServices := adminservices.NewAdminTransaksiServices(adminTransaksiRepo)
 	adminPesananServices := adminservices.NewPesananServices(adminPesananRepo)
+	adminFilterServices := adminservices.NewAdminFilterServices(adminFilterRepo)
 
 	authControl := controllers.NewAuthController(authServis)
 	productController := controllers.NewProductIkanController(productService)
@@ -53,6 +55,7 @@ func main() {
 	adminDasboardController := admincontroller.NewAdminPaymentController(adminDasbordServices)
 	adminTransakasiController := admincontroller.NewAdminTransaksiController(adminTransaksiServices)
 	adminPesananController := admincontroller.NewAdminPesananController(adminPesananServices)
+	adminFilterController := admincontroller.NewAdminFilterController(adminFilterServices)
 
 	chatRepo := repositories.NewChatRepo(db)
 	chatService := services.NewChatService(chatRepo)
@@ -66,7 +69,7 @@ func main() {
 	adminProductService := services.NewAdminProductService(adminProductRepo)
 	adminProductController := controllers.NewAdminProductController(adminProductService)
 
-	r := routes.Routes(authControl, productController, filterController, detailProdukControl, CartController, OrderDetailController, PaymentController, ReviewController, adminDasboardController, artikelController, chatController, adminProductController, adminTransakasiController, adminPesananController)
+	r := routes.Routes(authControl, productController, filterController, detailProdukControl, CartController, OrderDetailController, PaymentController, ReviewController, adminDasboardController, artikelController, chatController, adminProductController, adminTransakasiController, adminPesananController, adminFilterController)
 
 	r.Run(":8000")
 }
