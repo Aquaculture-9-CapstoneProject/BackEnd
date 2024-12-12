@@ -30,11 +30,15 @@ func CreateDatabase() *gorm.DB {
 		panic(err)
 	}
 
-	db.AutoMigrate(entities.User{}, entities.Admin{}, entities.Product{}, entities.Cart{}, entities.Order{}, entities.OrderDetail{}, entities.Profil{}, entities.Review{}, entities.Artikel{}, entities.Chat{}, entities.Payment{})
-	db.Migrator().CreateTable(&entities.Payment{})
-	db.Migrator().CreateTable(&entities.Artikel{})
-	db.Migrator().CreateTable(&entities.Chat{})
-	db.Migrator().CreateTable(&entities.TotalPendapatan{})
+	db.AutoMigrate(entities.User{}, entities.Admin{},
+		entities.Product{}, entities.Cart{}, entities.Order{},
+		entities.OrderDetail{}, entities.Profil{}, entities.Review{},
+		entities.Artikel{}, entities.Chat{}, entities.Payment{},
+		&entities.TotalPendapatan{})
+	// db.Migrator().CreateTable(&entities.Payment{})
+	// db.Migrator().CreateTable(&entities.Artikel{})
+	// db.Migrator().CreateTable(&entities.Chat{})
+	// db.Migrator().CreateTable(&entities.TotalPendapatan{})
 
 	return db
 }

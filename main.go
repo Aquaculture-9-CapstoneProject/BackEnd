@@ -4,7 +4,6 @@ import (
 	"github.com/Aquaculture-9-CapstoneProject/BackEnd.git/config"
 	"github.com/Aquaculture-9-CapstoneProject/BackEnd.git/controllers"
 	admincontroller "github.com/Aquaculture-9-CapstoneProject/BackEnd.git/controllers/adminController"
-	"github.com/Aquaculture-9-CapstoneProject/BackEnd.git/entities"
 	"github.com/Aquaculture-9-CapstoneProject/BackEnd.git/repositories"
 	"github.com/Aquaculture-9-CapstoneProject/BackEnd.git/repositories/admin"
 	"github.com/Aquaculture-9-CapstoneProject/BackEnd.git/routes"
@@ -19,7 +18,6 @@ import (
 
 func main() {
 	db := config.CreateDatabase()
-	db.AutoMigrate(entities.Payment{})
 	authRepo := repositories.NewAuthRepo(db)
 	detailProdukRepo := repositories.NewProductDetailRepo(db)
 	ReviewRepo := repositories.NewRatingRepo(db)
