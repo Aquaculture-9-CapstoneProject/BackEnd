@@ -25,6 +25,7 @@ func (pr *adminPesananRepo) GetDetailedOrders() ([]map[string]interface{}, error
 			orders.id AS order_id, 
 			users.nama_lengkap AS namapengguna, 
 			products.name AS produk, 
+			order_details.kuantitas AS kuantitas,   
 			orders.created_at AS tanggaldanwaktu, 
 			users.alamat AS alamat, 
 			payments.amount AS nominal, 
