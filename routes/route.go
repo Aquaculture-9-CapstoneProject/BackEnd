@@ -125,5 +125,7 @@ func Routes(authControl *controllers.AuthCotroller, produkcontrol *controllers.P
 	adminRoute.GET("/adminpesanan", adminPesanan.GetDetailedOrders)
 	//Filter GET /admin/payments/status?status=PAID // GET /admin/payments/status?status=PENDING // GET /admin/payments/status?status=EXPIRED
 	adminRoute.GET("/payment/status", adminfilter.GetPaymentsByStatus)
+	//filter get
+	adminRoute.GET("payement", adminfilter.GetPaymentsByStatusBarang)
 	return r
 }

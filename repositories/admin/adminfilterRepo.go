@@ -9,6 +9,7 @@ import (
 
 type AdminFilterRepo interface {
 	GetPaymentsByStatus(status string) ([]entities.Payment, error)
+	GetPaymentsByStatusBarang(statusBarang string) ([]entities.Payment, error)
 }
 
 type adminFilterRepo struct {
@@ -22,6 +23,15 @@ func NewAdminFilterRepo(db *gorm.DB) AdminFilterRepo {
 func (pr *adminFilterRepo) GetPaymentsByStatus(status string) ([]entities.Payment, error) {
 	var payments []entities.Payment
 	err := pr.db.Where("status = ?", status).Find(&payments).Error
+	if err != nil {
+		return nil, errors.New("gagal mengambil data pembayaran: " + err.Error())
+	}
+	return payments, nil
+}
+
+func (pr *adminFilterRepo) GetPaymentsByStatusBarang(statusBarang string) ([]entities.Payment, error) {
+	var payments []entities.Payment
+	err := pr.db.Where("status_barang = ?", statusBarang).Find(&payments).Error
 	if err != nil {
 		return nil, errors.New("gagal mengambil data pembayaran: " + err.Error())
 	}
