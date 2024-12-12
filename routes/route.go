@@ -8,19 +8,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func Routes(authControl *controllers.AuthCotroller,
-	produkcontrol *controllers.ProductIkanController,
-	filterproduk *controllers.ProductFilterControl,
-	detailproduk *controllers.ProductDetailControl,
-	cartProduk *controllers.KeranjangControl,
-	orderProduk *controllers.OrderControl,
-	payment *controllers.PaymentControl,
-	review *controllers.ReviewController,
-	chatControl *controllers.ChatController,
-	artikelControl *controllers.ArtikelController,
-	adminProductControl *controllers.AdminProductController,
-  dasboard *admincontroller.AdminPaymentController) *gin.Engine {
-
+func Routes(authControl *controllers.AuthCotroller, produkcontrol *controllers.ProductIkanController, filterproduk *controllers.ProductFilterControl, detailproduk *controllers.ProductDetailControl, cartProduk *controllers.KeranjangControl, orderProduk *controllers.OrderControl, payment *controllers.PaymentControl, review *controllers.ReviewController, dasboard *admincontroller.AdminPaymentController, artikelControl *controllers.ArtikelController, chatControl *controllers.ChatController, adminProductControl *controllers.AdminProductController) *gin.Engine {
 	r := gin.Default()
 
 	// Tambahkan middleware CORS
@@ -116,7 +104,7 @@ func Routes(authControl *controllers.AuthCotroller,
 		adminProductRoutes.PUT("/:id", adminProductControl.UpdateAdminProduct)
 		adminProductRoutes.DELETE("/:id", adminProductControl.DeleteAdminProduct)
 	}
-  
+
 	adminRoute := route.Group("/admin", middlewares.AdminOnly())
 	adminRoute.GET("/totalpendapatan", dasboard.GetAdminTotalPendapatanBulanIni)
 	adminRoute.GET("/totalpesanan", dasboard.GetAdminJumlahPesananBulanIni)
