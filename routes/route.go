@@ -7,7 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func Routes(authControl *controllers.AuthCotroller, produkcontrol *controllers.ProductIkanController, filterproduk *controllers.ProductFilterControl, detailproduk *controllers.ProductDetailControl, cartProduk *controllers.KeranjangControl, orderProduk *controllers.OrderControl) *gin.Engine {
+func Routes(authControl *controllers.AuthCotroller, produkcontrol *controllers.ProductIkanController, filterproduk *controllers.ProductFilterControl, detailproduk *controllers.ProductDetailControl, cartProduk *controllers.KeranjangControl, orderProduk *controllers.OrderControl, payment *controllers.PaymentControl) *gin.Engine {
 	r := gin.Default()
 
 	// Tambahkan middleware CORS
@@ -57,6 +57,24 @@ func Routes(authControl *controllers.AuthCotroller, produkcontrol *controllers.P
 	{
 		orderRoutes.POST("", orderProduk.PlaceOrder)
 		orderRoutes.GET("/checkout", orderProduk.GetOrderForCheckout)
+	}
+
+	paymentRoutes := route.Group("/payments")
+	{
+		// Endpoint untuk membuat pembayaran
+		paymentRoutes.POST("", payment.TambahPayment)
+
+		// Endpoint untuk mengecek status pembayaran
+		paymentRoutes.GET("/:invoiceID/status", payment.CheckPaymentStatus)
+
+		// Endpoint untuk membatalkan pembayaran
+		paymentRoutes.POST("/cancel", payment.CancelPayment)
+
+		// Endpoint untuk mendapatkan detail pembayaran berdasarkan Invoice ID
+		paymentRoutes.GET("/detail/:invoiceID", payment.GetPaymentByInvoiceID)
+
+		// Endpoint untuk mendapatkan pesanan yang sudah dibayar
+		paymentRoutes.GET("/order/paid", payment.GetPaidOrders)
 	}
 
 	return r

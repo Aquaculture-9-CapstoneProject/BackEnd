@@ -38,7 +38,11 @@ func main() {
 	OrderDetailServices := services.NeworderService(OrderDetailRepo, detailProdukRepo)
 	OrderDetailController := controllers.NewOrderControl(OrderDetailServices)
 
-	r := routes.Routes(authControl, productController, filterController, detailProdukControl, CartController, OrderDetailController)
+	PaymentRepo := repositories.NewPaymentRepo(db)
+	PaymentServices := services.NewPaymentServices(PaymentRepo)
+	PaymentController := controllers.NewPaymentController(PaymentServices)
+
+	r := routes.Routes(authControl, productController, filterController, detailProdukControl, CartController, OrderDetailController, PaymentController)
 
 	r.Run(":8000")
 }
