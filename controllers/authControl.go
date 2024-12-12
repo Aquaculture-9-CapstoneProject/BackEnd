@@ -95,5 +95,3 @@ func (ctrl *AuthCotroller) Logout(c *gin.Context) {
 		"status":  true,
 	})
 }
-
-// data user dimasukkin ke jwt

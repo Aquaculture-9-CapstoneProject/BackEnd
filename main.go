@@ -22,6 +22,22 @@ func main() {
 	productService := services.NewProductIkanServices(productRepo)
 	productController := controllers.NewProductIkanController(productService)
 
+	filterRepo := repositories.NewProductFilterRepo(db)
+	filterService := services.NewProductFilterService(filterRepo)
+	filterController := controllers.NewProductFilterControl(filterService)
+
+	detailProdukRepo := repositories.NewProductDetailRepo(db)
+	detailProdukServices := services.NewProductDetailServices(detailProdukRepo)
+	detailProdukControl := controllers.NewProductDetailControl(detailProdukServices)
+
+	CartRepo := repositories.NewKeranjangRepo(db)
+	CartServices := services.NewServicesKeranjang(CartRepo, detailProdukRepo)
+	CartController := controllers.NewCartControl(CartServices)
+
+	OrderDetailRepo := repositories.NewOrderRepo(db)
+	OrderDetailServices := services.NeworderService(OrderDetailRepo, detailProdukRepo)
+	OrderDetailController := controllers.NewOrderControl(OrderDetailServices)
+
 	artikelRepo := repositories.NewArtikelRepo(db)
 	artikelService := services.NewArtikelService(artikelRepo)
 	artikelController := controllers.NewArtikelController(artikelService)
@@ -30,7 +46,7 @@ func main() {
 	chatService := services.NewChatService(chatRepo)
 	chatController := controllers.NewChatController(chatService)
 
-	r := routes.Routes(authControl, productController, artikelController, chatController)
+	r := routes.Routes(authControl, productController, filterController, detailProdukControl, CartController, OrderDetailController, artikelController, chatController)
 
 	r.Run(":8000")
 }

@@ -13,7 +13,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"namalengkap\" : \"Michael\",\n    \"alamat\" : \"medan\",\n    \"notelpon\" : \"081341414\",\n    \"email\" : \"michaelsitanggang01@gmail.com\",\n    \"password\" : \"1234567\",\n    \"konfirpass\" : \"1234567\"\n}",
+					"raw": "{\n    \"namalengkap\" : \"Michael\",\n    \"alamat\" : \"medan\",\n    \"notelpon\" : \"081341414\",\n    \"email\" : \"michaelsitanggang02@gmail.com\",\n    \"password\" : \"1234567\",\n    \"konfirpass\" : \"1234567\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -21,15 +21,14 @@
 					}
 				},
 				"url": {
-					"raw": "http://34.238.42.178:8000/register",
-					"protocol": "http",
+					"raw": "https://www.bluebay.my.id/register",
+					"protocol": "https",
 					"host": [
-						"34",
-						"238",
-						"42",
-						"178"
+						"www",
+						"bluebay",
+						"my",
+						"id"
 					],
-					"port": "8000",
 					"path": [
 						"register"
 					]
@@ -82,15 +81,14 @@
 					}
 				},
 				"url": {
-					"raw": "http://34.238.42.178:8000/login",
-					"protocol": "http",
+					"raw": "https://www.bluebay.my.id/login",
+					"protocol": "https",
 					"host": [
-						"34",
-						"238",
-						"42",
-						"178"
+						"www",
+						"bluebay",
+						"my",
+						"id"
 					],
-					"port": "8000",
 					"path": [
 						"login"
 					]
@@ -100,17 +98,71 @@
 		},
 		{
 			"name": "ProdukTermurah",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
 			"request": {
 				"method": "GET",
-				"header": []
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://www.bluebay.my.id/produk-termurah",
+					"protocol": "https",
+					"host": [
+						"www",
+						"bluebay",
+						"my",
+						"id"
+					],
+					"path": [
+						"produk-termurah"
+					]
+				}
 			},
 			"response": []
 		},
 		{
-			"name": "ProdukPopuler",
+			"name": "FilterProduct",
 			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySUQiOjEsInJvbGUiOiJ1c2VyIiwiZXhwIjoxNzY1MzcxNzAxfQ.5O_WdOuBYqqL9aVPhzfjtEoN_XvEO-4fou4gYXPHjBg",
+							"type": "string"
+						}
+					]
+				},
 				"method": "GET",
-				"header": []
+				"header": [],
+				"url": {
+					"raw": "https://www.bluebay.my.id/products?kategori=KERANG",
+					"protocol": "https",
+					"host": [
+						"www",
+						"bluebay",
+						"my",
+						"id"
+					],
+					"path": [
+						"products"
+					],
+					"query": [
+						{
+							"key": "kategori",
+							"value": "KERANG"
+						}
+					]
+				}
 			},
 			"response": []
 		}

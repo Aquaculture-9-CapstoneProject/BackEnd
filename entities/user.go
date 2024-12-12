@@ -8,4 +8,6 @@ type User struct {
 	Email          string
 	Password       string
 	KonfirmasiPass string
+	Orders         []Order  `gorm:"foreignKey:UserID" json:"orders"`
+	Reviews        []Review `gorm:"foreignKey:UserID" json:"reviews,omitempty"`
 }
