@@ -18,8 +18,8 @@ func NewReviewController(reviewService services.ReviewServices) *ReviewControlle
 
 func (ctrl *ReviewController) AddReview(c *gin.Context) {
 	var request struct {
-		Rating  float64 `json:"rating"`
-		Comment string  `json:"comment"`
+		Rating float64 `json:"rating"`
+		Ulasan string  `json:"ulasan"`
 	}
 	if err := c.ShouldBindJSON(&request); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -36,7 +36,7 @@ func (ctrl *ReviewController) AddReview(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid product ID"})
 		return
 	}
-	err = ctrl.ReviewService.AddReview(userID.(int), int(id), request.Rating, request.Comment)
+	err = ctrl.ReviewService.AddReview(userID.(int), int(id), request.Rating, request.Ulasan)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to add review"})
 		return
