@@ -106,7 +106,7 @@ func Routes(authControl *controllers.AuthCotroller, produkcontrol *controllers.P
 	}
 
 	adminRoute := route.Group("/admin", middlewares.AdminOnly())
-	adminRoute.GET("/totalpendapatan", dasboard.GetAdminTotalPendapatanBulanIni)
+	adminRoute.GET("/totalpendapatanbulan", dasboard.GetAdminTotalPendapatanBulanIni)
 	adminRoute.GET("/totalpesanan", dasboard.GetAdminJumlahPesananBulanIni)
 	adminRoute.GET("/totalproduk", dasboard.GetTotalProduk)
 	adminRoute.GET("/statustransaksi", dasboard.GetJumlahStatus)
