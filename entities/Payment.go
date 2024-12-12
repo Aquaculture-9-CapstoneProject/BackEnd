@@ -7,6 +7,6 @@ type Payment struct {
 	StatusBarang string
 	Jumlah       float64
 	OrderID      int
-	Order        Order `json:"order" gorm:"foreignKey:OrderID"`
+	Order        Order `gorm:"foreignKey:OrderID" json:"order"`
 	PaymentUrl   string
 }
