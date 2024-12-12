@@ -43,5 +43,9 @@ func (s *adminProductUseCase) GetAdminProductCount() (int64, error) {
 }
 
 func (s *adminProductUseCase) SearchAdminProducts(nama string, kategori string, page int, limit int) ([]entities.Product, error) {
-	return s.repo.SearchAdminProducts(nama, kategori, page, limit)
+	products, err := s.repo.SearchAdminProducts(nama, kategori, page, limit)
+	if err != nil {
+		return nil, err
+	}
+	return products, nil
 }
