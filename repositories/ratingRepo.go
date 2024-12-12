@@ -9,8 +9,8 @@ type RatingRepo interface {
 	GetReviewsByProductID(productID int) ([]entities.Review, error)
 	AddReview(review *entities.Review) error
 	GetReviewByUserAndProduct(userID, productID int) (*entities.Review, error)
-	CountReviewsByProduct(productID int) (int64, error)
-	SumRatingByProduct(productID int) (int64, error)
+	CountReviewsByProduct(productID int) (int, error)
+	SumRatingByProduct(productID int) (int, error)
 }
 
 type ratingRepo struct {
@@ -43,17 +43,17 @@ func (r *ratingRepo) GetReviewByUserAndProduct(userID, productID int) (*entities
 	return &review, nil
 }
 
-func (r *ratingRepo) CountReviewsByProduct(productID int) (int64, error) {
+func (r *ratingRepo) CountReviewsByProduct(productID int) (int, error) {
 	var count int64
 	err := r.db.Model(&entities.Review{}).Where("product_id = ?", productID).Distinct("user_id").Count(&count).Error
 	if err != nil {
 		return 0, err
 	}
-	return count, nil
+	return int(count), nil
 }
 
-func (r *ratingRepo) SumRatingByProduct(productID int) (int64, error) {
-	var totalRating int64
+func (r *ratingRepo) SumRatingByProduct(productID int) (int, error) {
+	var totalRating int
 	err := r.db.Model(&entities.Review{}).Where("product_id = ?", productID).Select("SUM(rating)").Scan(&totalRating).Error
 	if err != nil {
 		return 0, err

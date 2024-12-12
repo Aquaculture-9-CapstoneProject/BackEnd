@@ -8,5 +8,3 @@ type Review struct {
 	Ulasan    string
 	User      User `gorm:"foreignKey:UserID"`
 }
-
-//

@@ -31,12 +31,12 @@ func (ctrl *ReviewController) AddReview(c *gin.Context) {
 		return
 	}
 	productID := c.Param("product_id")
-	id, err := strconv.ParseInt(productID, 10, 64)
+	id, err := strconv.Atoi(productID)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid product ID"})
 		return
 	}
-	err = ctrl.ReviewService.AddReview(userID.(int), int(id), request.Rating, request.Ulasan)
+	err = ctrl.ReviewService.AddReview(userID.(int), id, request.Rating, request.Ulasan)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to add review"})
 		return
@@ -46,13 +46,13 @@ func (ctrl *ReviewController) AddReview(c *gin.Context) {
 
 func (ctrl *ReviewController) GetReviewsByProduct(c *gin.Context) {
 	productID := c.Param("id")
-	id, err := strconv.ParseInt(productID, 10, 64)
+	id, err := strconv.Atoi(productID)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid product ID"})
 		return
 	}
 
-	reviews, err := ctrl.ReviewService.GetReviewsByProduct(int(id))
+	reviews, err := ctrl.ReviewService.GetReviewsByProduct(id)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to fetch reviews"})
 		return

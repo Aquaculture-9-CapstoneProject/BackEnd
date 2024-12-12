@@ -12,12 +12,12 @@ type ReviewServices interface {
 }
 
 type reviewServices struct {
-	repoReview   repositories.RatingRepo
-	servieDetail ProductDetailServices
+	repoReview    repositories.RatingRepo
+	serviceDetail ProductDetailServices
 }
 
-func NewServiceRating(repoReview repositories.RatingRepo, servieDetail ProductDetailServices) ReviewServices {
-	return &reviewServices{repoReview: repoReview, servieDetail: servieDetail}
+func NewServiceRating(repoReview repositories.RatingRepo, serviceDetail ProductDetailServices) ReviewServices {
+	return &reviewServices{repoReview: repoReview, serviceDetail: serviceDetail}
 }
 
 func (s *reviewServices) AddReview(userID, productID int, rating float64, comment string) error {
@@ -31,7 +31,7 @@ func (s *reviewServices) AddReview(userID, productID int, rating float64, commen
 	if err := s.repoReview.AddReview(&review); err != nil {
 		return err
 	}
-	return s.servieDetail.UpdateProductRating(productID)
+	return s.serviceDetail.UpdateProductRating(productID)
 }
 
 func (s *reviewServices) GetUserReview(userID, productID int) (*entities.Review, error) {
