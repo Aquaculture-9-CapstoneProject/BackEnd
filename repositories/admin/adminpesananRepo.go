@@ -24,11 +24,11 @@ func (pr *adminPesananRepo) GetDetailedOrders() ([]map[string]interface{}, error
 		Select(`
 			orders.id AS order_id, 
 			users.nama_lengkap AS namapengguna, 
-			products.name AS produk, 
+			products.nama AS produk, 
 			order_details.kuantitas AS kuantitas,   
 			orders.created_at AS tanggaldanwaktu, 
 			users.alamat AS alamat, 
-			payments.amount AS nominal, 
+			payments.jumlah AS nominal, 
 			payments.status_barang AS status`).
 		Joins("JOIN orders ON orders.id = payments.order_id").
 		Joins("JOIN users ON users.id = orders.user_id").

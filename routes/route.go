@@ -118,7 +118,7 @@ func Routes(authControl *controllers.AuthCotroller, produkcontrol *controllers.P
 	adminRoute.GET("/produkterbanyak", dasboard.GetProdukDenganKategoriStokTerbanyak)
 	//Transaksi
 	adminRoute.GET("/admintransaksi", adminTransaksi.GetPaymentDetails)
-	adminRoute.DELETE("/hapustransaksi", adminTransaksi.DeletePaymentByID)
+	adminRoute.DELETE("/hapustransaksi/:id", adminTransaksi.DeletePaymentByID)
 	//Pesanan
 	adminRoute.GET("/adminpesanan", adminPesanan.GetDetailedOrders)
 	//Filter GET /admin/payments/status?status=PAID // GET /admin/payments/status?status=PENDING // GET /admin/payments/status?status=EXPIRED
