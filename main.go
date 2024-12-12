@@ -31,13 +31,13 @@ func main() {
 	detailProdukServices := services.NewProductDetailServices(detailProdukRepo)
 	detailProdukControl := controllers.NewProductDetailControl(detailProdukServices)
 
-	CartRepo := repositories.NewKeranjangRepo(db)
-	CartServices := services.NewServicesKeranjang(CartRepo, detailProdukRepo)
-	CartController := controllers.NewCartControl(CartServices)
-
 	OrderDetailRepo := repositories.NewOrderRepo(db)
 	OrderDetailServices := services.NeworderService(OrderDetailRepo, detailProdukRepo)
 	OrderDetailController := controllers.NewOrderControl(OrderDetailServices)
+
+	CartRepo := repositories.NewKeranjangRepo(db)
+	CartServices := services.NewServicesKeranjang(CartRepo, detailProdukRepo, OrderDetailRepo)
+	CartController := controllers.NewCartControl(CartServices)
 
 	PaymentRepo := repositories.NewPaymentRepo(db)
 	PaymentServices := services.NewPaymentServices(PaymentRepo)
