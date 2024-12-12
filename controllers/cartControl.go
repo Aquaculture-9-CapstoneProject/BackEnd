@@ -30,7 +30,7 @@ func (ctrl *KeranjangControl) AddToCart(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "gagal input"})
 		return
 	}
-	if err := ctrl.cartService.TambahCart(userID.(int), req.ProductID, req.Quantity); err != nil {
+	if err := ctrl.cartService.TambahCart(int(userID.(int)), req.ProductID, req.Quantity); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Data Tidak ada"})
 		return
 	}
