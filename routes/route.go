@@ -2,12 +2,13 @@ package routes
 
 import (
 	"github.com/Aquaculture-9-CapstoneProject/BackEnd.git/controllers"
+	admincontroller "github.com/Aquaculture-9-CapstoneProject/BackEnd.git/controllers/adminController"
 	"github.com/Aquaculture-9-CapstoneProject/BackEnd.git/middlewares"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 )
 
-func Routes(authControl *controllers.AuthCotroller, produkcontrol *controllers.ProductIkanController, filterproduk *controllers.ProductFilterControl, detailproduk *controllers.ProductDetailControl, cartProduk *controllers.KeranjangControl, orderProduk *controllers.OrderControl, payment *controllers.PaymentControl, review *controllers.ReviewController) *gin.Engine {
+func Routes(authControl *controllers.AuthCotroller, produkcontrol *controllers.ProductIkanController, filterproduk *controllers.ProductFilterControl, detailproduk *controllers.ProductDetailControl, cartProduk *controllers.KeranjangControl, orderProduk *controllers.OrderControl, payment *controllers.PaymentControl, review *controllers.ReviewController, dasboard *admincontroller.AdminPaymentController, artikelControl *controllers.ArtikelController, chatControl *controllers.ChatController, adminProductControl *controllers.AdminProductController) *gin.Engine {
 	r := gin.Default()
 
 	// Tambahkan middleware CORS
@@ -62,6 +63,12 @@ func Routes(authControl *controllers.AuthCotroller, produkcontrol *controllers.P
 		orderRoutes.GET("/checkout", orderProduk.GetOrderForCheckout)
 	}
 
+	chatRoutes := route.Group("/chats")
+	{
+		chatRoutes.GET("", chatControl.GetAllChats)
+		chatRoutes.POST("", chatControl.ChatController)
+	}
+
 	paymentRoutes := route.Group("/payments")
 	{
 		// Endpoint untuk membuat pembayaran
@@ -80,14 +87,32 @@ func Routes(authControl *controllers.AuthCotroller, produkcontrol *controllers.P
 		paymentRoutes.GET("/order/paid", payment.GetPaidOrders)
 	}
 
-	// adminRoute := route.Group("/admin", middlewares.AdminOnly())
-	// adminRoute.GET("/totalpendapatan", dasboard.GetAdminTotalPendapatanBulanIni)
-	// adminRoute.GET("/totalpesanan", dasboard.GetAdminJumlahPesananBulanIni)
-	// adminRoute.GET("/totalproduk", dasboard.GetTotalProduk)
-	// adminRoute.GET("/statustransaksi", dasboard.GetJumlahStatus)
-	// adminRoute.GET("/totaldikirim", dasboard.GetJumlahPesananDikirim)
-	// adminRoute.GET("/totalditerima", dasboard.GetJumlahPesananDiterima)
-	// adminRoute.GET("/totalpendapatan", dasboard.TampilkanTotalPendapatan)
+	artikelRoutes := route.Group("/artikel")
+	{
+		artikelRoutes.GET("", artikelControl.GetAll)
+		artikelRoutes.GET("/:id", artikelControl.GetDetails)
+		artikelRoutes.POST("/", artikelControl.Create)
+		artikelRoutes.PUT("/:id", artikelControl.Update)
+		artikelRoutes.DELETE("/:id", artikelControl.Delete)
+	}
+
+	adminProductRoutes := route.Group("/dashboard/products")
+	{
+		adminProductRoutes.GET("", adminProductControl.SearchAdminProducts)
+		adminProductRoutes.GET("/:id", adminProductControl.GetAdminProductDetails)
+		adminProductRoutes.POST("", adminProductControl.CreateAdminProduct)
+		adminProductRoutes.PUT("/:id", adminProductControl.UpdateAdminProduct)
+		adminProductRoutes.DELETE("/:id", adminProductControl.DeleteAdminProduct)
+	}
+
+	adminRoute := route.Group("/admin", middlewares.AdminOnly())
+	adminRoute.GET("/totalpendapatan", dasboard.GetAdminTotalPendapatanBulanIni)
+	adminRoute.GET("/totalpesanan", dasboard.GetAdminJumlahPesananBulanIni)
+	adminRoute.GET("/totalproduk", dasboard.GetTotalProduk)
+	adminRoute.GET("/statustransaksi", dasboard.GetJumlahStatus)
+	adminRoute.GET("/totaldikirim", dasboard.GetJumlahPesananDikirim)
+	adminRoute.GET("/totalditerima", dasboard.GetJumlahPesananDiterima)
+	adminRoute.GET("/totalpendapatan", dasboard.TampilkanTotalPendapatan)
 
 	return r
 }

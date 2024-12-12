@@ -13,14 +13,13 @@ type ArtikelRepoInterface interface {
 	FindByID(id int) (*entities.Artikel, error)
 	GetAdminByID(id int) (*entities.Admin, error)
 	Count() (int64, error)
-	GetJumlahArtikel() (int64, error)
 }
 
 type artikelRepo struct {
 	db *gorm.DB
 }
 
-func NewArtikelRepo(db *gorm.DB) *artikelRepo {
+func NewArtikelRepo(db *gorm.DB) ArtikelRepoInterface {
 	return &artikelRepo{db: db}
 }
 
