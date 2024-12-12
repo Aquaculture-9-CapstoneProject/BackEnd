@@ -13,6 +13,7 @@ type AdminPaymentRepository interface {
 	GetJumlahPesananDikirim() (int64, error)
 	GetJumlahPesananDiterima() (int64, error)
 	GetTotalPendapatan() ([]entities.TotalPendapatan, error)
+	GetJumlahArtikel() (int64, error)
 }
 
 type adminPaymentRepository struct {
@@ -85,4 +86,11 @@ func (r *adminPaymentRepository) GetTotalPendapatan() ([]entities.TotalPendapata
 	return pendapatan, err
 }
 
-//artikel
+func (r *adminPaymentRepository) GetJumlahArtikel() (int64, error) {
+	var count int64
+	err := r.db.Model(&entities.Artikel{}).Count(&count).Error
+	if err != nil {
+		return 0, err
+	}
+	return count, nil
+}

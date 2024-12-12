@@ -3,7 +3,6 @@ package main
 import (
 	"github.com/Aquaculture-9-CapstoneProject/BackEnd.git/config"
 	"github.com/Aquaculture-9-CapstoneProject/BackEnd.git/controllers"
-	admincontroller "github.com/Aquaculture-9-CapstoneProject/BackEnd.git/controllers/adminController"
 	"github.com/Aquaculture-9-CapstoneProject/BackEnd.git/repositories"
 	"github.com/Aquaculture-9-CapstoneProject/BackEnd.git/repositories/admin"
 	"github.com/Aquaculture-9-CapstoneProject/BackEnd.git/routes"
@@ -46,9 +45,8 @@ func main() {
 	PaymentController := controllers.NewPaymentController(PaymentServices)
 	ReviewController := controllers.NewReviewController(ReviewServices)
 	detailProdukControl := controllers.NewProductDetailControl(detailProdukServices)
-	adminDasboardController := admincontroller.NewAdminPaymentController(adminDasbordServices)
 
-	r := routes.Routes(authControl, productController, filterController, detailProdukControl, CartController, OrderDetailController, PaymentController, ReviewController, adminDasboardController)
+	r := routes.Routes(authControl, productController, filterController, detailProdukControl, CartController, OrderDetailController, PaymentController, adminDasbordServices)
 
 	r.Run(":8000")
 }
