@@ -79,15 +79,6 @@ func Routes(authControl *controllers.AuthCotroller,
 		chatRoutes.POST("", chatControl.ChatController)
 	}
 
-	artikelRoutes := route.Group("/artikel")
-	{
-		artikelRoutes.GET("/", artikelControl.GetAll)
-		artikelRoutes.GET("/:id", artikelControl.GetDetails)
-		artikelRoutes.POST("/", artikelControl.Create)
-		artikelRoutes.PUT("/:id", artikelControl.Update)
-		artikelRoutes.DELETE("/:id", artikelControl.Delete)
-	}
-
 	paymentRoutes := route.Group("/payments")
 	{
 		// Endpoint untuk membuat pembayaran
@@ -106,11 +97,23 @@ func Routes(authControl *controllers.AuthCotroller,
 		paymentRoutes.GET("/order/paid", payment.GetPaidOrders)
 	}
 
-	r.GET("/dashboard/products", adminProductControl.SearchAdminProducts)
-	r.GET("/dashboard/products/:id", adminProductControl.GetAdminProductDetails)
-	r.POST("/dashboard/products", adminProductControl.CreateAdminProduct)
-	r.PUT("/dashboard/products/:id", adminProductControl.UpdateAdminProduct)
-	r.DELETE("/dashboard/products/:id", adminProductControl.DeleteAdminProduct)
+	artikelRoutes := route.Group("/artikel")
+	{
+		artikelRoutes.GET("", artikelControl.GetAll)
+		artikelRoutes.GET("/:id", artikelControl.GetDetails)
+		artikelRoutes.POST("/", artikelControl.Create)
+		artikelRoutes.PUT("/:id", artikelControl.Update)
+		artikelRoutes.DELETE("/:id", artikelControl.Delete)
+	}
+
+	adminProductRoutes := route.Group("/dashboard/products")
+	{
+		adminProductRoutes.GET("", adminProductControl.SearchAdminProducts)
+		adminProductRoutes.GET("/:id", adminProductControl.GetAdminProductDetails)
+		adminProductRoutes.POST("", adminProductControl.CreateAdminProduct)
+		adminProductRoutes.PUT("/:id", adminProductControl.UpdateAdminProduct)
+		adminProductRoutes.DELETE("/:id", adminProductControl.DeleteAdminProduct)
+	}
 
 	return r
 }
