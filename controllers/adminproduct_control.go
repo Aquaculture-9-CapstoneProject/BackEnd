@@ -93,7 +93,26 @@ func (ac *AdminProductController) DeleteAdminProduct(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"message": "Product deleted successfully"})
 }
 
-func (ac *AdminProductController) GetAllAdminProducts(c *gin.Context) {
+func (ac *AdminProductController) GetAdminProductDetails(c *gin.Context) {
+	id := c.Param("id")
+	intID, err := strconv.Atoi(id)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid ID"})
+		return
+	}
+
+	product, err := ac.service.FindByAdminProductID(intID)
+	if err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": "Product not found"})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"data": product})
+}
+
+func (ac *AdminProductController) SearchAdminProducts(c *gin.Context) {
+	nama := c.Query("nama")
+	kategori := c.Query("kategori")
 	pageStr := c.Query("page")
 	limitStr := c.Query("limit")
 
@@ -107,7 +126,7 @@ func (ac *AdminProductController) GetAllAdminProducts(c *gin.Context) {
 		limit = 15
 	}
 
-	products, err := ac.service.GetAllAdminProducts(page, limit)
+	products, err := ac.service.SearchAdminProducts(nama, kategori, page, limit)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
@@ -129,21 +148,4 @@ func (ac *AdminProductController) GetAllAdminProducts(c *gin.Context) {
 		},
 		"data": products,
 	})
-}
-
-func (ac *AdminProductController) GetAdminProductDetails(c *gin.Context) {
-	id := c.Param("id")
-	intID, err := strconv.Atoi(id)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid ID"})
-		return
-	}
-
-	product, err := ac.service.FindByAdminProductID(intID)
-	if err != nil {
-		c.JSON(http.StatusNotFound, gin.H{"error": "Product not found"})
-		return
-	}
-
-	c.JSON(http.StatusOK, gin.H{"data": product})
 }

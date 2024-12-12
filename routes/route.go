@@ -71,7 +71,8 @@ func Routes(authControl *controllers.AuthCotroller, produkcontrol *controllers.P
 	r.PUT("/artikel/:id", artikelControl.Update)
 	r.DELETE("/artikel/:id", artikelControl.Delete)
 
-	r.GET("/dashboard/products", adminProductControl.GetAllAdminProducts)
+	//r.GET("/dashboard/products", adminProductControl.GetAllAdminProducts)
+	r.GET("/dashboard/products", adminProductControl.SearchAdminProducts)
 	r.GET("/dashboard/products/:id", adminProductControl.GetAdminProductDetails)
 	r.POST("/dashboard/products", adminProductControl.CreateAdminProduct)
 	r.PUT("/dashboard/products/:id", adminProductControl.UpdateAdminProduct)
