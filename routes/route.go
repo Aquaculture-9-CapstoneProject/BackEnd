@@ -7,7 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func Routes(authControl *controllers.AuthCotroller, produkcontrol *controllers.ProductIkanController, filterproduk *controllers.ProductFilterControl, detailproduk *controllers.ProductDetailControl, cartProduk *controllers.KeranjangControl, orderProduk *controllers.OrderControl, chatControl *controllers.ChatController, artikelControl *controllers.ArtikelController) *gin.Engine {
+func Routes(authControl *controllers.AuthCotroller, produkcontrol *controllers.ProductIkanController, filterproduk *controllers.ProductFilterControl, detailproduk *controllers.ProductDetailControl, cartProduk *controllers.KeranjangControl, orderProduk *controllers.OrderControl, chatControl *controllers.ChatController, artikelControl *controllers.ArtikelController, adminProductControl *controllers.AdminProductController) *gin.Engine {
 	r := gin.Default()
 
 	// Tambahkan middleware CORS
@@ -70,6 +70,12 @@ func Routes(authControl *controllers.AuthCotroller, produkcontrol *controllers.P
 	r.POST("/artikel", artikelControl.Create)
 	r.PUT("/artikel/:id", artikelControl.Update)
 	r.DELETE("/artikel/:id", artikelControl.Delete)
+
+	r.GET("/dashboard/products", adminProductControl.GetAllAdminProducts)
+	r.GET("/dashboard/products/:id", adminProductControl.GetAdminProductDetails)
+	r.POST("/dashboard/products", adminProductControl.CreateAdminProduct)
+	r.PUT("/dashboard/products/:id", adminProductControl.UpdateAdminProduct)
+	r.DELETE("/dashboard/products/:id", adminProductControl.DeleteAdminProduct)
 
 	return r
 }

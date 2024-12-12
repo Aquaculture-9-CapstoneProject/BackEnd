@@ -46,7 +46,11 @@ func main() {
 	artikelService := services.NewArtikelService(artikelRepo)
 	artikelController := controllers.NewArtikelController(artikelService)
 
-	r := routes.Routes(authControl, productController, filterController, detailProdukControl, CartController, OrderDetailController, chatController, artikelController)
+	adminProductRepo := repositories.NewAdminProductRepo(db)
+	adminProductService := services.NewAdminProductService(adminProductRepo)
+	adminProductController := controllers.NewAdminProductController(adminProductService)
+
+	r := routes.Routes(authControl, productController, filterController, detailProdukControl, CartController, OrderDetailController, chatController, artikelController, adminProductController)
 
 	r.Run(":8000")
 }
