@@ -38,7 +38,10 @@ func (ctrl *ReviewController) AddReview(c *gin.Context) {
 	}
 	err = ctrl.ReviewService.AddReview(userID.(int), id, request.Rating, request.Ulasan)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to add review"})
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error":   "Failed to add review",
+			"details": err.Error(),
+		})
 		return
 	}
 	c.JSON(http.StatusOK, gin.H{"message": "Tambah Ulasan Berhasil", "code": 200, "status": "Berhasil"})

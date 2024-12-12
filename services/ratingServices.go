@@ -6,7 +6,7 @@ import (
 )
 
 type ReviewServices interface {
-	AddReview(userID, productID int, rating float64, comment string) error
+	AddReview(userID, productID int, rating float64, ulasan string) error
 	GetUserReview(userID, productID int) (*entities.Review, error)
 	GetReviewsByProduct(productID int) ([]entities.Review, error)
 }
@@ -20,12 +20,12 @@ func NewServiceRating(repoReview repositories.RatingRepo, serviceDetail ProductD
 	return &reviewServices{repoReview: repoReview, serviceDetail: serviceDetail}
 }
 
-func (s *reviewServices) AddReview(userID, productID int, rating float64, comment string) error {
+func (s *reviewServices) AddReview(userID, productID int, rating float64, ulasan string) error {
 	review := entities.Review{
 		UserID:    userID,
 		ProductID: productID,
 		Rating:    rating,
-		Ulasan:    comment,
+		Ulasan:    ulasan,
 	}
 
 	if err := s.repoReview.AddReview(&review); err != nil {
