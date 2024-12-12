@@ -2,6 +2,7 @@ package services
 
 import (
 	"fmt"
+	"log"
 
 	"github.com/Aquaculture-9-CapstoneProject/BackEnd.git/entities"
 	"github.com/Aquaculture-9-CapstoneProject/BackEnd.git/repositories"
@@ -32,14 +33,18 @@ func (s *keranjangServices) TambahCart(userID int, productID int, quantity int) 
 	// Cek apakah produk sudah ada di cart
 	cartItem, err := s.cartRepo.GetKeranjangItem(userID, productID)
 	if err != nil && err.Error() != "record not found" {
+		log.Println("Error saat mengambil cart item:", err)
 		return err
 	}
 
 	// Cek apakah produk valid
 	produk, err := s.produkRepo.CekProdukByID(productID)
 	if err != nil {
+		log.Println("Produk tidak ditemukan:", err)
 		return err
 	}
+
+	log.Println("Produk ditemukan:", produk)
 
 	// Hitung subtotal untuk kuantitas yang ditambahkan
 	subTotal := float64(quantity) * produk.Harga
@@ -48,12 +53,14 @@ func (s *keranjangServices) TambahCart(userID int, productID int, quantity int) 
 	if cartItem != nil {
 		newQuantity := cartItem.Kuantitas + quantity
 		newSubTotal := cartItem.Subtotal + subTotal
+		log.Println("Mengupdate cart item:", cartItem.ID)
 		return s.cartRepo.UpdateKeranjangItem(cartItem.ID, newQuantity, newSubTotal)
 	}
 
 	// Jika produk belum ada di cart, tambahkan sebagai item baru (hanya kirim userID, productID, quantity)
 	err = s.cartRepo.CreateKeranjangItem(userID, productID, quantity)
 	if err != nil {
+		log.Println("Gagal menambahkan produk ke cart:", err)
 		return err
 	}
 
