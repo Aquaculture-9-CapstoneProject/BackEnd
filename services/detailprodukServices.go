@@ -15,8 +15,8 @@ type productDetailServices struct {
 	reviewRepo  repositories.RatingRepo
 }
 
-func NewProductDetailServices(productRepo repositories.ProductDetailRepo) ProductDetailServices {
-	return &productDetailServices{productRepo: productRepo}
+func NewProductDetailServices(productRepo repositories.ProductDetailRepo, reviewRepo repositories.RatingRepo) ProductDetailServices {
+	return &productDetailServices{productRepo: productRepo, reviewRepo: reviewRepo}
 }
 
 func (s *productDetailServices) LihatProductByID(ProductID int) (*entities.Product, error) {
@@ -32,6 +32,7 @@ func (s *productDetailServices) UpdateProductRating(productID int) error {
 	if err != nil {
 		return err
 	}
+
 	totalRating, err := s.reviewRepo.SumRatingByProduct(productID)
 	if err != nil {
 		return err
@@ -46,6 +47,7 @@ func (s *productDetailServices) UpdateProductRating(productID int) error {
 	if err != nil {
 		return err
 	}
+
 	err = s.productRepo.UpdateTotalReview(productID, int(totalReviews))
 	return err
 }
