@@ -28,22 +28,19 @@ func (s *productDetailServices) LihatProductByID(ProductID int) (*entities.Produ
 }
 
 func (s *productDetailServices) UpdateProductRating(productID int) error {
-	// Mendapatkan jumlah ulasan untuk produk
 	totalReviews, err := s.reviewRepo.CountReviewsByProduct(productID)
 	if err != nil {
 		return err
 	}
 
-	// Mendapatkan jumlah rating total untuk produk
 	totalRating, err := s.reviewRepo.SumRatingByProduct(productID)
 	if err != nil {
 		return err
 	}
 
-	// Menghitung rating baru dengan pembagian total rating / total ulasan
 	newRating := 0.0
 	if totalReviews > 0 {
-		newRating = totalRating / float64(totalReviews) // totalRating sekarang bertipe float64
+		newRating = totalRating / float64(totalReviews)
 	}
 
 	err = s.productRepo.UpdateProductRating(productID, newRating)
@@ -51,7 +48,6 @@ func (s *productDetailServices) UpdateProductRating(productID int) error {
 		return err
 	}
 
-	// Memperbarui jumlah ulasan produk di repository
 	err = s.productRepo.UpdateTotalReview(productID, int(totalReviews))
 	return err
 }
