@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"net/http"
+	"strconv"
 
 	"github.com/Aquaculture-9-CapstoneProject/BackEnd.git/services"
 	"github.com/gin-gonic/gin"
@@ -51,9 +52,13 @@ func (ctrl *KeranjangControl) GetCartUser(c *gin.Context) {
 }
 
 func (ctrl *KeranjangControl) DeleteKeranjang(c *gin.Context) {
-	cartID := c.Param("cart_id")
-	err := ctrl.cartService.RemoveFromCart(cartID)
+	cartIDStr := c.Param("cartID")
+	cartID, err := strconv.Atoi(cartIDStr)
 	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid cart ID"})
+		return
+	}
+	if err := ctrl.cartService.RemoveFromCart(cartID); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}

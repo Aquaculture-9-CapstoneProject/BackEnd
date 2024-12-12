@@ -9,6 +9,7 @@ require (
 	github.com/google/generative-ai-go v0.19.0
 	github.com/joho/godotenv v1.5.1
 	google.golang.org/api v0.210.0
+	github.com/xendit/xendit-go v1.0.25
 	gorm.io/driver/mysql v1.5.7
 	gorm.io/gorm v1.25.12
 )
