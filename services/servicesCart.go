@@ -34,18 +34,31 @@ func (s *keranjangServices) TambahCart(userID int, productID int, quantity int) 
 	if err != nil && err.Error() != "record not found" {
 		return err
 	}
+
+	// Cek apakah produk valid
 	produk, err := s.produkRepo.CekProdukByID(productID)
 	if err != nil {
 		return err
 	}
+
+	// Hitung subtotal untuk kuantitas yang ditambahkan
 	subTotal := float64(quantity) * produk.Harga
 
+	// Jika produk sudah ada di cart, update kuantitas dan subtotal
 	if cartItem != nil {
 		newQuantity := cartItem.Kuantitas + quantity
 		newSubTotal := cartItem.Subtotal + subTotal
 		return s.cartRepo.UpdateKeranjangItem(cartItem.ID, newQuantity, newSubTotal)
 	}
-	return s.cartRepo.CreateKeranjangItem(userID, productID, quantity)
+
+	// Jika produk belum ada di cart, tambahkan sebagai item baru (hanya kirim userID, productID, quantity)
+	err = s.cartRepo.CreateKeranjangItem(userID, productID, quantity)
+	if err != nil {
+		return err
+	}
+
+	// Jika item keranjang berhasil dibuat, perbarui subtotal
+	return s.cartRepo.UpdateSubtotal(userID, productID, subTotal)
 }
 
 func (s *keranjangServices) GetCartForUser(userID int) ([]entities.Cart, float64, error) {
