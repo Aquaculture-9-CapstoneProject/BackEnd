@@ -8,3 +8,4 @@ type Cart struct {
 	Subtotal  float64
 	Product   Product `gorm:"foreignKey:ProductID" json:"product"`
 }
+
