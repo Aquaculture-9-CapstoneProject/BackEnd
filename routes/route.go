@@ -7,7 +7,17 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func Routes(authControl *controllers.AuthCotroller, produkcontrol *controllers.ProductIkanController, filterproduk *controllers.ProductFilterControl, detailproduk *controllers.ProductDetailControl, cartProduk *controllers.KeranjangControl, orderProduk *controllers.OrderControl, chatControl *controllers.ChatController, artikelControl *controllers.ArtikelController) *gin.Engine {
+func Routes(authControl *controllers.AuthCotroller,
+            produkcontrol *controllers.ProductIkanController,
+            filterproduk *controllers.ProductFilterControl,
+            detailproduk *controllers.ProductDetailControl,
+            cartProduk *controllers.KeranjangControl,
+            orderProduk *controllers.OrderControl,
+            payment *controllers.PaymentControl,
+            review *controllers.ReviewController,
+            chatControl *controllers.ChatController,
+            artikelControl *controllers.ArtikelController) *gin.Engine {
+
 	r := gin.Default()
 
 	// Tambahkan middleware CORS
@@ -45,6 +55,9 @@ func Routes(authControl *controllers.AuthCotroller, produkcontrol *controllers.P
 
 	route.GET("/products/:id", detailproduk.CekDetailProdukByID)
 
+	route.POST("/products/:product_id/reviews", review.AddReview)
+	route.GET("/products/:id/reviews", review.GetReviewsByProduct)
+
 	cartRoutes := route.Group("/cart")
 	{
 		cartRoutes.POST("/tambah", cartProduk.AddToCart)
@@ -65,11 +78,32 @@ func Routes(authControl *controllers.AuthCotroller, produkcontrol *controllers.P
 		chatRoutes.POST("", chatControl.ChatController)
 	}
 
-	r.GET("/artikel", artikelControl.GetAll)
-	r.GET("/artikel/:id", artikelControl.GetDetails)
-	r.POST("/artikel", artikelControl.Create)
-	r.PUT("/artikel/:id", artikelControl.Update)
-	r.DELETE("/artikel/:id", artikelControl.Delete)
+  artikelRoutes := route.Group("/artikel")
+  {
+	  artikelRoutes.GET("/", artikelControl.GetAll)
+	  artikelRoutes.GET("/:id", artikelControl.GetDetails)
+	  artikelRoutes.POST("/", artikelControl.Create)
+	  artikelRoutes.PUT("/:id", artikelControl.Update)
+	  artikelRoutes.DELETE("/:id", artikelControl.Delete)
+  }
+  
+	paymentRoutes := route.Group("/payments")
+	{
+		// Endpoint untuk membuat pembayaran
+		paymentRoutes.POST("", payment.TambahPayment)
+
+		// Endpoint untuk mengecek status pembayaran
+		paymentRoutes.GET("/:invoiceID/status", payment.CheckPaymentStatus)
+
+		// Endpoint untuk membatalkan pembayaran
+		paymentRoutes.POST("/cancel", payment.CancelPayment)
+
+		// Endpoint untuk mendapatkan detail pembayaran berdasarkan Invoice ID
+		paymentRoutes.GET("/detail/:invoiceID", payment.GetPaymentByInvoiceID)
+
+		// Endpoint untuk mendapatkan pesanan yang sudah dibayar
+		paymentRoutes.GET("/order/paid", payment.GetPaidOrders)
+	}
 
 	return r
 }

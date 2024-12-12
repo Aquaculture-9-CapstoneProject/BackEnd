@@ -11,32 +11,36 @@ import (
 // *Branch Main
 // *Dokumentasi Postman
 // *https://www.bluebay.my.id/route
+//
 
 func main() {
 	db := config.CreateDatabase()
 	authRepo := repositories.NewAuthRepo(db)
-	authServis := services.NewAuthUseCase(authRepo)
-	authControl := controllers.NewAuthController(authServis)
-
-	productRepo := repositories.NewProdukIkanRepo(db)
-	productService := services.NewProductIkanServices(productRepo)
-	productController := controllers.NewProductIkanController(productService)
-
-	filterRepo := repositories.NewProductFilterRepo(db)
-	filterService := services.NewProductFilterService(filterRepo)
-	filterController := controllers.NewProductFilterControl(filterService)
-
 	detailProdukRepo := repositories.NewProductDetailRepo(db)
-	detailProdukServices := services.NewProductDetailServices(detailProdukRepo)
-	detailProdukControl := controllers.NewProductDetailControl(detailProdukServices)
-
+	ReviewRepo := repositories.NewRatingRepo(db)
+	PaymentRepo := repositories.NewPaymentRepo(db)
 	CartRepo := repositories.NewKeranjangRepo(db)
-	CartServices := services.NewServicesKeranjang(CartRepo, detailProdukRepo)
-	CartController := controllers.NewCartControl(CartServices)
-
 	OrderDetailRepo := repositories.NewOrderRepo(db)
+	filterRepo := repositories.NewProductFilterRepo(db)
+	productRepo := repositories.NewProdukIkanRepo(db)
+
+	authServis := services.NewAuthUseCase(authRepo)
+	filterService := services.NewProductFilterService(filterRepo)
 	OrderDetailServices := services.NeworderService(OrderDetailRepo, detailProdukRepo)
+	productService := services.NewProductIkanServices(productRepo)
+	CartServices := services.NewServicesKeranjang(CartRepo, detailProdukRepo, OrderDetailRepo)
+	PaymentServices := services.NewPaymentServices(PaymentRepo)
+	detailProdukServices := services.NewProductDetailServices(detailProdukRepo, ReviewRepo)
+	ReviewServices := services.NewServiceRating(ReviewRepo, detailProdukServices)
+
+	authControl := controllers.NewAuthController(authServis)
+	productController := controllers.NewProductIkanController(productService)
+	filterController := controllers.NewProductFilterControl(filterService)
 	OrderDetailController := controllers.NewOrderControl(OrderDetailServices)
+	CartController := controllers.NewCartControl(CartServices)
+	PaymentController := controllers.NewPaymentController(PaymentServices)
+	ReviewController := controllers.NewReviewController(ReviewServices)
+	detailProdukControl := controllers.NewProductDetailControl(detailProdukServices)
 
 	chatRepo := repositories.NewChatRepo(db)
 	chatService := services.NewChatService(chatRepo)
@@ -46,7 +50,7 @@ func main() {
 	artikelService := services.NewArtikelService(artikelRepo)
 	artikelController := controllers.NewArtikelController(artikelService)
 
-	r := routes.Routes(authControl, productController, filterController, detailProdukControl, CartController, OrderDetailController, chatController, artikelController)
+	r := routes.Routes(authControl, productController, filterController, detailProdukControl, CartController, OrderDetailController, PaymentController, ReviewController, chatController, artikelController)
 
 	r.Run(":8000")
 }

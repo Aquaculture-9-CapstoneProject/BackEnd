@@ -7,16 +7,16 @@ import (
 
 type ProductDetailServices interface {
 	LihatProductByID(ProductID int) (*entities.Product, error)
-	// UpdateProductRating(ProductID int) error
+	UpdateProductRating(ProductID int) error
 }
 
 type productDetailServices struct {
 	productRepo repositories.ProductDetailRepo
-	// reviewRepo  repositories.ReviewRepository
+	reviewRepo  repositories.RatingRepo
 }
 
-func NewProductDetailServices(productRepo repositories.ProductDetailRepo) ProductDetailServices {
-	return &productDetailServices{productRepo: productRepo}
+func NewProductDetailServices(productRepo repositories.ProductDetailRepo, reviewRepo repositories.RatingRepo) ProductDetailServices {
+	return &productDetailServices{productRepo: productRepo, reviewRepo: reviewRepo}
 }
 
 func (s *productDetailServices) LihatProductByID(ProductID int) (*entities.Product, error) {
@@ -27,30 +27,27 @@ func (s *productDetailServices) LihatProductByID(ProductID int) (*entities.Produ
 	return product, nil
 }
 
-// func (s *productDetailServices) UpdateProductRating(productID uint) error {
-// 	// Hitung jumlah ulasan unik (user_id) untuk produk
-// 	totalReviews, err := s.reviewRepo.CountReviewsByProduct(productID)
-// 	if err != nil {
-// 		return err
-// 	}
+func (s *productDetailServices) UpdateProductRating(productID int) error {
+	totalReviews, err := s.reviewRepo.CountReviewsByProduct(productID)
+	if err != nil {
+		return err
+	}
 
-// 	// Hitung jumlah total rating untuk produk
-// 	totalRating, err := s.reviewRepo.SumRatingByProduct(productID)
-// 	if err != nil {
-// 		return err
-// 	}
+	totalRating, err := s.reviewRepo.SumRatingByProduct(productID)
+	if err != nil {
+		return err
+	}
 
-// 	// Hitung rata-rata rating
-// 	newRating := 0.0
-// 	if totalReviews > 0 {
-// 		newRating = float64(totalRating) / float64(totalReviews)
-// 	}
+	newRating := 0.0
+	if totalReviews > 0 {
+		newRating = totalRating / float64(totalReviews)
+	}
 
-// 	// Perbarui nilai Rating dan TotalReview di tabel Product
-// 	err = s.productRepo.UpdateProductRating(productID, newRating)
-// 	if err != nil {
-// 		return err
-// 	}
-// 	err = s.productRepo.UpdateTotalReview(productID, int(totalReviews))
-// 	return err
-// }
+	err = s.productRepo.UpdateProductRating(productID, newRating)
+	if err != nil {
+		return err
+	}
+
+	err = s.productRepo.UpdateTotalReview(productID, int(totalReviews))
+	return err
+}
