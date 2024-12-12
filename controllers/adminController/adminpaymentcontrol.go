@@ -18,7 +18,7 @@ func NewAdminPaymentController(adminPaymentService adminservices.AdminPaymentSer
 func (ctrl *AdminPaymentController) GetAdminTotalPendapatanBulanIni(c *gin.Context) {
 	totalPendapatan, err := ctrl.adminPaymentService.HitungAdminPendapatanBulanIni()
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		c.JSON(http.StatusInternalServerError, gin.H{"Total": 0})
 		return
 	}
 

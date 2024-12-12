@@ -98,7 +98,13 @@ func (r *adminPaymentRepository) GetJumlahArtikel() (int64, error) {
 
 func (r *adminPaymentRepository) GetProdukDenganKategoriStokTerbanyak() ([]entities.Product, error) {
 	var produk []entities.Product
-	err := r.db.Model(&entities.Product{}).Select("id, kategori, stock").Group("kategori").Order("stock DESC").Limit(1).Scan(&produk).Error
+	err := r.db.Debug(). // Debug untuk log query
+				Model(&entities.Product{}).
+				Select("id, kategori, stok"). // Pastikan menggunakan nama kolom yang sesuai
+				Group("kategori").
+				Order("stok DESC").
+				Limit(5).
+				Scan(&produk).Error
 	if err != nil {
 		return nil, err
 	}
