@@ -42,7 +42,15 @@ func main() {
 	ReviewController := controllers.NewReviewController(ReviewServices)
 	detailProdukControl := controllers.NewProductDetailControl(detailProdukServices)
 
-	r := routes.Routes(authControl, productController, filterController, detailProdukControl, CartController, OrderDetailController, PaymentController, ReviewController)
+	chatRepo := repositories.NewChatRepo(db)
+	chatService := services.NewChatService(chatRepo)
+	chatController := controllers.NewChatController(chatService)
+
+	artikelRepo := repositories.NewArtikelRepo(db)
+	artikelService := services.NewArtikelService(artikelRepo)
+	artikelController := controllers.NewArtikelController(artikelService)
+
+	r := routes.Routes(authControl, productController, filterController, detailProdukControl, CartController, OrderDetailController, PaymentController, ReviewController, chatController, artikelController)
 
 	r.Run(":8000")
 }

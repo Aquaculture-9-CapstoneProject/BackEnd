@@ -7,7 +7,17 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func Routes(authControl *controllers.AuthCotroller, produkcontrol *controllers.ProductIkanController, filterproduk *controllers.ProductFilterControl, detailproduk *controllers.ProductDetailControl, cartProduk *controllers.KeranjangControl, orderProduk *controllers.OrderControl, payment *controllers.PaymentControl, review *controllers.ReviewController) *gin.Engine {
+func Routes(authControl *controllers.AuthCotroller,
+            produkcontrol *controllers.ProductIkanController,
+            filterproduk *controllers.ProductFilterControl,
+            detailproduk *controllers.ProductDetailControl,
+            cartProduk *controllers.KeranjangControl,
+            orderProduk *controllers.OrderControl,
+            payment *controllers.PaymentControl,
+            review *controllers.ReviewController,
+            chatControl *controllers.ChatController,
+            artikelControl *controllers.ArtikelController) *gin.Engine {
+
 	r := gin.Default()
 
 	// Tambahkan middleware CORS
@@ -62,6 +72,21 @@ func Routes(authControl *controllers.AuthCotroller, produkcontrol *controllers.P
 		orderRoutes.GET("/checkout", orderProduk.GetOrderForCheckout)
 	}
 
+	chatRoutes := route.Group("/chats")
+	{
+		chatRoutes.GET("", chatControl.GetAllChats)
+		chatRoutes.POST("", chatControl.ChatController)
+	}
+
+  artikelRoutes := route.Group("/artikel")
+  {
+	  artikelRoutes.GET("/", artikelControl.GetAll)
+	  artikelRoutes.GET("/:id", artikelControl.GetDetails)
+	  artikelRoutes.POST("/", artikelControl.Create)
+	  artikelRoutes.PUT("/:id", artikelControl.Update)
+	  artikelRoutes.DELETE("/:id", artikelControl.Delete)
+  }
+  
 	paymentRoutes := route.Group("/payments")
 	{
 		// Endpoint untuk membuat pembayaran
