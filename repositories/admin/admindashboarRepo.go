@@ -14,6 +14,7 @@ type AdminPaymentRepository interface {
 	GetJumlahPesananDiterima() (int64, error)
 	GetTotalPendapatan() ([]entities.TotalPendapatan, error)
 	GetJumlahArtikel() (int64, error)
+	GetProdukDenganKategoriStokTerbanyak() ([]entities.Product, error)
 }
 
 type adminPaymentRepository struct {
@@ -93,4 +94,13 @@ func (r *adminPaymentRepository) GetJumlahArtikel() (int64, error) {
 		return 0, err
 	}
 	return count, nil
+}
+
+func (r *adminPaymentRepository) GetProdukDenganKategoriStokTerbanyak() ([]entities.Product, error) {
+	var produk []entities.Product
+	err := r.db.Model(&entities.Product{}).Select("id, kategori, stock").Group("kategori").Order("stock DESC").Limit(1).Scan(&produk).Error
+	if err != nil {
+		return nil, err
+	}
+	return produk, nil
 }

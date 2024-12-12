@@ -101,3 +101,12 @@ func (ctrl *AdminPaymentController) GetJumlahArtikel(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{"totalArtikel": count, "message": "Berhasil", "code": 200, "status": "Berhasil"})
 }
+
+func (ctrl *AdminPaymentController) GetProdukDenganKategoriStokTerbanyak(c *gin.Context) {
+	produk, err := ctrl.adminPaymentService.GetProdukDenganKategoriStokTerbanyak()
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"Produk": produk, "message": "Berhasil", "code": 200, "status": "Berhasil"})
+}

@@ -113,6 +113,8 @@ func Routes(authControl *controllers.AuthCotroller, produkcontrol *controllers.P
 	adminRoute.GET("/totaldikirim", dasboard.GetJumlahPesananDikirim)
 	adminRoute.GET("/totalditerima", dasboard.GetJumlahPesananDiterima)
 	adminRoute.GET("/totalpendapatan", dasboard.TampilkanTotalPendapatan)
+	adminRoute.GET("/totalartikel", dasboard.GetJumlahArtikel)
+	adminRoute.GET("/produkterbanyak", dasboard.GetProdukDenganKategoriStokTerbanyak)
 
 	return r
 }
