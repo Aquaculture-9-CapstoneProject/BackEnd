@@ -48,7 +48,6 @@ func main() {
 	detailProdukControl := controllers.NewProductDetailControl(detailProdukServices)
 	adminDasboardController := admincontroller.NewAdminPaymentController(adminDasbordServices)
 
-<<<<<<< HEAD
 	chatRepo := repositories.NewChatRepo(db)
 	chatService := services.NewChatService(chatRepo)
 	chatController := controllers.NewChatController(chatService)
@@ -57,10 +56,11 @@ func main() {
 	artikelService := services.NewArtikelService(artikelRepo)
 	artikelController := controllers.NewArtikelController(artikelService)
 
-	r := routes.Routes(authControl, productController, filterController, detailProdukControl, CartController, OrderDetailController, PaymentController, ReviewController, chatController, artikelController)
-=======
-	r := routes.Routes(authControl, productController, filterController, detailProdukControl, CartController, OrderDetailController, PaymentController, ReviewController, adminDasboardController)
->>>>>>> 0bc648e (dashboard admin done)
+	adminProductRepo := repositories.NewAdminProductRepo(db)
+	adminProductService := services.NewAdminProductService(adminProductRepo)
+	adminProductController := controllers.NewAdminProductController(adminProductService)
+
+	r := routes.Routes(authControl, productController, filterController, detailProdukControl, CartController, OrderDetailController, PaymentController, ReviewController, chatController, artikelController, adminProductController, adminDasboardController)
 
 	r.Run(":8000")
 }

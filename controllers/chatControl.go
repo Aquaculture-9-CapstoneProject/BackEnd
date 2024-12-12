@@ -12,7 +12,7 @@ type ChatController struct {
 }
 
 func NewChatController(chatService services.ChatServiceInterface) *ChatController {
-	return &ChatController{chatService}
+	return &ChatController{chatService: chatService}
 }
 
 func (ctc *ChatController) ChatController(c *gin.Context) {

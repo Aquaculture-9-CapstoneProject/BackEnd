@@ -22,7 +22,7 @@ type chatService struct {
 }
 
 func NewChatService(chatRepo repositories.ChatRepoInterface) *chatService {
-	return &chatService{chatRepo}
+	return &chatService{chatRepo: chatRepo}
 }
 
 func (cuc *chatService) ProccessChat(userID int, userInput string) (entities.Chat, error) {

@@ -16,7 +16,7 @@ type chatRepository struct {
 }
 
 func NewChatRepo(db *gorm.DB) *chatRepository {
-	return &chatRepository{db}
+	return &chatRepository{db: db}
 }
 
 func (r *chatRepository) SaveChat(chat entities.Chat) error {
