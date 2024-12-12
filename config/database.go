@@ -30,6 +30,6 @@ func CreateDatabase() *gorm.DB {
 		panic(err)
 	}
 	db.AutoMigrate(entities.User{}, entities.Admin{}, entities.Product{}, entities.Cart{}, entities.Order{}, entities.OrderDetail{}, entities.Payment{}, entities.Profil{}, entities.Review{})
-
+	db.Migrator().CreateTable(&entities.Review{})
 	return db
 }
