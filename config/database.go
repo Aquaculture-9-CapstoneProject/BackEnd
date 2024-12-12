@@ -35,6 +35,7 @@ func CreateDatabase() *gorm.DB {
 	db.Migrator().CreateTable(&entities.Artikel{})
 	db.Migrator().CreateTable(&entities.Chat{})
 	db.Migrator().CreateTable(&entities.TotalPendapatan{})
+	db.Migrator().CreateTable(&entities.Payment{})
 
 	return db
 }
