@@ -126,7 +126,7 @@ func (ac *ArtikelController) GetAll(c *gin.Context) {
 		limit = 9
 	}
 
-	artikels, err := ac.service.GetAll(page, limit)
+	artikels, err := ac.service.GetAll(nama, kategori, page, limit)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
