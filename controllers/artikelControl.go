@@ -111,6 +111,8 @@ func (ac *ArtikelController) Delete(c *gin.Context) {
 }
 
 func (ac *ArtikelController) GetAll(c *gin.Context) {
+	nama := c.Query("nama")
+	kategori := c.Query("kategori")
 	pageStr := c.Query("page")
 	limitStr := c.Query("limit")
 
