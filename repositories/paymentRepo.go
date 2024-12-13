@@ -90,17 +90,20 @@ func (r *paymentsRepo) UpdateBarangStatusAsync(invoiceID string) error {
 		return errors.New("pembayaran dengan ID yang diberikan tidak ditemukan")
 	}
 	if payment.Status != "PAID" && payment.Status != "SETTLED" {
-		return errors.New("status pembayaran tidak PAID")
+		return errors.New("status pembayaran tidak PAID atau SETTLED")
 	}
-	go func() {
-		time.Sleep(1 * time.Minute)
-		payment.StatusBarang = "DIKIRIM"
-		r.db.Save(&payment)
 
+	payment.StatusBarang = "DIKIRIM"
+	if err := r.db.Save(&payment).Error; err != nil {
+		return errors.New("gagal memperbarui status barang menjadi DIKIRIM")
+	}
+
+	go func() {
 		time.Sleep(2 * time.Minute)
 		payment.StatusBarang = "SELESAI"
 		r.db.Save(&payment)
 	}()
+
 	return nil
 }
 
