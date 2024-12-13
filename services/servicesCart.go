@@ -2,6 +2,8 @@ package services
 
 import (
 	"fmt"
+	"log"
+	"time"
 
 	"github.com/Aquaculture-9-CapstoneProject/BackEnd.git/entities"
 	"github.com/Aquaculture-9-CapstoneProject/BackEnd.git/repositories"
@@ -32,20 +34,39 @@ func (s *keranjangServices) TambahCart(userID int, productID int, quantity int) 
 	// Cek apakah produk sudah ada di cart
 	cartItem, err := s.cartRepo.GetKeranjangItem(userID, productID)
 	if err != nil && err.Error() != "record not found" {
+		log.Println("Error saat mengambil cart item:", err)
 		return err
 	}
+
+	// Cek apakah produk valid
 	produk, err := s.produkRepo.CekProdukByID(productID)
 	if err != nil {
+		log.Println("Produk tidak ditemukan:", err)
 		return err
 	}
+
+	log.Println("Produk ditemukan:", produk)
+
+	// Hitung subtotal untuk kuantitas yang ditambahkan
 	subTotal := float64(quantity) * produk.Harga
 
+	// Jika produk sudah ada di cart, update kuantitas dan subtotal
 	if cartItem != nil {
 		newQuantity := cartItem.Kuantitas + quantity
 		newSubTotal := cartItem.Subtotal + subTotal
+		log.Println("Mengupdate cart item:", cartItem.ID)
 		return s.cartRepo.UpdateKeranjangItem(cartItem.ID, newQuantity, newSubTotal)
 	}
-	return s.cartRepo.CreateKeranjangItem(userID, productID, quantity)
+
+	// Jika produk belum ada di cart, tambahkan sebagai item baru (hanya kirim userID, productID, quantity)
+	err = s.cartRepo.CreateKeranjangItem(userID, productID, quantity)
+	if err != nil {
+		log.Println("Gagal menambahkan produk ke cart:", err)
+		return err
+	}
+
+	// Jika item keranjang berhasil dibuat, perbarui subtotal
+	return s.cartRepo.UpdateSubtotal(userID, productID, subTotal)
 }
 
 func (s *keranjangServices) GetCartForUser(userID int) ([]entities.Cart, float64, error) {
@@ -69,6 +90,9 @@ func (s *keranjangServices) Checkout(userID int) error {
 	if err != nil {
 		return fmt.Errorf("gagal mendapatkan keranjang: %w", err)
 	}
+	if len(carts) == 0 {
+		return fmt.Errorf("keranjang kosong, tidak ada item untuk di-checkout")
+	}
 	total := 0.0
 	for _, cart := range carts {
 		total += cart.Subtotal
@@ -80,9 +104,10 @@ func (s *keranjangServices) Checkout(userID int) error {
 	order := &entities.Order{
 		UserID:           userID,
 		Total:            totalOrder,
-		MetodePembayaran: "Transfer Bank",
+		MetodePembayaran: "E-Wallet",
 		BiayaLayanan:     biayaLayanan,
 		BiayaOngkir:      biayaOngkir,
+		CreatedAt:        time.Now().Format("2006-01-02 15:04:05"),
 	}
 	if err := s.orderRepo.CreateOrder(order); err != nil {
 		return fmt.Errorf("gagal membuat order: %w", err)

@@ -17,7 +17,9 @@ type PaymentServices interface {
 	CheckPaymentStatus(invoiceID string) (string, error)
 	CancelOrder(invoiceID string) error
 	GetPaymentByInvoiceID(invoiceID string) (*entities.Payment, error)
-	GetPaidOrders() ([]entities.Payment, error)
+	// GetPaidOrders() ([]entities.Payment, error)
+	GetAllPayments() ([]entities.Payment, error)
+	GetPaymentsByUserID(userID int) ([]entities.Payment, error)
 }
 
 type paymentServices struct {
@@ -83,7 +85,7 @@ func (s *paymentServices) CheckPaymentStatus(invoiceID string) (string, error) {
 		return currentstatus, nil
 	}
 	s.paymentRepo.UpdatePaymentStatus(invoiceID, inv.Status)
-	if inv.Status == "PAID" {
+	if inv.Status == "PAID" || inv.Status == "SETTLED" {
 		err := s.paymentRepo.UpdateBarangStatusAsync(invoiceID)
 		if err != nil {
 			return inv.Status, errors.New("gagal memperbarui status barang: " + err.Error())
@@ -113,10 +115,17 @@ func (s *paymentServices) GetPaymentByInvoiceID(invoiceID string) (*entities.Pay
 
 }
 
-func (s *paymentServices) GetPaidOrders() ([]entities.Payment, error) {
-	payments, err := s.paymentRepo.GetPaidOrders()
-	if err != nil {
-		return nil, err
-	}
-	return payments, nil
+// func (s *paymentServices) GetPaidOrders() ([]entities.Payment, error) {
+// 	payments, err := s.paymentRepo.GetPaidOrders()
+// 	if err != nil {
+// 		return nil, err
+// 	}
+// 	return payments, nil
+// }
+
+func (s *paymentServices) GetAllPayments() ([]entities.Payment, error) {
+	return s.paymentRepo.GetAllPayments()
+}
+func (s *paymentServices) GetPaymentsByUserID(userID int) ([]entities.Payment, error) {
+	return s.paymentRepo.GetPaymentsByUserID(userID)
 }

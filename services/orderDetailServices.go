@@ -4,6 +4,7 @@ package services
 
 import (
 	"fmt"
+	"time"
 
 	"github.com/Aquaculture-9-CapstoneProject/BackEnd.git/entities"
 	"github.com/Aquaculture-9-CapstoneProject/BackEnd.git/repositories"
@@ -46,9 +47,10 @@ func (s *orderService) PlaceOrder(userID int, productID int, quantity int) error
 	order := &entities.Order{
 		UserID:           userID,
 		Total:            total,
-		MetodePembayaran: "Transfer Bank",
+		MetodePembayaran: "E-Wallet",
 		BiayaLayanan:     biayaLayanan,
 		BiayaOngkir:      biayaOngkir,
+		CreatedAt:        time.Now().Format("2006-01-02 15:04:05"),
 	}
 
 	if err := s.orderRepo.CreateOrder(order); err != nil {

@@ -13,6 +13,7 @@ type KeranjangRepo interface {
 	GetKeranjangItem(userID, productID int) (*entities.Cart, error)
 	UpdateKeranjangItem(cartID, newQuantity int, newSubTotal float64) error
 	CreateKeranjangItem(userID, productID, quantity int) error
+	UpdateSubtotal(userID, productID int, subTotal float64) error
 }
 
 type keranjangRepo struct {
@@ -69,7 +70,7 @@ func (r *keranjangRepo) GetKeranjangItem(userID, productID int) (*entities.Cart,
 func (r *keranjangRepo) UpdateKeranjangItem(cartID, newQuantity int, newSubTotal float64) error {
 	return r.db.Model(&entities.Cart{}).Where("id = ?", cartID).Updates(map[string]interface{}{
 		"kuantitas": newQuantity,
-		"sub_total": newSubTotal,
+		"subtotal":  newSubTotal,
 	}).Error
 }
 
@@ -89,4 +90,8 @@ func (r *keranjangRepo) CreateKeranjangItem(userID, productID, quantity int) err
 	}
 
 	return r.db.Create(&cart).Error
+}
+
+func (r *keranjangRepo) UpdateSubtotal(userID, productID int, subTotal float64) error {
+	return r.db.Model(&entities.Cart{}).Where("user_id = ? AND product_id = ?", userID, productID).Update("subtotal", subTotal).Error
 }

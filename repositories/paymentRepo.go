@@ -16,8 +16,10 @@ type PaymentsRepo interface {
 	CancelOrder(invoiceID string) error
 	UpdateBarangStatusAsync(invoiceID string) error
 	GetPaymentByInvoiceID(invoiceID string) (*entities.Payment, error)
-	GetPaidOrders() ([]entities.Payment, error)
+	// GetPaidOrders() ([]entities.Payment, error)
 	GetPaymentStatus(invoiceID string) (string, error)
+	GetAllPayments() ([]entities.Payment, error)
+	GetPaymentsByUserID(userID int) ([]entities.Payment, error)
 }
 
 type paymentsRepo struct {
@@ -87,7 +89,7 @@ func (r *paymentsRepo) UpdateBarangStatusAsync(invoiceID string) error {
 	if err := r.db.Where("invoice_id = ?", invoiceID).First(&payment).Error; err != nil {
 		return errors.New("pembayaran dengan ID yang diberikan tidak ditemukan")
 	}
-	if payment.Status != "PAID" {
+	if payment.Status != "PAID" && payment.Status != "SETTLED" {
 		return errors.New("status pembayaran tidak PAID")
 	}
 	go func() {
@@ -106,7 +108,6 @@ func (r *paymentsRepo) GetPaymentByInvoiceID(invoiceID string) (*entities.Paymen
 	var payment entities.Payment
 	err := r.db.Preload("Order.Details.Product").
 		Preload("Order.Details.User").
-		Preload("Order.User").
 		Where("invoice_id = ?", invoiceID).
 		First(&payment).Error
 	if err != nil {
@@ -126,15 +127,32 @@ func (r *paymentsRepo) GetPaymentStatus(invoiceID string) (string, error) {
 	return payment.Status, nil
 }
 
-func (r *paymentsRepo) GetPaidOrders() ([]entities.Payment, error) {
-	var payments []entities.Payment
-	err := r.db.
-		Preload("Order.Details.Product").
-		Preload("Order.User").
-		Where("status = ?", "PAID").
-		Find(&payments).Error
+// func (r *paymentsRepo) GetPaidOrders() ([]entities.Payment, error) {
+// 	var payments []entities.Payment
+// 	err := r.db.
+// 		Preload("Order.Details.Product").
+// 		Preload("Order.User").
+// 		Where("status = ?", "PAID", "").
+// 		Find(&payments).Error
 
-	if err != nil {
+// 	if err != nil {
+// 		return nil, err
+// 	}
+// 	return payments, nil
+// }
+
+// perbaikan dari line 129
+func (r *paymentsRepo) GetAllPayments() ([]entities.Payment, error) {
+	var payments []entities.Payment
+	if err := r.db.Preload("Order").Find(&payments).Error; err != nil {
+		return nil, err
+	}
+	return payments, nil
+}
+
+func (r *paymentsRepo) GetPaymentsByUserID(userID int) ([]entities.Payment, error) {
+	var payments []entities.Payment
+	if err := r.db.Preload("Order").Joins("JOIN orders o ON payments.order_id = o.id").Where("o.user_id = ?", userID).Find(&payments).Error; err != nil {
 		return nil, err
 	}
 	return payments, nil

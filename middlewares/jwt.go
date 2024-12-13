@@ -73,3 +73,15 @@ func AdminOnly() gin.HandlerFunc {
 		c.Next()
 	}
 }
+
+// func UserOnly() gin.HandlerFunc {
+// 	return func(c *gin.Context) {
+// 		role, exists := c.Get("role")
+// 		if !exists || role == "admin" {
+// 			c.JSON(403, gin.H{"error": "Akses hanya untuk pengguna biasa"})
+// 			c.Abort()
+// 			return
+// 		}
+// 		c.Next()
+// 	}
+// }

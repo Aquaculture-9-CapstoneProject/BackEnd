@@ -1,12 +1,12 @@
 package entities
 
 type Payment struct {
-	ID           int
-	InvoiceID    string `gorm:"uniqueIndex"`
+	ID           int    `gorm:"primaryKey"`
+	InvoiceID    string `gorm:"type:varchar(255);uniqueIndex"`
 	Status       string
 	StatusBarang string
 	Jumlah       float64
-	OrderID      int
-	Order        Order `json:"order" gorm:"foreignKey:OrderID"`
+	OrderID      int   `gorm:"not null"`
+	Order        Order `gorm:"foreignKey:OrderID;references:ID" json:"order"`
 	PaymentUrl   string
 }

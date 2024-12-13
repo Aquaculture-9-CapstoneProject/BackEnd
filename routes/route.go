@@ -49,6 +49,9 @@ func Routes(authControl *controllers.AuthCotroller, produkcontrol *controllers.P
 	route.POST("/products/:product_id/reviews", review.AddReview)
 	route.GET("/products/:id/reviews", review.GetReviewsByProduct)
 
+	route.GET("/profile", profil.GetProfile)
+	route.PUT("/profile", profil.UpdateProfile)
+
 	cartRoutes := route.Group("/cart")
 	{
 		cartRoutes.POST("/tambah", cartProduk.AddToCart)
@@ -66,7 +69,6 @@ func Routes(authControl *controllers.AuthCotroller, produkcontrol *controllers.P
 	chatRoutes := route.Group("/chats")
 	{
 		chatRoutes.GET("", chatControl.GetAllChats)
-		chatRoutes.GET("/:id", chatControl.GetChatByID)
 		chatRoutes.POST("", chatControl.ChatController)
 	}
 
@@ -82,10 +84,12 @@ func Routes(authControl *controllers.AuthCotroller, produkcontrol *controllers.P
 		paymentRoutes.POST("/cancel", payment.CancelPayment)
 
 		// Endpoint untuk mendapatkan detail pembayaran berdasarkan Invoice ID
-		paymentRoutes.GET("/detail/:invoiceID", payment.GetPaymentByInvoiceID)
+		paymentRoutes.GET("/detail/:invoiceID", payment.GetPaymentByInvoiceID) //kosong
 
 		// Endpoint untuk mendapatkan pesanan yang sudah dibayar
-		paymentRoutes.GET("/order/paid", payment.GetPaidOrders)
+		// paymentRoutes.GET("/order/paid", payment.GetPaidOrders)
+
+		paymentRoutes.GET("/detailorder", payment.GetAllPayments)
 	}
 
 	artikelRoutes := route.Group("/artikel")
@@ -94,26 +98,42 @@ func Routes(authControl *controllers.AuthCotroller, produkcontrol *controllers.P
 		artikelRoutes.GET("/:id", artikelControl.GetDetails)
 	}
 
+	//buat dokumentasi
 	adminRoute := route.Group("/admin", middlewares.AdminOnly())
-	// adminRoute.GET("/totalpendapatan", dasboard.GetAdminTotalPendapatanBulanIni)
-	adminRoute.GET("/totalpesanan", dasboard.GetAdminJumlahPesananBulanIni)
+	adminRoute.GET("/totalpendapatan/bulan", dasboard.GetAdminTotalPendapatanBulanIni)
+	adminRoute.GET("/totalpesanan/bulan", dasboard.GetAdminJumlahPesananBulanIni)
 	adminRoute.GET("/totalproduk", dasboard.GetTotalProduk)
-	adminRoute.GET("/statustransaksi", dasboard.GetJumlahStatus)
-	adminRoute.GET("/totaldikirim", dasboard.GetJumlahPesananDikirim)
-	adminRoute.GET("/totalditerima", dasboard.GetJumlahPesananDiterima)
+	adminRoute.GET("/totalartikel", dasboard.GetJumlahArtikel)
 	adminRoute.GET("/totalpendapatan", dasboard.TampilkanTotalPendapatan)
+	adminRoute.GET("/statustransaksi", dasboard.GetJumlahStatus)
+	adminRoute.GET("/totalpesanan/dikirim", dasboard.GetJumlahPesananDikirim)
+	adminRoute.GET("/totalpesanan/selesai", dasboard.GetJumlahPesananDiterima)
+	adminRoute.GET("/produkterbanyak", dasboard.GetProdukDenganKategoriStokTerbanyak)
+	//Transaksi
+	adminRoute.GET("/admintransaksi", adminTransaksi.GetPaymentDetails)
+	adminRoute.DELETE("/hapustransaksi/:id", adminTransaksi.DeletePaymentByID)
+	//Pesanan
+	adminRoute.GET("/adminpesanan", adminPesanan.GetDetailedOrders)
+	//Filter GET /admin/payments/status?status=PAID // GET /admin/payments/status?status=PENDING // GET /admin/payments/status?status=EXPIRED
+	adminRoute.GET("/payment/status", adminfilter.GetPaymentsByStatus)
+	//filter get //GET /payments?status_barang=DIKIRIM
+	adminRoute.GET("payment", adminfilter.GetPaymentsByStatusBarang)
 
+	//manage artikel
 	adminRoute.GET("/artikel", artikelControl.GetAll)
 	adminRoute.GET("/artikel/:id", artikelControl.GetDetails)
 	adminRoute.POST("/artikel", artikelControl.Create)
 	adminRoute.PUT("/artikel/:id", artikelControl.Update)
 	adminRoute.DELETE("/artikel/:id", artikelControl.Delete)
-
+	
+	//manage product
 	adminRoute.GET("/products", adminProductControl.SearchAdminProducts)
 	adminRoute.GET("/products/:id", adminProductControl.GetAdminProductDetails)
 	adminRoute.POST("/products", adminProductControl.CreateAdminProduct)
 	adminRoute.PUT("/products/:id", adminProductControl.UpdateAdminProduct)
 	adminRoute.DELETE("/products/:id", adminProductControl.DeleteAdminProduct)
-
+	
 	return r
 }
+
+//buat tabel daftar pesanan

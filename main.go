@@ -14,7 +14,6 @@ import (
 // *Branch Main
 // *Dokumentasi Postman
 // *https://www.bluebay.my.id/route
-//
 
 func main() {
 	db := config.CreateDatabase()
@@ -27,6 +26,10 @@ func main() {
 	filterRepo := repositories.NewProductFilterRepo(db)
 	productRepo := repositories.NewProdukIkanRepo(db)
 	adminDasbordRepo := admin.NewAdminPaymentRepository(db)
+	adminTransaksiRepo := admin.NewAdminTransaksiRepo(db)
+	adminPesananRepo := admin.NewPesananRepo(db)
+	adminFilterRepo := admin.NewAdminFilterRepo(db)
+	profileRepo := repositories.NewProfileRepository(db)
 
 	authServis := services.NewAuthUseCase(authRepo)
 	filterService := services.NewProductFilterService(filterRepo)
@@ -37,6 +40,10 @@ func main() {
 	detailProdukServices := services.NewProductDetailServices(detailProdukRepo, ReviewRepo)
 	ReviewServices := services.NewServiceRating(ReviewRepo, detailProdukServices)
 	adminDasbordServices := adminservices.NewAdminPaymentService(adminDasbordRepo)
+	adminTransaksiServices := adminservices.NewAdminTransaksiServices(adminTransaksiRepo)
+	adminPesananServices := adminservices.NewPesananServices(adminPesananRepo)
+	adminFilterServices := adminservices.NewAdminFilterServices(adminFilterRepo)
+	profileServices := services.NewProfileService(profileRepo)
 
 	authControl := controllers.NewAuthController(authServis)
 	productController := controllers.NewProductIkanController(productService)
@@ -47,6 +54,10 @@ func main() {
 	ReviewController := controllers.NewReviewController(ReviewServices)
 	detailProdukControl := controllers.NewProductDetailControl(detailProdukServices)
 	adminDasboardController := admincontroller.NewAdminPaymentController(adminDasbordServices)
+	adminTransakasiController := admincontroller.NewAdminTransaksiController(adminTransaksiServices)
+	adminPesananController := admincontroller.NewAdminPesananController(adminPesananServices)
+	adminFilterController := admincontroller.NewAdminFilterController(adminFilterServices)
+	profileController := controllers.NewProfileController(profileServices)
 
 	chatRepo := repositories.NewChatRepo(db)
 	chatService := services.NewChatService(chatRepo)
@@ -60,7 +71,10 @@ func main() {
 	adminProductService := services.NewAdminProductService(adminProductRepo)
 	adminProductController := controllers.NewAdminProductController(adminProductService)
 
-	r := routes.Routes(authControl, productController, filterController, detailProdukControl, CartController, OrderDetailController, PaymentController, ReviewController, chatController, artikelController, adminProductController, adminDasboardController)
+	r := routes.Routes(authControl, productController, filterController, detailProdukControl, CartController, OrderDetailController, PaymentController, ReviewController, adminDasboardController, artikelController, chatController, adminProductController, adminTransakasiController, adminPesananController, adminFilterController, profileController)
 
 	r.Run(":8000")
 }
+
+// BESOK CRUD PRODUK DAN UNIT TES
+// export csv pada produk

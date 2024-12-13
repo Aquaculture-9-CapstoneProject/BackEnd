@@ -41,15 +41,28 @@ func (ctrl *OrderControl) PlaceOrder(c *gin.Context) {
 }
 
 func (ctrl *OrderControl) GetOrderForCheckout(c *gin.Context) {
+	// Ambil userID dari konteks
 	userID, exists := c.Get("userID")
 	if !exists {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "User tidak terdaftar"})
 		return
 	}
+
+	// Panggil service untuk mendapatkan data order
 	orders, err := ctrl.orderService.GetOrderForCheckout(userID.(int))
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Gagal mengambil data order"})
 		return
 	}
-	c.JSON(http.StatusOK, gin.H{"meta": gin.H{"message": "Berhasil", "code": 200, "status": "Berhasil"}, "orders": orders, "tanggal": time.Now()})
+
+	// Kirimkan response ke client
+	c.JSON(http.StatusOK, gin.H{
+		"meta": gin.H{
+			"message": "Berhasil",
+			"code":    200,
+			"status":  "Berhasil",
+		},
+		"orders":  orders,
+		"tanggal": time.Now().Format(time.RFC3339),
+	})
 }

@@ -18,7 +18,7 @@ func NewAdminPaymentController(adminPaymentService adminservices.AdminPaymentSer
 func (ctrl *AdminPaymentController) GetAdminTotalPendapatanBulanIni(c *gin.Context) {
 	totalPendapatan, err := ctrl.adminPaymentService.HitungAdminPendapatanBulanIni()
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		c.JSON(http.StatusInternalServerError, gin.H{"Total": 0})
 		return
 	}
 
@@ -90,4 +90,23 @@ func (ctrl *AdminPaymentController) TampilkanTotalPendapatan(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{"message": "server error"})
 	}
 	c.JSON(http.StatusOK, gin.H{"message": data, "code": 200, "status": "Berhasil"})
+}
+
+func (ctrl *AdminPaymentController) GetJumlahArtikel(c *gin.Context) {
+	count, err := ctrl.adminPaymentService.GetJumlahArtikel()
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"totalArtikel": count, "message": "Berhasil", "code": 200, "status": "Berhasil"})
+}
+
+func (ctrl *AdminPaymentController) GetProdukDenganKategoriStokTerbanyak(c *gin.Context) {
+	produk, err := ctrl.adminPaymentService.GetProdukDenganKategoriStokTerbanyak()
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"Produk": produk, "message": "Berhasil", "code": 200, "status": "Berhasil"})
 }

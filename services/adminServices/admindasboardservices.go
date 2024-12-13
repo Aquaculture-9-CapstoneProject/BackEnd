@@ -13,6 +13,8 @@ type AdminPaymentService interface {
 	GetJumlahPesananDikirim() (int64, error)
 	GetJumlahPesananDiterima() (int64, error)
 	GetTotalPendapatBulan() ([]entities.TotalPendapatan, error)
+	GetJumlahArtikel() (int64, error)
+	GetProdukDenganKategoriStokTerbanyak() ([]entities.Product, error)
 }
 
 type adminPaymentService struct {
@@ -69,4 +71,12 @@ func (s *adminPaymentService) GetJumlahPesananDiterima() (int64, error) {
 
 func (s *adminPaymentService) GetTotalPendapatBulan() ([]entities.TotalPendapatan, error) {
 	return s.adminPaymentRepo.GetTotalPendapatan()
+}
+
+func (s *adminPaymentService) GetJumlahArtikel() (int64, error) {
+	return s.adminPaymentRepo.GetJumlahArtikel()
+}
+
+func (s *adminPaymentService) GetProdukDenganKategoriStokTerbanyak() ([]entities.Product, error) {
+	return s.adminPaymentRepo.GetProdukDenganKategoriStokTerbanyak()
 }
