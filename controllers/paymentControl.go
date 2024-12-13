@@ -3,7 +3,6 @@ package controllers
 import (
 	"log"
 	"net/http"
-	"strconv"
 	"time"
 
 	"github.com/Aquaculture-9-CapstoneProject/BackEnd.git/services"
@@ -154,24 +153,17 @@ func (ctrl *PaymentControl) GetPaymentByInvoiceID(c *gin.Context) {
 
 ///
 
-func (ctrl *PaymentControl) GetPaymentByIDAndUser(c *gin.Context) {
-	paymentID := c.Param("id")
-	userID, _ := c.Get("userID")
-	paymentIDInt, err := strconv.Atoi(paymentID)
+func (ctrl *PaymentControl) GetAllPayments(c *gin.Context) {
+	payments, err := ctrl.paymentServis.GetAllPayments()
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "ID harus berupa angka"})
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Gagal mendapatkan daftar pembayaran"})
 		return
 	}
 
-	payment, err := ctrl.paymentServis.GetPaymentByIDAndUser(paymentIDInt, userID.(int))
-	if err != nil {
-		c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
-		return
-	}
 	c.JSON(http.StatusOK, gin.H{
-		"message": "Berhasil",
-		"code":    200,
-		"status":  "Berhasil mendapatkan data pembayaran",
-		"payment": payment,
+		"message":  "Berhasil",
+		"code":     200,
+		"status":   "Berhasil mendapatkan daftar pembayaran",
+		"payments": payments,
 	})
 }
