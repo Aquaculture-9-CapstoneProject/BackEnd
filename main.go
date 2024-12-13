@@ -44,6 +44,7 @@ func main() {
 	adminPesananServices := adminservices.NewPesananServices(adminPesananRepo)
 	adminFilterServices := adminservices.NewAdminFilterServices(adminFilterRepo)
 	profileServices := services.NewProfileService(profileRepo)
+	ExportServices := adminservices.NewProducExportService(productRepo)
 
 	authControl := controllers.NewAuthController(authServis)
 	productController := controllers.NewProductIkanController(productService)
@@ -58,6 +59,7 @@ func main() {
 	adminPesananController := admincontroller.NewAdminPesananController(adminPesananServices)
 	adminFilterController := admincontroller.NewAdminFilterController(adminFilterServices)
 	profileController := controllers.NewProfileController(profileServices)
+	ExportController := admincontroller.NewProductExportController(ExportServices)
 
 	chatRepo := repositories.NewChatRepo(db)
 	chatService := services.NewChatService(chatRepo)
@@ -71,10 +73,10 @@ func main() {
 	adminProductService := services.NewAdminProductService(adminProductRepo)
 	adminProductController := controllers.NewAdminProductController(adminProductService)
 
-	r := routes.Routes(authControl, productController, filterController, detailProdukControl, CartController, OrderDetailController, PaymentController, ReviewController, adminDasboardController, artikelController, chatController, adminProductController, adminTransakasiController, adminPesananController, adminFilterController, profileController)
+	r := routes.Routes(authControl, productController, filterController, detailProdukControl, CartController, OrderDetailController, PaymentController, ReviewController, adminDasboardController, artikelController, chatController, adminProductController, adminTransakasiController, adminPesananController, adminFilterController, profileController, ExportController)
 
 	r.Run(":8000")
 }
 
 // BESOK CRUD PRODUK DAN UNIT TES
-// export csv pada produk
+// export csv pada produk done

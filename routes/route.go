@@ -8,7 +8,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func Routes(authControl *controllers.AuthCotroller, produkcontrol *controllers.ProductIkanController, filterproduk *controllers.ProductFilterControl, detailproduk *controllers.ProductDetailControl, cartProduk *controllers.KeranjangControl, orderProduk *controllers.OrderControl, payment *controllers.PaymentControl, review *controllers.ReviewController, dasboard *admincontroller.AdminPaymentController, artikelControl *controllers.ArtikelController, chatControl *controllers.ChatController, adminProductControl *controllers.AdminProductController, adminTransaksi *admincontroller.AdminTransaksiControl, adminPesanan *admincontroller.AdminPesananController, adminfilter *admincontroller.AdminFilterController, profil *controllers.ProfileController) *gin.Engine {
+func Routes(authControl *controllers.AuthCotroller, produkcontrol *controllers.ProductIkanController, filterproduk *controllers.ProductFilterControl, detailproduk *controllers.ProductDetailControl, cartProduk *controllers.KeranjangControl, orderProduk *controllers.OrderControl, payment *controllers.PaymentControl, review *controllers.ReviewController, dasboard *admincontroller.AdminPaymentController, artikelControl *controllers.ArtikelController, chatControl *controllers.ChatController, adminProductControl *controllers.AdminProductController, adminTransaksi *admincontroller.AdminTransaksiControl, adminPesanan *admincontroller.AdminPesananController, adminfilter *admincontroller.AdminFilterController, profil *controllers.ProfileController, export *admincontroller.ProductExportController) *gin.Engine {
 	r := gin.Default()
 
 	// Tambahkan middleware CORS
@@ -126,14 +126,17 @@ func Routes(authControl *controllers.AuthCotroller, produkcontrol *controllers.P
 	adminRoute.POST("/artikel", artikelControl.Create)
 	adminRoute.PUT("/artikel/:id", artikelControl.Update)
 	adminRoute.DELETE("/artikel/:id", artikelControl.Delete)
-	
+
 	//manage product
 	adminRoute.GET("/products", adminProductControl.SearchAdminProducts)
 	adminRoute.GET("/products/:id", adminProductControl.GetAdminProductDetails)
 	adminRoute.POST("/products", adminProductControl.CreateAdminProduct)
 	adminRoute.PUT("/products/:id", adminProductControl.UpdateAdminProduct)
 	adminRoute.DELETE("/products/:id", adminProductControl.DeleteAdminProduct)
-	
+
+	//export
+	adminRoute.GET("/exportcsv", export.ExportToCSV)
+
 	return r
 }
 
