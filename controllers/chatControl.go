@@ -74,3 +74,26 @@ func (ctc *ChatController) GetAllChats(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{"status": true, "message": response})
 }
+
+func (ctc *ChatController) GetChatByID(c *gin.Context) {
+	chatIDStr := c.Param("id")
+	chatID, err := strconv.Atoi(chatIDStr)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"status": false, "message": "Invalid Chat ID"})
+		return
+	}
+
+	chat, err := ctc.chatService.GetChatByID(chatID)
+	if err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"status": false, "message": "Chat not found"})
+		return
+	}
+
+	response := struct {
+		Chat entities.Chat `json:"chat"`
+	}{
+		Chat: chat,
+	}
+
+	c.JSON(http.StatusOK, gin.H{"status": true, "message": response})
+}
