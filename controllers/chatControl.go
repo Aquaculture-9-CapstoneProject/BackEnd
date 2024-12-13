@@ -16,15 +16,19 @@ func NewChatController(chatService services.ChatServiceInterface) *ChatControlle
 }
 
 func (ctc *ChatController) ChatController(c *gin.Context) {
+	userID, exists := c.Get("userID")
+	if !exists {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "User tidak terautentikasi"})
+		return
+	}
 	var input struct {
-		UserID    int    `json:"user_id"`
 		UserInput string `json:"user_input"`
 	}
 	if err := c.ShouldBindJSON(&input); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"status": false, "message": "Input Data Invalid"})
 		return
 	}
-	chat, err := ctc.chatService.ProccessChat(input.UserID, input.UserInput)
+	chat, err := ctc.chatService.ProccessChat(int(userID.(int)), input.UserInput)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"status": false, "message": "Server error"})
 		return
