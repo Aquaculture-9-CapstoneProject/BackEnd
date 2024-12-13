@@ -98,15 +98,6 @@ func Routes(authControl *controllers.AuthCotroller, produkcontrol *controllers.P
 		artikelRoutes.GET("/:id", artikelControl.GetDetails)
 	}
 
-	adminProductRoutes := route.Group("/dashboard/products")
-	{
-		adminProductRoutes.GET("", adminProductControl.SearchAdminProducts)
-		adminProductRoutes.GET("/:id", adminProductControl.GetAdminProductDetails)
-		adminProductRoutes.POST("", adminProductControl.CreateAdminProduct)
-		adminProductRoutes.PUT("/:id", adminProductControl.UpdateAdminProduct)
-		adminProductRoutes.DELETE("/:id", adminProductControl.DeleteAdminProduct)
-	}
-
 	//buat dokumentasi
 	adminRoute := route.Group("/admin", middlewares.AdminOnly())
 	adminRoute.GET("/totalpendapatan/bulan", dasboard.GetAdminTotalPendapatanBulanIni)
@@ -134,6 +125,13 @@ func Routes(authControl *controllers.AuthCotroller, produkcontrol *controllers.P
 	adminRoute.POST("/artikel", artikelControl.Create)
 	adminRoute.PUT("/artikel/:id", artikelControl.Update)
 	adminRoute.DELETE("/artikel/:id", artikelControl.Delete)
+	
+	//manage product
+	adminRoute.GET("/products", adminProductControl.SearchAdminProducts)
+	adminRoute.GET("/products/:id", adminProductControl.GetAdminProductDetails)
+	adminRoute.POST("/products", adminProductControl.CreateAdminProduct)
+	adminRoute.PUT("/products/:id", adminProductControl.UpdateAdminProduct)
+	adminRoute.DELETE("/products/:id", adminProductControl.DeleteAdminProduct)
 	
 	return r
 }
