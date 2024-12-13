@@ -127,5 +127,11 @@ func Routes(authControl *controllers.AuthCotroller,
 	adminRoute.GET("/totalditerima", dasboard.GetJumlahPesananDiterima)
 	adminRoute.GET("/totalpendapatan", dasboard.TampilkanTotalPendapatan)
 
+	adminRoute.GET("/artikel", artikelControl.GetAll)
+	adminRoute.GET("/artikel/:id", artikelControl.GetDetails)
+	adminRoute.POST("/artikel", artikelControl.Create)
+	adminRoute.PUT("/artikel/:id", artikelControl.Update)
+	adminRoute.DELETE("/artikel/:id", artikelControl.Delete)
+
 	return r
 }
