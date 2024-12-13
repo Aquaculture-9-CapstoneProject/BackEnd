@@ -90,6 +90,9 @@ func (s *keranjangServices) Checkout(userID int) error {
 	if err != nil {
 		return fmt.Errorf("gagal mendapatkan keranjang: %w", err)
 	}
+	if len(carts) == 0 {
+		return fmt.Errorf("keranjang kosong, tidak ada item untuk di-checkout")
+	}
 	total := 0.0
 	for _, cart := range carts {
 		total += cart.Subtotal
