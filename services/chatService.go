@@ -14,7 +14,7 @@ import (
 
 type ChatServiceInterface interface {
 	ProccessChat(userID int, userInput string) (entities.Chat, error)
-	GetAllChats() ([]entities.Chat, error)
+	GetAllChats(userID int) ([]entities.Chat, error)
 }
 
 type chatService struct {
@@ -62,6 +62,6 @@ func (cuc *chatService) ProccessChat(userID int, userInput string) (entities.Cha
 	return chat, nil
 }
 
-func (cts *chatService) GetAllChats() ([]entities.Chat, error) {
-	return cts.chatRepo.GetAllChat()
+func (cts *chatService) GetAllChats(userID int) ([]entities.Chat, error) {
+	return cts.chatRepo.GetAllChat(userID)
 }

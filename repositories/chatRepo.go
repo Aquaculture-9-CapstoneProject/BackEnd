@@ -8,7 +8,7 @@ import (
 
 type ChatRepoInterface interface {
 	SaveChat(chat entities.Chat) error
-	GetAllChat() ([]entities.Chat, error)
+	GetAllChat(userID int) ([]entities.Chat, error)
 }
 
 type chatRepository struct {
@@ -23,8 +23,11 @@ func (r *chatRepository) SaveChat(chat entities.Chat) error {
 	return r.db.Debug().Create(&chat).Error
 }
 
-func (r *chatRepository) GetAllChat() ([]entities.Chat, error) {
+func (r *chatRepository) GetAllChat(userID int) ([]entities.Chat, error) {
 	var chats []entities.Chat
-	err := r.db.Find(&chats).Error
-	return chats, err
+	if err := r.db.Where("user_id = ?", userID).Find(&chats).Error; err != nil {
+		return nil, err
+	}
+
+	return chats, nil
 }

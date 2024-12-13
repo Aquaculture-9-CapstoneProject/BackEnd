@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"net/http"
+	"strconv"
 
 	"github.com/Aquaculture-9-CapstoneProject/BackEnd.git/services"
 	"github.com/gin-gonic/gin"
@@ -33,7 +34,14 @@ func (ctc *ChatController) ChatController(c *gin.Context) {
 }
 
 func (ctc *ChatController) GetAllChats(c *gin.Context) {
-	chats, err := ctc.chatService.GetAllChats()
+	userID := c.Param("userID")
+	intUserID, err := strconv.Atoi(userID)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"status": false, "message": "Invalid User ID"})
+		return
+	}
+
+	chats, err := ctc.chatService.GetAllChats(intUserID)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err})
 		return
