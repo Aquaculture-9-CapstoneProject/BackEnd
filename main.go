@@ -3,9 +3,12 @@ package main
 import (
 	"github.com/Aquaculture-9-CapstoneProject/BackEnd.git/config"
 	"github.com/Aquaculture-9-CapstoneProject/BackEnd.git/controllers"
+	admincontroller "github.com/Aquaculture-9-CapstoneProject/BackEnd.git/controllers/adminController"
 	"github.com/Aquaculture-9-CapstoneProject/BackEnd.git/repositories"
+	"github.com/Aquaculture-9-CapstoneProject/BackEnd.git/repositories/admin"
 	"github.com/Aquaculture-9-CapstoneProject/BackEnd.git/routes"
 	"github.com/Aquaculture-9-CapstoneProject/BackEnd.git/services"
+	adminservices "github.com/Aquaculture-9-CapstoneProject/BackEnd.git/services/adminServices"
 )
 
 // *Branch Main
@@ -23,6 +26,7 @@ func main() {
 	OrderDetailRepo := repositories.NewOrderRepo(db)
 	filterRepo := repositories.NewProductFilterRepo(db)
 	productRepo := repositories.NewProdukIkanRepo(db)
+	adminDasbordRepo := admin.NewAdminPaymentRepository(db)
 
 	authServis := services.NewAuthUseCase(authRepo)
 	filterService := services.NewProductFilterService(filterRepo)
@@ -32,6 +36,7 @@ func main() {
 	PaymentServices := services.NewPaymentServices(PaymentRepo)
 	detailProdukServices := services.NewProductDetailServices(detailProdukRepo, ReviewRepo)
 	ReviewServices := services.NewServiceRating(ReviewRepo, detailProdukServices)
+	adminDasbordServices := adminservices.NewAdminPaymentService(adminDasbordRepo)
 
 	authControl := controllers.NewAuthController(authServis)
 	productController := controllers.NewProductIkanController(productService)
@@ -41,6 +46,7 @@ func main() {
 	PaymentController := controllers.NewPaymentController(PaymentServices)
 	ReviewController := controllers.NewReviewController(ReviewServices)
 	detailProdukControl := controllers.NewProductDetailControl(detailProdukServices)
+	adminDasboardController := admincontroller.NewAdminPaymentController(adminDasbordServices)
 
 	chatRepo := repositories.NewChatRepo(db)
 	chatService := services.NewChatService(chatRepo)
@@ -54,7 +60,7 @@ func main() {
 	adminProductService := services.NewAdminProductService(adminProductRepo)
 	adminProductController := controllers.NewAdminProductController(adminProductService)
 
-	r := routes.Routes(authControl, productController, filterController, detailProdukControl, CartController, OrderDetailController, PaymentController, ReviewController, chatController, artikelController, adminProductController)
+	r := routes.Routes(authControl, productController, filterController, detailProdukControl, CartController, OrderDetailController, PaymentController, ReviewController, chatController, artikelController, adminProductController, adminDasboardController)
 
 	r.Run(":8000")
 }
