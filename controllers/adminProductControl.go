@@ -113,6 +113,17 @@ func (ac *AdminProductController) GetAdminProductDetails(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"data": product})
 }
 
+func (ac *AdminProductController) GetAllAdminProducts(c *gin.Context) {
+	limit := 15
+	products, err := ac.service.GetAllAdminProducts(limit)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"data": products})
+}
+
 func (ac *AdminProductController) SearchAdminProducts(c *gin.Context) {
 	nama := c.Query("nama")
 	kategori := c.Query("kategori")
