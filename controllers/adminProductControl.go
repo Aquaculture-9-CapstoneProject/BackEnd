@@ -57,6 +57,9 @@ func (ac *AdminProductController) UpdateAdminProduct(c *gin.Context) {
 	}
 
 	product.ID = existingProduct.ID
+	product.Rating = existingProduct.Rating
+	product.TotalReview = existingProduct.TotalReview
+	product.Terjual = existingProduct.Terjual
 
 	updatedProduct, err := ac.service.UpdateAdminProduct(&product)
 	if err != nil {
