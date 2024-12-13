@@ -48,14 +48,28 @@ func (ctrl *PaymentControl) CheckPaymentStatus(c *gin.Context) {
 		return
 	}
 
+	// Mengambil pembayaran berdasarkan invoice ID
+	payment, err := ctrl.paymentServis.GetPaymentByInvoiceID(invoiceID)
+	if err != nil {
+		log.Printf("Failed to get payment by invoice ID: %v", err)
+		c.JSON(http.StatusNotFound, gin.H{"error": "Payment not found for the given invoice ID"})
+		return
+	}
+
+	// Mengambil status pembayaran (misalnya, memanggil layanan atau API eksternal untuk mengecek status)
 	status, err := ctrl.paymentServis.CheckPaymentStatus(invoiceID)
 	if err != nil {
 		log.Printf("Failed to check payment status: %v", err)
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to check payment status"})
 		return
 	}
-
-	c.JSON(http.StatusOK, gin.H{"meta": gin.H{"message": "Berhasil", "code": 200, "status": "Berhasil"}, "invoice_id": invoiceID, "status": status, "tanggal": time.Now()})
+	c.JSON(http.StatusOK, gin.H{
+		"meta":       gin.H{"message": "Berhasil", "code": 200, "status": "Berhasil"},
+		"invoice_id": invoiceID,
+		"payment_id": payment.ID,
+		"status":     status,
+		"tanggal":    time.Now(),
+	})
 }
 
 func (ctrl *PaymentControl) CancelPayment(c *gin.Context) {
