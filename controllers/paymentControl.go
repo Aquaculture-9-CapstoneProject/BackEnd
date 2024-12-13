@@ -133,7 +133,6 @@ func (ctrl *PaymentControl) GetPaidOrders(c *gin.Context) {
 			"order": gin.H{
 				"id":                payment.Order.ID,
 				"user_id":           payment.Order.UserID,
-				"user_name":         payment.Order.User.NamaLengkap,
 				"total":             payment.Order.Total,
 				"biaya_layanan":     payment.Order.BiayaLayanan,
 				"biaya_ongkir":      payment.Order.BiayaOngkir,

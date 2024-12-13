@@ -4,7 +4,6 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/Aquaculture-9-CapstoneProject/BackEnd.git/entities"
 	"github.com/Aquaculture-9-CapstoneProject/BackEnd.git/services"
 	"github.com/gin-gonic/gin"
 )
@@ -54,11 +53,6 @@ func (ctrl *OrderControl) GetOrderForCheckout(c *gin.Context) {
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Gagal mengambil data order"})
 		return
-	}
-
-	// Pastikan `User` di setiap elemen menjadi nil
-	for i := range orders {
-		orders[i].User = entities.User{}
 	}
 
 	// Kirimkan response ke client
