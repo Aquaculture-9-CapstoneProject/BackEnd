@@ -54,6 +54,7 @@ func (r *orderRepo) ReduceStock(productID int, quantity int) error {
 	return r.db.Save(&product).Error
 }
 
+// perbaikan
 func (r *orderRepo) GetOrderForCheckout(userID int) ([]entities.Order, error) {
 	var orders []entities.Order
 	if err := r.db.Preload("Details.Product").Preload("Details.User").Where("user_id = ?", userID).Find(&orders).Error; err != nil {
