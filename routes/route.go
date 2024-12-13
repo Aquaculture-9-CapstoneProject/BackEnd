@@ -37,7 +37,7 @@ func Routes(authControl *controllers.AuthCotroller, produkcontrol *controllers.P
 		})
 	})
 	route := r.Group("/")
-	route.Use(middlewares.JWTAuth(), middlewares.UserOnly())
+	route.Use(middlewares.JWTAuth())
 	route.GET("/products", filterproduk.FilterProduct)
 
 	route.GET("/produk-termurah", produkcontrol.GetTermurahProduk)
