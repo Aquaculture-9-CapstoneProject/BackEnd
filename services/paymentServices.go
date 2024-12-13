@@ -83,7 +83,7 @@ func (s *paymentServices) CheckPaymentStatus(invoiceID string) (string, error) {
 		return currentstatus, nil
 	}
 	s.paymentRepo.UpdatePaymentStatus(invoiceID, inv.Status)
-	if inv.Status == "PAID" {
+	if inv.Status == "PAID" || inv.Status == "SETTLED" {
 		err := s.paymentRepo.UpdateBarangStatusAsync(invoiceID)
 		if err != nil {
 			return inv.Status, errors.New("gagal memperbarui status barang: " + err.Error())

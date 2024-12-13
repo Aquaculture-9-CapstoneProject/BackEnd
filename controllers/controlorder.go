@@ -58,7 +58,7 @@ func (ctrl *OrderControl) GetOrderForCheckout(c *gin.Context) {
 
 	// Pastikan `User` di setiap elemen menjadi nil
 	for i := range orders {
-		orders[i].User = entities.User{} // Jika `User` adalah pointer
+		orders[i].User = entities.User{}
 	}
 
 	// Kirimkan response ke client

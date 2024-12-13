@@ -87,7 +87,7 @@ func (r *paymentsRepo) UpdateBarangStatusAsync(invoiceID string) error {
 	if err := r.db.Where("invoice_id = ?", invoiceID).First(&payment).Error; err != nil {
 		return errors.New("pembayaran dengan ID yang diberikan tidak ditemukan")
 	}
-	if payment.Status != "PAID" {
+	if payment.Status != "PAID" && payment.Status != "SETTLED" {
 		return errors.New("status pembayaran tidak PAID")
 	}
 	go func() {
@@ -131,7 +131,7 @@ func (r *paymentsRepo) GetPaidOrders() ([]entities.Payment, error) {
 	err := r.db.
 		Preload("Order.Details.Product").
 		Preload("Order.User").
-		Where("status = ?", "PAID").
+		Where("status = ?", "PAID", "").
 		Find(&payments).Error
 
 	if err != nil {

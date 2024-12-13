@@ -84,7 +84,7 @@ func Routes(authControl *controllers.AuthCotroller, produkcontrol *controllers.P
 		paymentRoutes.POST("/cancel", payment.CancelPayment)
 
 		// Endpoint untuk mendapatkan detail pembayaran berdasarkan Invoice ID
-		paymentRoutes.GET("/detail/:invoiceID", payment.GetPaymentByInvoiceID)
+		paymentRoutes.GET("/detail/:invoiceID", payment.GetPaymentByInvoiceID) //kosong
 
 		// Endpoint untuk mendapatkan pesanan yang sudah dibayar
 		paymentRoutes.GET("/order/paid", payment.GetPaidOrders)
@@ -130,3 +130,5 @@ func Routes(authControl *controllers.AuthCotroller, produkcontrol *controllers.P
 	adminRoute.GET("payment", adminfilter.GetPaymentsByStatusBarang)
 	return r
 }
+
+//buat tabel daftar pesanan
