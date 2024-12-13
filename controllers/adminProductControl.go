@@ -114,14 +114,32 @@ func (ac *AdminProductController) GetAdminProductDetails(c *gin.Context) {
 }
 
 func (ac *AdminProductController) GetAllAdminProducts(c *gin.Context) {
+	id := c.Param("id")
+	page, err := strconv.Atoi(id)
 	limit := 15
+
 	products, err := ac.service.GetAllAdminProducts(limit)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"data": products})
+	totalItems, err := ac.service.GetAdminProductCount()
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	totalPages := int((totalItems + int64(limit) - 1) / int64(limit))
+
+	c.JSON(http.StatusOK, gin.H{
+		"pagination": entities.Pagination{
+			CurrentPage: page,
+			TotalPages:  totalPages,
+			TotalItems:  totalItems,
+		},
+		"data": products,
+	})
 }
 
 func (ac *AdminProductController) SearchAdminProducts(c *gin.Context) {

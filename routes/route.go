@@ -129,6 +129,7 @@ func Routes(authControl *controllers.AuthCotroller, produkcontrol *controllers.P
 
 	//manage product
 	adminRoute.GET("/products", adminProductControl.SearchAdminProducts)
+	adminRoute.GET("/products/page/:id", adminProductControl.GetAllAdminProducts)
 	adminRoute.GET("/products/:id", adminProductControl.GetAdminProductDetails)
 	adminRoute.POST("/products", adminProductControl.CreateAdminProduct)
 	adminRoute.PUT("/products/:id", adminProductControl.UpdateAdminProduct)
