@@ -118,7 +118,7 @@ func (ac *AdminProductController) GetAllAdminProducts(c *gin.Context) {
 	page, err := strconv.Atoi(id)
 	limit := 15
 
-	products, err := ac.service.GetAllAdminProducts(limit)
+	products, err := ac.service.GetAllAdminProducts(page, limit)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
