@@ -96,9 +96,6 @@ func Routes(authControl *controllers.AuthCotroller, produkcontrol *controllers.P
 	{
 		artikelRoutes.GET("", artikelControl.GetAll)
 		artikelRoutes.GET("/:id", artikelControl.GetDetails)
-		artikelRoutes.POST("/", artikelControl.Create)
-		artikelRoutes.PUT("/:id", artikelControl.Update)
-		artikelRoutes.DELETE("/:id", artikelControl.Delete)
 	}
 
 	adminProductRoutes := route.Group("/dashboard/products")
@@ -130,6 +127,14 @@ func Routes(authControl *controllers.AuthCotroller, produkcontrol *controllers.P
 	adminRoute.GET("/payment/status", adminfilter.GetPaymentsByStatus)
 	//filter get //GET /payments?status_barang=DIKIRIM
 	adminRoute.GET("payment", adminfilter.GetPaymentsByStatusBarang)
+
+	//manage artikel
+	adminRoute.GET("/artikel", artikelControl.GetAll)
+	adminRoute.GET("/artikel/:id", artikelControl.GetDetails)
+	adminRoute.POST("/artikel", artikelControl.Create)
+	adminRoute.PUT("/artikel/:id", artikelControl.Update)
+	adminRoute.DELETE("/artikel/:id", artikelControl.Delete)
+	
 	return r
 }
 
