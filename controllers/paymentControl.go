@@ -101,6 +101,7 @@ func (ctrl *PaymentControl) GetPaymentByInvoiceID(c *gin.Context) {
 			"status_barang":     payment.StatusBarang,
 			"jumlah":            payment.Jumlah,
 			"payment_url":       payment.PaymentUrl,
+			"Tanggal":           payment.Order.CreatedAt,
 			"order": gin.H{
 				"id":                payment.Order.ID,
 				"user_id":           payment.Order.UserID,
@@ -130,6 +131,7 @@ func (ctrl *PaymentControl) GetPaidOrders(c *gin.Context) {
 			"jumlah":            payment.Jumlah,
 			"status_pembayaran": payment.Status,
 			"status_barang":     payment.StatusBarang,
+			"Tanggal":           payment.Order.CreatedAt,
 			"order": gin.H{
 				"id":                payment.Order.ID,
 				"user_id":           payment.Order.UserID,

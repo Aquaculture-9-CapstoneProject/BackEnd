@@ -3,6 +3,7 @@ package services
 import (
 	"fmt"
 	"log"
+	"time"
 
 	"github.com/Aquaculture-9-CapstoneProject/BackEnd.git/entities"
 	"github.com/Aquaculture-9-CapstoneProject/BackEnd.git/repositories"
@@ -100,9 +101,10 @@ func (s *keranjangServices) Checkout(userID int) error {
 	order := &entities.Order{
 		UserID:           userID,
 		Total:            totalOrder,
-		MetodePembayaran: "Transfer Bank",
+		MetodePembayaran: "E-Wallet",
 		BiayaLayanan:     biayaLayanan,
 		BiayaOngkir:      biayaOngkir,
+		CreatedAt:        time.Now().Format("2006-01-02 15:04:05"),
 	}
 	if err := s.orderRepo.CreateOrder(order); err != nil {
 		return fmt.Errorf("gagal membuat order: %w", err)
