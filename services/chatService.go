@@ -38,9 +38,11 @@ func (cuc *chatService) ProccessChat(userID int, userInput string) (entities.Cha
 	if err != nil {
 		return entities.Chat{}, err
 	}
+
 	if len(resp.Candidates) == 0 {
 		return entities.Chat{}, err
 	}
+
 	aiResponse := ""
 	for _, candidate := range resp.Candidates {
 		if candidate.Content == nil {
@@ -50,16 +52,19 @@ func (cuc *chatService) ProccessChat(userID int, userInput string) (entities.Cha
 			aiResponse += fmt.Sprintf("%v", part)
 		}
 	}
+
 	chat := entities.Chat{
 		UserID:    userID,
 		UserInput: userInput,
 		AiRespon:  aiResponse,
 	}
-	if err := cuc.chatRepo.SaveChat(chat); err != nil {
+
+	savedChat, err := cuc.chatRepo.SaveChat(chat)
+	if err != nil {
 		return entities.Chat{}, err
 	}
 
-	return chat, nil
+	return savedChat, nil
 }
 
 func (cts *chatService) GetAllChats(userID int) ([]entities.Chat, error) {
