@@ -9,7 +9,7 @@ type ArtikelUseCase interface {
 	Create(artikel *entities.Artikel) (*entities.Artikel, error)
 	Update(artikel *entities.Artikel) (*entities.Artikel, error)
 	Delete(id int) error
-	GetAll(page int, limit int) ([]entities.Artikel, error)
+	GetAll(nama string, kategori string, page int, limit int) ([]entities.Artikel, error)
 	FindByID(id int) (*entities.Artikel, error)
 	GetAdminByID(id int) (*entities.Admin, error)
 	Count() (int64, error)
