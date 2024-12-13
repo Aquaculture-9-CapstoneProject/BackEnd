@@ -21,7 +21,7 @@ func NewChatRepo(db *gorm.DB) *chatRepository {
 }
 
 func (r *chatRepository) SaveChat(chat entities.Chat) (entities.Chat, error) {
-	if err := r.db.Debug().Create(&chat).Error; err != nil {
+	if err := r.db.Debug().Preload("user").Create(&chat).Error; err != nil {
 		return entities.Chat{}, err
 	}
 	return chat, nil
