@@ -59,7 +59,8 @@ func (r *adminProductRepo) GetAdminProductCount() (int64, error) {
 
 func (r *adminProductRepo) GetAllAdminProducts(page int, limit int) ([]entities.Product, error) {
 	var products []entities.Product
-	err := r.db.Limit(limit).Find(&products).Error
+	offset := (page - 1) * limit
+	err := r.db.Limit(limit).Offset(offset).Find(&products).Error
 	if err != nil {
 		return nil, err
 	}
