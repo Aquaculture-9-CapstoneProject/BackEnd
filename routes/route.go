@@ -37,7 +37,7 @@ func Routes(authControl *controllers.AuthCotroller, produkcontrol *controllers.P
 		})
 	})
 	route := r.Group("/")
-	route.Use(middlewares.JWTAuth())
+	route.Use(middlewares.JWTAuth(), middlewares.UserOnly())
 	route.GET("/products", filterproduk.FilterProduct)
 
 	route.GET("/produk-termurah", produkcontrol.GetTermurahProduk)
@@ -49,8 +49,8 @@ func Routes(authControl *controllers.AuthCotroller, produkcontrol *controllers.P
 	route.POST("/products/:product_id/reviews", review.AddReview)
 	route.GET("/products/:id/reviews", review.GetReviewsByProduct)
 
-	route.GET("profile", profil.GetProfile)
-	route.PUT("profile", profil.UpdateProfile)
+	route.GET("/profile", profil.GetProfile)
+	route.PUT("/profile", profil.UpdateProfile)
 
 	cartRoutes := route.Group("/cart")
 	{
