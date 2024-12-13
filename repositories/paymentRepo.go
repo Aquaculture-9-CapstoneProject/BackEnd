@@ -18,7 +18,6 @@ type PaymentsRepo interface {
 	GetPaymentByInvoiceID(invoiceID string) (*entities.Payment, error)
 	// GetPaidOrders() ([]entities.Payment, error)
 	GetPaymentStatus(invoiceID string) (string, error)
-	GetAllPayments() ([]entities.Payment, error)
 	GetPaymentsByUserID(userID int) ([]entities.Payment, error)
 }
 
@@ -145,25 +144,12 @@ func (r *paymentsRepo) GetPaymentStatus(invoiceID string) (string, error) {
 // }
 
 // perbaikan dari line 129
-func (r *paymentsRepo) GetAllPayments() ([]entities.Payment, error) {
-	var payments []entities.Payment
-	if err := r.db.Preload("Order").
-		Preload("Order.Details").
-		Preload("Order.Details.Product").
-		Preload("Order.Details.User").
-		Find(&payments).Error; err != nil {
-		return nil, err
-	}
-
-	return payments, nil
-}
 
 func (r *paymentsRepo) GetPaymentsByUserID(userID int) ([]entities.Payment, error) {
 	var payments []entities.Payment
 	if err := r.db.Preload("Order").
 		Preload("Order.Details").
-		Preload("Order.Details.Product").
-		Preload("Order.Details.User").Joins("JOIN orders o ON payments.order_id = o.id").Where("o.user_id = ?", userID).Find(&payments).Error; err != nil {
+		Preload("Order.Details.Product").Joins("JOIN orders o ON payments.order_id = o.id").Where("o.user_id = ?", userID).Find(&payments).Error; err != nil {
 		return nil, err
 	}
 	return payments, nil
