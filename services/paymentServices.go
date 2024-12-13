@@ -19,6 +19,7 @@ type PaymentServices interface {
 	GetPaymentByInvoiceID(invoiceID string) (*entities.Payment, error)
 	// GetPaidOrders() ([]entities.Payment, error)
 	GetAllPayments() ([]entities.Payment, error)
+	GetPaymentsByUserID(userID int) ([]entities.Payment, error)
 }
 
 type paymentServices struct {
@@ -124,4 +125,7 @@ func (s *paymentServices) GetPaymentByInvoiceID(invoiceID string) (*entities.Pay
 
 func (s *paymentServices) GetAllPayments() ([]entities.Payment, error) {
 	return s.paymentRepo.GetAllPayments()
+}
+func (s *paymentServices) GetPaymentsByUserID(userID int) ([]entities.Payment, error) {
+	return s.paymentRepo.GetPaymentsByUserID(userID)
 }

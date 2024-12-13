@@ -154,7 +154,13 @@ func (ctrl *PaymentControl) GetPaymentByInvoiceID(c *gin.Context) {
 ///
 
 func (ctrl *PaymentControl) GetAllPayments(c *gin.Context) {
-	payments, err := ctrl.paymentServis.GetAllPayments()
+	userID, exists := c.Get("userID")
+	if !exists {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "User tidak terautentikasi"})
+		return
+	}
+
+	payments, err := ctrl.paymentServis.GetPaymentsByUserID(userID.(int))
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Gagal mendapatkan daftar pembayaran"})
 		return
