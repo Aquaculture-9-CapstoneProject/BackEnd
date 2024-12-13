@@ -2,7 +2,9 @@ package controllers
 
 import (
 	"net/http"
+	"strconv"
 
+	"github.com/Aquaculture-9-CapstoneProject/BackEnd.git/entities"
 	"github.com/Aquaculture-9-CapstoneProject/BackEnd.git/services"
 	"github.com/gin-gonic/gin"
 )
@@ -16,19 +18,32 @@ func NewChatController(chatService services.ChatServiceInterface) *ChatControlle
 }
 
 func (ctc *ChatController) ChatController(c *gin.Context) {
+	userID, exists := c.Get("userID")
+	if !exists {
+		c.JSON(http.StatusUnauthorized, gin.H{"status": false, "message": "User  ID not found"})
+		return
+	}
+
+	intUserID, ok := userID.(int)
+	if !ok {
+		c.JSON(http.StatusBadRequest, gin.H{"status": false, "message": "Invalid User ID type"})
+		return
+	}
+
 	var input struct {
-		UserID    int    `json:"user_id"`
 		UserInput string `json:"user_input"`
 	}
 	if err := c.ShouldBindJSON(&input); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"status": false, "message": "Input Data Invalid"})
 		return
 	}
-	chat, err := ctc.chatService.ProccessChat(input.UserID, input.UserInput)
+
+	chat, err := ctc.chatService.ProccessChat(intUserID, input.UserInput)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"status": false, "message": "Server error"})
 		return
 	}
+
 	c.JSON(http.StatusOK, gin.H{"status": true, "message": chat})
 }
 
