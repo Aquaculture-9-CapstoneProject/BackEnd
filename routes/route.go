@@ -87,7 +87,9 @@ func Routes(authControl *controllers.AuthCotroller, produkcontrol *controllers.P
 		paymentRoutes.GET("/detail/:invoiceID", payment.GetPaymentByInvoiceID) //kosong
 
 		// Endpoint untuk mendapatkan pesanan yang sudah dibayar
-		paymentRoutes.GET("/order/paid", payment.GetPaidOrders)
+		// paymentRoutes.GET("/order/paid", payment.GetPaidOrders)
+
+		paymentRoutes.GET("/detailorder/:id", payment.GetPaymentByID)
 	}
 
 	artikelRoutes := route.Group("/artikel")

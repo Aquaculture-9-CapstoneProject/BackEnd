@@ -17,7 +17,8 @@ type PaymentServices interface {
 	CheckPaymentStatus(invoiceID string) (string, error)
 	CancelOrder(invoiceID string) error
 	GetPaymentByInvoiceID(invoiceID string) (*entities.Payment, error)
-	GetPaidOrders() ([]entities.Payment, error)
+	// GetPaidOrders() ([]entities.Payment, error)
+	GetPaymentByID(paymentID int) (*entities.Payment, error)
 }
 
 type paymentServices struct {
@@ -113,10 +114,14 @@ func (s *paymentServices) GetPaymentByInvoiceID(invoiceID string) (*entities.Pay
 
 }
 
-func (s *paymentServices) GetPaidOrders() ([]entities.Payment, error) {
-	payments, err := s.paymentRepo.GetPaidOrders()
-	if err != nil {
-		return nil, err
-	}
-	return payments, nil
+// func (s *paymentServices) GetPaidOrders() ([]entities.Payment, error) {
+// 	payments, err := s.paymentRepo.GetPaidOrders()
+// 	if err != nil {
+// 		return nil, err
+// 	}
+// 	return payments, nil
+// }
+
+func (s *paymentServices) GetPaymentByID(paymentID int) (*entities.Payment, error) {
+	return s.paymentRepo.GetPaymentByID(paymentID)
 }

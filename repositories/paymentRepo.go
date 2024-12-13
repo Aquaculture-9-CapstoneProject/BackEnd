@@ -16,8 +16,9 @@ type PaymentsRepo interface {
 	CancelOrder(invoiceID string) error
 	UpdateBarangStatusAsync(invoiceID string) error
 	GetPaymentByInvoiceID(invoiceID string) (*entities.Payment, error)
-	GetPaidOrders() ([]entities.Payment, error)
+	// GetPaidOrders() ([]entities.Payment, error)
 	GetPaymentStatus(invoiceID string) (string, error)
+	GetPaymentByID(paymentID int) (*entities.Payment, error)
 }
 
 type paymentsRepo struct {
@@ -126,16 +127,28 @@ func (r *paymentsRepo) GetPaymentStatus(invoiceID string) (string, error) {
 	return payment.Status, nil
 }
 
-func (r *paymentsRepo) GetPaidOrders() ([]entities.Payment, error) {
-	var payments []entities.Payment
-	err := r.db.
-		Preload("Order.Details.Product").
-		Preload("Order.User").
-		Where("status = ?", "PAID", "").
-		Find(&payments).Error
+// func (r *paymentsRepo) GetPaidOrders() ([]entities.Payment, error) {
+// 	var payments []entities.Payment
+// 	err := r.db.
+// 		Preload("Order.Details.Product").
+// 		Preload("Order.User").
+// 		Where("status = ?", "PAID", "").
+// 		Find(&payments).Error
 
-	if err != nil {
+// 	if err != nil {
+// 		return nil, err
+// 	}
+// 	return payments, nil
+// }
+
+// perbaikan dari line 129
+func (r *paymentsRepo) GetPaymentByID(paymentID int) (*entities.Payment, error) {
+	var payment entities.Payment
+	if err := r.db.Preload("Order").Where("id = ?", paymentID).First(&payment).Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, errors.New("payment not found")
+		}
 		return nil, err
 	}
-	return payments, nil
+	return &payment, nil
 }

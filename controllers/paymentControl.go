@@ -3,6 +3,7 @@ package controllers
 import (
 	"log"
 	"net/http"
+	"strconv"
 	"time"
 
 	"github.com/Aquaculture-9-CapstoneProject/BackEnd.git/services"
@@ -117,31 +118,54 @@ func (ctrl *PaymentControl) GetPaymentByInvoiceID(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"response": response, "code": 200, "status": "Berhasil"})
 }
 
-func (ctrl *PaymentControl) GetPaidOrders(c *gin.Context) {
-	payments, err := ctrl.paymentServis.GetPaidOrders()
+// func (ctrl *PaymentControl) GetPaidOrders(c *gin.Context) {
+// 	payments, err := ctrl.paymentServis.GetPaidOrders()
+// 	if err != nil {
+// 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+// 		return
+// 	}
+// 	var orders []gin.H
+// 	for _, payment := range payments {
+// 		orders = append(orders, gin.H{
+// 			"id":                payment.ID,
+// 			"invoice_id":        payment.InvoiceID,
+// 			"jumlah":            payment.Jumlah,
+// 			"status_pembayaran": payment.Status,
+// 			"status_barang":     payment.StatusBarang,
+// 			"Tanggal":           payment.Order.CreatedAt,
+// 			"order": gin.H{
+// 				"id":                payment.Order.ID,
+// 				"user_id":           payment.Order.UserID,
+// 				"total":             payment.Order.Total,
+// 				"biaya_layanan":     payment.Order.BiayaLayanan,
+// 				"biaya_ongkir":      payment.Order.BiayaOngkir,
+// 				"metode_pembayaran": payment.Order.MetodePembayaran,
+// 				"details":           payment.Order.Details,
+// 			},
+// 		})
+// 	}
+// 	c.JSON(http.StatusOK, gin.H{"orders": orders, "code": 200, "status": "Berhasil"})
+// }
+
+///
+
+func (ctrl *PaymentControl) GetPaymentByID(c *gin.Context) {
+	paymentID := c.Param("id")
+	paymentIDInt, err := strconv.Atoi(paymentID)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		c.JSON(http.StatusBadRequest, gin.H{"error": "ID harus berupa angka"})
 		return
 	}
-	var orders []gin.H
-	for _, payment := range payments {
-		orders = append(orders, gin.H{
-			"id":                payment.ID,
-			"invoice_id":        payment.InvoiceID,
-			"jumlah":            payment.Jumlah,
-			"status_pembayaran": payment.Status,
-			"status_barang":     payment.StatusBarang,
-			"Tanggal":           payment.Order.CreatedAt,
-			"order": gin.H{
-				"id":                payment.Order.ID,
-				"user_id":           payment.Order.UserID,
-				"total":             payment.Order.Total,
-				"biaya_layanan":     payment.Order.BiayaLayanan,
-				"biaya_ongkir":      payment.Order.BiayaOngkir,
-				"metode_pembayaran": payment.Order.MetodePembayaran,
-				"details":           payment.Order.Details,
-			},
-		})
+
+	payment, err := ctrl.paymentServis.GetPaymentByID(paymentIDInt)
+	if err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
+		return
 	}
-	c.JSON(http.StatusOK, gin.H{"orders": orders, "code": 200, "status": "Berhasil"})
+	c.JSON(http.StatusOK, gin.H{
+		"message": "Berhasil",
+		"code":    200,
+		"status":  "Berhasil mendapatkan data pembayaran",
+		"payment": payment,
+	})
 }
