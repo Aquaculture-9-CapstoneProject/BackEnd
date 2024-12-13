@@ -7,7 +7,7 @@ import (
 )
 
 type ChatRepoInterface interface {
-	SaveChat(chat entities.Chat) error
+	SaveChat(chat entities.Chat) (entities.Chat, error)
 	GetAllChat(userID int) ([]entities.Chat, error)
 }
 
@@ -19,8 +19,11 @@ func NewChatRepo(db *gorm.DB) *chatRepository {
 	return &chatRepository{db: db}
 }
 
-func (r *chatRepository) SaveChat(chat entities.Chat) error {
-	return r.db.Debug().Create(&chat).Error
+func (r *chatRepository) SaveChat(chat entities.Chat) (entities.Chat, error) {
+	if err := r.db.Debug().Create(&chat).Error; err != nil {
+		return entities.Chat{}, err
+	}
+	return chat, nil
 }
 
 func (r *chatRepository) GetAllChat(userID int) ([]entities.Chat, error) {
