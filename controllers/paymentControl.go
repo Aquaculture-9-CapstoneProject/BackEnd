@@ -162,7 +162,7 @@ func (ctrl *PaymentControl) GetAllPayments(c *gin.Context) {
 
 	payments, err := ctrl.paymentServis.GetPaymentsByUserID(userID.(int))
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Gagal mendapatkan daftar pembayaran"})
+		c.JSON(http.StatusNotFound, gin.H{"Message": "Belom Ada Pesanan"})
 		return
 	}
 
