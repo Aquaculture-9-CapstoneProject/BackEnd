@@ -107,7 +107,6 @@ func (r *paymentsRepo) GetPaymentByInvoiceID(invoiceID string) (*entities.Paymen
 	var payment entities.Payment
 	err := r.db.Preload("Order.Details.Product").
 		Preload("Order.Details.User").
-		Preload("Order.User").
 		Where("invoice_id = ?", invoiceID).
 		First(&payment).Error
 	if err != nil {
