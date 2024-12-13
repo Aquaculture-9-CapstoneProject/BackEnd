@@ -144,9 +144,14 @@ func (r *paymentsRepo) GetPaymentStatus(invoiceID string) (string, error) {
 // perbaikan dari line 129
 func (r *paymentsRepo) GetAllPayments() ([]entities.Payment, error) {
 	var payments []entities.Payment
-	if err := r.db.Preload("Order").Preload("Order.details").Find(&payments).Error; err != nil {
+	if err := r.db.Preload("Order").
+		Preload("Order.Details").
+		Preload("Order.Details.Product").
+		Preload("Order.Details.User").
+		Find(&payments).Error; err != nil {
 		return nil, err
 	}
+
 	return payments, nil
 }
 
