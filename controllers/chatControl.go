@@ -48,10 +48,29 @@ func (ctc *ChatController) ChatController(c *gin.Context) {
 }
 
 func (ctc *ChatController) GetAllChats(c *gin.Context) {
-	chats, err := ctc.chatService.GetAllChats()
+	userID, exists := c.Get("userID")
+	if !exists {
+		c.JSON(http.StatusBadRequest, gin.H{"status": false, "message": "Invalid User ID"})
+		return
+	}
+
+	chats, err := ctc.chatService.GetAllChats(userID.(int))
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err})
 		return
 	}
-	c.JSON(http.StatusOK, gin.H{"status": true, "message": chats})
+
+	var response []struct {
+		Chat entities.Chat `json:"chat"`
+	}
+
+	for _, chat := range chats {
+		response = append(response, struct {
+			Chat entities.Chat `json:"chat"`
+		}{
+			Chat: chat,
+		})
+	}
+
+	c.JSON(http.StatusOK, gin.H{"status": true, "message": response})
 }
