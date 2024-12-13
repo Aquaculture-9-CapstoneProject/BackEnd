@@ -144,7 +144,8 @@ func (r *paymentsRepo) GetPaymentStatus(invoiceID string) (string, error) {
 // perbaikan dari line 129
 func (r *paymentsRepo) GetPaymentByIDAndUser(paymentID, userID int) (*entities.Payment, error) {
 	var payment entities.Payment
-	if err := r.db.Preload("Order").Where("id = ? AND order_user_id = ?", paymentID, userID).First(&payment).Error; err != nil {
+	// Memperbaiki 'order_user_id' menjadi 'user_id' yang ada di tabel 'Order'
+	if err := r.db.Preload("Order").Where("id = ? AND orders.user_id = ?", paymentID, userID).First(&payment).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, errors.New("payment not found for the given user")
 		}
