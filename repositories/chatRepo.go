@@ -29,7 +29,7 @@ func (r *chatRepository) SaveChat(chat entities.Chat) (entities.Chat, error) {
 
 func (r *chatRepository) GetAllChat(userID int) ([]entities.Chat, error) {
 	var chats []entities.Chat
-	if err := r.db.Where("user_id = ?", userID).Find(&chats).Error; err != nil {
+	if err := r.db.Preload("User").Where("user_id = ?", userID).Find(&chats).Error; err != nil {
 		return nil, err
 	}
 	return chats, nil
