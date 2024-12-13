@@ -150,14 +150,18 @@ func (ctrl *PaymentControl) GetPaymentByInvoiceID(c *gin.Context) {
 ///
 
 func (ctrl *PaymentControl) GetPaymentByID(c *gin.Context) {
+	userID, exists := c.Get("userID")
+	if !exists {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "User ID tidak ditemukan dalam token"})
+		return
+	}
 	paymentID := c.Param("id")
 	paymentIDInt, err := strconv.Atoi(paymentID)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "ID harus berupa angka"})
 		return
 	}
-
-	payment, err := ctrl.paymentServis.GetPaymentByID(paymentIDInt)
+	payment, err := ctrl.paymentServis.GetPaymentByIDAndUser(paymentIDInt, userID.(int))
 	if err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
 		return

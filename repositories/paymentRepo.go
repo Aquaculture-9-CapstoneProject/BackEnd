@@ -18,7 +18,7 @@ type PaymentsRepo interface {
 	GetPaymentByInvoiceID(invoiceID string) (*entities.Payment, error)
 	// GetPaidOrders() ([]entities.Payment, error)
 	GetPaymentStatus(invoiceID string) (string, error)
-	GetPaymentByID(paymentID int) (*entities.Payment, error)
+	GetPaymentByIDAndUser(paymentID, userID int) (*entities.Payment, error)
 }
 
 type paymentsRepo struct {
@@ -142,11 +142,11 @@ func (r *paymentsRepo) GetPaymentStatus(invoiceID string) (string, error) {
 // }
 
 // perbaikan dari line 129
-func (r *paymentsRepo) GetPaymentByID(paymentID int) (*entities.Payment, error) {
+func (r *paymentsRepo) GetPaymentByIDAndUser(paymentID, userID int) (*entities.Payment, error) {
 	var payment entities.Payment
-	if err := r.db.Preload("Order").Where("id = ?", paymentID).First(&payment).Error; err != nil {
+	if err := r.db.Preload("Order").Where("id = ? AND order_user_id = ?", paymentID, userID).First(&payment).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return nil, errors.New("payment not found")
+			return nil, errors.New("payment not found for the given user")
 		}
 		return nil, err
 	}
