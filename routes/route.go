@@ -19,7 +19,7 @@ func Routes(authControl *controllers.AuthCotroller,
 	chatControl *controllers.ChatController,
 	artikelControl *controllers.ArtikelController,
 	adminProductControl *controllers.AdminProductController,
-  dasboard *admincontroller.AdminPaymentController) *gin.Engine {
+	dasboard *admincontroller.AdminPaymentController) *gin.Engine {
 
 	r := gin.Default()
 
@@ -116,9 +116,9 @@ func Routes(authControl *controllers.AuthCotroller,
 		adminProductRoutes.PUT("/:id", adminProductControl.UpdateAdminProduct)
 		adminProductRoutes.DELETE("/:id", adminProductControl.DeleteAdminProduct)
 	}
-  
+
 	adminRoute := route.Group("/admin", middlewares.AdminOnly())
-	adminRoute.GET("/totalpendapatan", dasboard.GetAdminTotalPendapatanBulanIni)
+	// adminRoute.GET("/totalpendapatan", dasboard.GetAdminTotalPendapatanBulanIni)
 	adminRoute.GET("/totalpesanan", dasboard.GetAdminJumlahPesananBulanIni)
 	adminRoute.GET("/totalproduk", dasboard.GetTotalProduk)
 	adminRoute.GET("/statustransaksi", dasboard.GetJumlahStatus)

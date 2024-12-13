@@ -1,6 +1,7 @@
 package entities
 
 type Chat struct {
+	ID        int
 	UserID    int
 	UserInput string
 	AiRespon  string
