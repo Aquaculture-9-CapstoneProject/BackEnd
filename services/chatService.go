@@ -7,7 +7,6 @@ import (
 
 	"github.com/Aquaculture-9-CapstoneProject/BackEnd.git/entities"
 	"github.com/Aquaculture-9-CapstoneProject/BackEnd.git/repositories"
-
 	"github.com/google/generative-ai-go/genai"
 	"google.golang.org/api/option"
 )
@@ -15,6 +14,7 @@ import (
 type ChatServiceInterface interface {
 	ProccessChat(userID int, userInput string) (entities.Chat, error)
 	GetAllChats(userID int) ([]entities.Chat, error)
+	GetChatByID(chatID int) (entities.Chat, error)
 }
 
 type chatService struct {
@@ -69,4 +69,8 @@ func (cuc *chatService) ProccessChat(userID int, userInput string) (entities.Cha
 
 func (cts *chatService) GetAllChats(userID int) ([]entities.Chat, error) {
 	return cts.chatRepo.GetAllChat(userID)
+}
+
+func (cts *chatService) GetChatByID(chatID int) (entities.Chat, error) {
+	return cts.chatRepo.GetChatByID(chatID)
 }

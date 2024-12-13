@@ -78,6 +78,7 @@ func Routes(authControl *controllers.AuthCotroller,
 	chatRoutes := route.Group("/chats")
 	{
 		chatRoutes.GET("", chatControl.GetAllChats)
+		chatRoutes.GET("/:id", chatControl.GetChatByID)
 		chatRoutes.POST("", chatControl.ChatController)
 	}
 
