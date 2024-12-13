@@ -9,7 +9,7 @@ type ArtikelUseCase interface {
 	Create(artikel *entities.Artikel) (*entities.Artikel, error)
 	Update(artikel *entities.Artikel) (*entities.Artikel, error)
 	Delete(id int) error
-	GetAll(page int, limit int) ([]entities.Artikel, error)
+	GetAll(nama string, kategori string, page int, limit int) ([]entities.Artikel, error)
 	FindByID(id int) (*entities.Artikel, error)
 	GetAdminByID(id int) (*entities.Admin, error)
 	Count() (int64, error)
@@ -35,8 +35,12 @@ func (s *artikelUseCase) Delete(id int) error {
 	return s.repo.Delete(id)
 }
 
-func (s *artikelUseCase) GetAll(page int, limit int) ([]entities.Artikel, error) {
-	return s.repo.FindAll(page, limit)
+func (s *artikelUseCase) GetAll(nama string, kategori string, page int, limit int) ([]entities.Artikel, error) {
+	artikels, err := s.repo.FindAll(nama, kategori, page, limit)
+	if err != nil {
+		return nil, err
+	}
+	return artikels, nil
 }
 
 func (s *artikelUseCase) FindByID(id int) (*entities.Artikel, error) {
