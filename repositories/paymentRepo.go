@@ -152,7 +152,7 @@ func (r *paymentsRepo) GetAllPayments() ([]entities.Payment, error) {
 
 func (r *paymentsRepo) GetPaymentsByUserID(userID int) ([]entities.Payment, error) {
 	var payments []entities.Payment
-	if err := r.db.Preload("Order").Joins("JOIN orders o ON payments.order_id = o.id").Where("o.user_id = ?", userID).Find(&payments).Error; err != nil {
+	if err := r.db.Preload("Order").Preload("Order.details").Joins("JOIN orders o ON payments.order_id = o.id").Where("o.user_id = ?", userID).Find(&payments).Error; err != nil {
 		return nil, err
 	}
 	return payments, nil
