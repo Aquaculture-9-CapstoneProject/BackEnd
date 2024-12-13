@@ -89,5 +89,13 @@ func (ctc *ChatController) GetChatByID(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"status": true, "message": chat})
+	response := struct {
+		Chat entities.Chat `json:"chat"`
+		User entities.User `json:"user"`
+	}{
+		Chat: chat,
+		User: chat.User,
+	}
+
+	c.JSON(http.StatusOK, gin.H{"status": true, "message": response})
 }

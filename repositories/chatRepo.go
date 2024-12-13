@@ -37,7 +37,7 @@ func (r *chatRepository) GetAllChat(userID int) ([]entities.Chat, error) {
 
 func (r *chatRepository) GetChatByID(chatID int) (entities.Chat, error) {
 	var chat entities.Chat
-	if err := r.db.First(&chat, chatID).Error; err != nil {
+	if err := r.db.Preload("User").First(&chat, chatID).Error; err != nil {
 		return entities.Chat{}, err
 	}
 	return chat, nil
