@@ -54,8 +54,13 @@ func (ctrl *PaymentControl) CheckPaymentStatus(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to check payment status"})
 		return
 	}
+	payment, err := ctrl.paymentServis.GetPaymentByInvoiceID(invoiceID)
+	if err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": "Pembayaran Tidak ada", "details": err.Error()})
+		return
+	}
 
-	c.JSON(http.StatusOK, gin.H{"meta": gin.H{"message": "Berhasil", "code": 200, "status": "Berhasil"}, "invoice_id": invoiceID, "status": status, "tanggal": time.Now()})
+	c.JSON(http.StatusOK, gin.H{"meta": gin.H{"message": "Berhasil", "code": 200, "status": "Berhasil"}, "id_payment": payment.ID, "invoice_id": invoiceID, "status": status, "tanggal": time.Now()})
 }
 
 func (ctrl *PaymentControl) CancelPayment(c *gin.Context) {
@@ -149,18 +154,15 @@ func (ctrl *PaymentControl) GetPaymentByInvoiceID(c *gin.Context) {
 
 ///
 
-func (ctrl *PaymentControl) GetPaymentByID(c *gin.Context) {
-	userID, exists := c.Get("userID")
-	if !exists {
-		c.JSON(http.StatusUnauthorized, gin.H{"error": "User ID tidak ditemukan dalam token"})
-		return
-	}
+func (ctrl *PaymentControl) GetPaymentByIDAndUser(c *gin.Context) {
 	paymentID := c.Param("id")
+	userID, _ := c.Get("userID")
 	paymentIDInt, err := strconv.Atoi(paymentID)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "ID harus berupa angka"})
 		return
 	}
+
 	payment, err := ctrl.paymentServis.GetPaymentByIDAndUser(paymentIDInt, userID.(int))
 	if err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
