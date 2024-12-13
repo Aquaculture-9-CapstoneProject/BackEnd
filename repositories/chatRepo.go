@@ -9,6 +9,7 @@ import (
 type ChatRepoInterface interface {
 	SaveChat(chat entities.Chat) (entities.Chat, error)
 	GetAllChat(userID int) ([]entities.Chat, error)
+	GetChatByID(chatID int) (entities.Chat, error)
 }
 
 type chatRepository struct {
@@ -32,4 +33,12 @@ func (r *chatRepository) GetAllChat(userID int) ([]entities.Chat, error) {
 		return nil, err
 	}
 	return chats, nil
+}
+
+func (r *chatRepository) GetChatByID(chatID int) (entities.Chat, error) {
+	var chat entities.Chat
+	if err := r.db.Preload("User").First(&chat, chatID).Error; err != nil {
+		return entities.Chat{}, err
+	}
+	return chat, nil
 }
