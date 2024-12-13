@@ -9,7 +9,7 @@ type Product struct {
 	Harga           float64
 	Variasi         string
 	Kategori        string
-	KotaAsal        string
+	KotaAsal        string//input otomatis
 	Rating          float64
 	Stok            int
 	TotalReview     int
