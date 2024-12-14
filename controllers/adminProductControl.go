@@ -99,7 +99,16 @@ func (ac *AdminProductController) UpdateAdminProduct(c *gin.Context) {
 	}
 
 	product.ID = existingProduct.ID
-	product.Gambar = existingProduct.Gambar
+	product.Nama = c.PostForm("nama")
+	product.Deskripsi = c.PostForm("deskripsi")
+	product.Keunggulan = c.PostForm("keunggulan")
+	product.Harga, _ = strconv.ParseFloat(c.PostForm("harga"), 64)
+	product.Variasi = c.PostForm("variasi")
+	product.Kategori = c.PostForm("kategori")
+	product.KotaAsal = c.PostForm("kota_asal")
+	product.Stok, _ = strconv.Atoi(c.PostForm("stok"))
+	product.Status = c.PostForm("status")
+	product.TipsPenyimpanan = c.PostForm("tips_penyimpanan")
 	product.Rating = existingProduct.Rating
 	product.TotalReview = existingProduct.TotalReview
 	product.Terjual = existingProduct.Terjual
