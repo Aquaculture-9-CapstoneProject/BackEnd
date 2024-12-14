@@ -51,5 +51,31 @@ func (ctrl *AdminFilterController) GetPaymentsByStatusBarang(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Gagal mengambil data pembayaran"})
 		return
 	}
-	c.JSON(http.StatusOK, gin.H{"data": payments})
+
+	var responsePayments []gin.H
+	for _, payment := range payments {
+		// Default nama pengguna jika tidak ada
+		namapengguna := "Unknown"
+		namaproduk := "unknown"
+
+		// Mengakses nama pengguna dari OrderDetail pertama, jika ada
+		if len(payment.Order.Details) > 0 {
+			namapengguna = payment.Order.Details[0].User.NamaLengkap
+		}
+		if len(payment.Order.Details) > 0 {
+			namaproduk = payment.Order.Details[0].Product.Nama
+		}
+
+		// Membuat response JSON
+		responsePayments = append(responsePayments, gin.H{
+			"order_id":        payment.ID,
+			"namapengguna":    namapengguna,
+			"statusbarang":    payment.StatusBarang,
+			"nominal":         payment.Jumlah,
+			"produk":          namaproduk,
+			"status":          payment.StatusBarang,
+			"tanggaldanwaktu": payment.Order.CreatedAt,
+		})
+	}
+	c.JSON(http.StatusOK, gin.H{"data": responsePayments})
 }
