@@ -22,7 +22,7 @@ func NewAdminFilterRepo(db *gorm.DB) AdminFilterRepo {
 
 func (pr *adminFilterRepo) GetPaymentsByStatus(status string) ([]entities.Payment, error) {
 	var payments []entities.Payment
-	err := pr.db.Preload("Order").Where("status = ?", status).Find(&payments).Error
+	err := pr.db.Preload("Order").Preload("Order.details").Where("status = ?", status).Find(&payments).Error
 	if err != nil {
 		return nil, errors.New("gagal mengambil data pembayaran: " + err.Error())
 	}
