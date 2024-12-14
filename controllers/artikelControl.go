@@ -32,14 +32,14 @@ func (ac *ArtikelController) Create(c *gin.Context) {
 		return
 	}
 
-	if err := c.ShouldBindJSON(&artikel); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
+	artikel.Gambar = filePath
+	artikel.Judul = c.PostForm("judul")
+	artikel.Deskripsi = c.PostForm("deskripsi")
+	artikel.Kategori = c.PostForm("kategori")
 
 	createdArtikel, err := ac.service.Create(&artikel)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Terjadi kesalahan saat menambah artikel"})
 		return
 	}
 
