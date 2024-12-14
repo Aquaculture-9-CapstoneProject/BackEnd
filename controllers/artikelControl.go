@@ -70,6 +70,7 @@ func (ac *ArtikelController) Update(c *gin.Context) {
 	}
 
 	artikel.ID = existingArtikel.ID
+	artikel.Gambar = existingArtikel.Gambar
 	artikel.CreatedAt = existingArtikel.CreatedAt
 
 	updatedArtikel, err := ac.service.Update(&artikel)
