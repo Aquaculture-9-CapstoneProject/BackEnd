@@ -86,6 +86,18 @@ func (ac *AdminProductController) UpdateAdminProduct(c *gin.Context) {
 		return
 	}
 
+	if bindFile.File != nil {
+		file := bindFile.File
+		filePath := "./uploads/" + file.Filename
+		if err := c.SaveUploadedFile(file, filePath); err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Gagal menyimpan gambar"})
+			return
+		}
+		product.Gambar = "https://www.bluebay.my.id/uploads/" + file.Filename
+	} else {
+		product.Gambar = existingProduct.Gambar
+	}
+
 	product.ID = existingProduct.ID
 	product.Gambar = existingProduct.Gambar
 	product.Rating = existingProduct.Rating
