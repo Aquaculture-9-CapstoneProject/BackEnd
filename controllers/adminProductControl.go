@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"mime/multipart"
 	"net/http"
-	"path/filepath"
 	"strconv"
 
 	"github.com/Aquaculture-9-CapstoneProject/BackEnd.git/entities"
@@ -32,7 +31,7 @@ func (ac *AdminProductController) CreateAdminProduct(c *gin.Context) {
 	}
 
 	file := bindFile.File
-	filePath := filepath.Base(file.Filename)
+	filePath := "./uploads/" + file.Filename
 	if err := c.SaveUploadedFile(file, filePath); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Gagal menyimpan gambar"})
 		return
