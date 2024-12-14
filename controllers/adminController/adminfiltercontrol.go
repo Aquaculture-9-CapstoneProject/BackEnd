@@ -22,7 +22,23 @@ func (ctrl *AdminFilterController) GetPaymentsByStatus(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-	c.JSON(http.StatusOK, gin.H{"data": payments})
+
+	// Membuat slice baru untuk menyimpan data yang dibutuhkan saja
+	var responsePayments []gin.H
+	for _, payment := range payments {
+		// Membuat objek baru hanya dengan id dan nama
+		responsePayments = append(responsePayments, gin.H{
+			"id":           payment.ID,
+			"id_pesanan":   payment.InvoiceID,
+			"status":       payment.Status,
+			"statusbarang": payment.StatusBarang,
+			"jumlah":       payment.Jumlah,
+			"orderid":      payment.OrderID,
+		})
+	}
+
+	// Mengirimkan response dengan hanya data yang dibutuhkan
+	c.JSON(http.StatusOK, gin.H{"data": responsePayments})
 }
 
 func (ctrl *AdminFilterController) GetPaymentsByStatusBarang(c *gin.Context) {
