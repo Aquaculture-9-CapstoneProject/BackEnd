@@ -8,7 +8,6 @@ import (
 	"github.com/stretchr/testify/mock"
 )
 
-// Mock repository untuk AdminFilterRepo
 type MockAdminFilterRepo struct {
 	mock.Mock
 }
@@ -50,10 +49,10 @@ func TestAdminFilterServices_GetPaymentsByStatusBarang(t *testing.T) {
 	service := NewAdminFilterServices(mockRepo)
 
 	// Setup ekspektasi
-	statusBarang := "in_stock"
+	statusBarang := "dikirim"
 	mockRepo.On("GetPaymentsByStatusBarang", statusBarang).Return([]entities.Payment{
-		{ID: 1, StatusBarang: "in_stock", Jumlah: 500},
-		{ID: 2, StatusBarang: "in_stock", Jumlah: 700},
+		{ID: 1, StatusBarang: "dikirim", Jumlah: 500},
+		{ID: 2, StatusBarang: "dikirim", Jumlah: 700},
 	}, nil)
 
 	// Panggil metode
@@ -62,6 +61,48 @@ func TestAdminFilterServices_GetPaymentsByStatusBarang(t *testing.T) {
 	// Validasi hasil
 	assert.NoError(t, err)
 	assert.Len(t, result, 2)
-	assert.Equal(t, "in_stock", result[0].StatusBarang)
+	assert.Equal(t, "dikirim", result[0].StatusBarang)
+	mockRepo.AssertExpectations(t)
+}
+
+func TestAdminFilterServices_GetPaymentsByStatusBarang_Selesai(t *testing.T) {
+	mockRepo := new(MockAdminFilterRepo)
+	service := NewAdminFilterServices(mockRepo)
+
+	// Setup ekspektasi
+	statusBarang := "selesai"
+	mockRepo.On("GetPaymentsByStatusBarang", statusBarang).Return([]entities.Payment{
+		{ID: 1, StatusBarang: "selesai", Jumlah: 1000},
+		{ID: 2, StatusBarang: "selesai", Jumlah: 1500},
+	}, nil)
+
+	// Panggil metode
+	result, err := service.GetPaymentsByStatusBarang(statusBarang)
+
+	// Validasi hasil
+	assert.NoError(t, err)
+	assert.Len(t, result, 2)
+	assert.Equal(t, "selesai", result[0].StatusBarang)
+	mockRepo.AssertExpectations(t)
+}
+
+func TestAdminFilterServices_GetPaymentsByStatus_Pending(t *testing.T) {
+	mockRepo := new(MockAdminFilterRepo)
+	service := NewAdminFilterServices(mockRepo)
+
+	// Setup ekspektasi
+	status := "pending"
+	mockRepo.On("GetPaymentsByStatus", status).Return([]entities.Payment{
+		{ID: 1, Status: "pending", Jumlah: 500},
+		{ID: 2, Status: "pending", Jumlah: 1000},
+	}, nil)
+
+	// Panggil metode
+	result, err := service.GetPaymentsByStatus(status)
+
+	// Validasi hasil
+	assert.NoError(t, err)
+	assert.Len(t, result, 2)
+	assert.Equal(t, "pending", result[0].Status)
 	mockRepo.AssertExpectations(t)
 }
