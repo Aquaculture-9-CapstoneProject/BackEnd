@@ -1,6 +1,8 @@
 package controllers
 
 import (
+	"fmt"
+	"mime/multipart"
 	"net/http"
 	"strconv"
 
@@ -19,13 +21,16 @@ func NewArtikelController(service services.ArtikelUseCase) *ArtikelController {
 
 func (ac *ArtikelController) Create(c *gin.Context) {
 	var artikel entities.Artikel
+	var bindFile struct {
+		File *multipart.FileHeader `form:"gambar" binding:"required"`
+	}
 
-	file, err := c.FormFile("gambar")
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Gambar tidak ditemukan"})
+	if err := c.ShouldBind(&bindFile); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": fmt.Sprintf("Gagal mengikat file: %s", err.Error())})
 		return
 	}
 
+	file := bindFile.File
 	filePath := "./uploads/" + file.Filename
 	if err := c.SaveUploadedFile(file, filePath); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Gagal menyimpan gambar"})
