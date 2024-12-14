@@ -4,6 +4,7 @@ import "time"
 
 type Artikel struct {
 	ID        int
+	Gambar    string
 	Judul     string
 	Deskripsi string
 	Kategori  string

@@ -9,6 +9,7 @@ type ArtikelRepoInterface interface {
 	Create(artikel *entities.Artikel) (*entities.Artikel, error)
 	Update(artikel *entities.Artikel) (*entities.Artikel, error)
 	Delete(id int) error
+	GetAll(page int, limit int) ([]entities.Artikel, error)
 	FindAll(nama string, kategori string, page int, limit int) ([]entities.Artikel, error)
 	FindByID(id int) (*entities.Artikel, error)
 	GetAdminByID(id int) (*entities.Admin, error)
@@ -39,6 +40,16 @@ func (r *artikelRepo) Update(artikel *entities.Artikel) (*entities.Artikel, erro
 
 func (r *artikelRepo) Delete(id int) error {
 	return r.db.Delete(&entities.Artikel{}, id).Error
+}
+
+func (r *artikelRepo) GetAll(page int, limit int) ([]entities.Artikel, error) {
+	var artikels []entities.Artikel
+	offset := (page - 1) * limit
+	err := r.db.Limit(limit).Offset(offset).Find(&artikels).Error
+	if err != nil {
+		return nil, err
+	}
+	return artikels, nil
 }
 
 func (r *artikelRepo) FindAll(nama string, kategori string, page int, limit int) ([]entities.Artikel, error) {
