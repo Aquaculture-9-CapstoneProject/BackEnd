@@ -32,7 +32,8 @@ func (ac *AdminProductController) CreateAdminProduct(c *gin.Context) {
 		return
 	}
 
-	product.Gambar = filePath
+	linkFile := "https://www.bluebay.my.id/uploads/" + file.Filename
+	product.Gambar = linkFile
 	product.Nama = c.PostForm("nama")
 	product.Deskripsi = c.PostForm("deskripsi")
 	product.Keunggulan = c.PostForm("keunggulan")
