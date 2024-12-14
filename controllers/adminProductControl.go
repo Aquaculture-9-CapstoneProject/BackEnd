@@ -70,9 +70,13 @@ func (ac *AdminProductController) UpdateAdminProduct(c *gin.Context) {
 		return
 	}
 
+	var bindFile struct {
+		File *multipart.FileHeader `form:"gambar"`
+	}
+
 	var product entities.Product
-	if err := c.ShouldBindJSON(&product); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Gagal mengikat data JSON"})
+	if err := c.ShouldBind(&bindFile); err != nil && bindFile.File != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Gagal mengikat file: " + err.Error()})
 		return
 	}
 
