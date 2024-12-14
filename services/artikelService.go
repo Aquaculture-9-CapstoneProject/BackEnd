@@ -10,9 +10,8 @@ type ArtikelUseCase interface {
 	Update(artikel *entities.Artikel) (*entities.Artikel, error)
 	Delete(id int) error
 	GetAll(page int, limit int) ([]entities.Artikel, error)
-	FindAll(nama string, kategori string, page int, limit int) ([]entities.Artikel, error)
+	FindAll(judul string, kategori string, page int, limit int) ([]entities.Artikel, error)
 	FindByID(id int) (*entities.Artikel, error)
-	GetAdminByID(id int) (*entities.Admin, error)
 	Count() (int64, error)
 }
 
@@ -40,8 +39,8 @@ func (s *artikelUseCase) GetAll(page int, limit int) ([]entities.Artikel, error)
 	return s.repo.GetAll(page, limit)
 }
 
-func (s *artikelUseCase) FindAll(nama string, kategori string, page int, limit int) ([]entities.Artikel, error) {
-	artikels, err := s.repo.FindAll(nama, kategori, page, limit)
+func (s *artikelUseCase) FindAll(judul string, kategori string, page int, limit int) ([]entities.Artikel, error) {
+	artikels, err := s.repo.FindAll(judul, kategori, page, limit)
 	if err != nil {
 		return nil, err
 	}
@@ -50,10 +49,6 @@ func (s *artikelUseCase) FindAll(nama string, kategori string, page int, limit i
 
 func (s *artikelUseCase) FindByID(id int) (*entities.Artikel, error) {
 	return s.repo.FindByID(id)
-}
-
-func (s *artikelUseCase) GetAdminByID(id int) (*entities.Admin, error) {
-	return s.repo.GetAdminByID(id)
 }
 
 func (s *artikelUseCase) Count() (int64, error) {

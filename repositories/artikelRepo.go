@@ -10,9 +10,8 @@ type ArtikelRepoInterface interface {
 	Update(artikel *entities.Artikel) (*entities.Artikel, error)
 	Delete(id int) error
 	GetAll(page int, limit int) ([]entities.Artikel, error)
-	FindAll(nama string, kategori string, page int, limit int) ([]entities.Artikel, error)
+	FindAll(judul string, kategori string, page int, limit int) ([]entities.Artikel, error)
 	FindByID(id int) (*entities.Artikel, error)
-	GetAdminByID(id int) (*entities.Admin, error)
 	Count() (int64, error)
 }
 
@@ -52,14 +51,14 @@ func (r *artikelRepo) GetAll(page int, limit int) ([]entities.Artikel, error) {
 	return artikels, nil
 }
 
-func (r *artikelRepo) FindAll(nama string, kategori string, page int, limit int) ([]entities.Artikel, error) {
+func (r *artikelRepo) FindAll(judul string, kategori string, page int, limit int) ([]entities.Artikel, error) {
 	var artikels []entities.Artikel
 	offset := (page - 1) * limit
 
 	db := r.db.Model(&entities.Artikel{})
 
-	if nama != "" {
-		db = db.Where("nama LIKE ?", "%"+nama+"%")
+	if judul != "" {
+		db = db.Where("judul LIKE ?", "%"+judul+"%")
 	}
 
 	if kategori != "" {
@@ -80,14 +79,6 @@ func (r *artikelRepo) FindByID(id int) (*entities.Artikel, error) {
 		return nil, err
 	}
 	return &artikel, nil
-}
-
-func (r *artikelRepo) GetAdminByID(id int) (*entities.Admin, error) {
-	var admin entities.Admin
-	if err := r.db.First(&admin, id).Error; err != nil {
-		return nil, err
-	}
-	return &admin, nil
 }
 
 func (r *artikelRepo) Count() (int64, error) {

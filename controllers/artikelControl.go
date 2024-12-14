@@ -24,19 +24,11 @@ func (ac *ArtikelController) Create(c *gin.Context) {
 		return
 	}
 
-	admin, err := ac.service.GetAdminByID(artikel.AdminID)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid Admin ID"})
-		return
-	}
-
 	createdArtikel, err := ac.service.Create(&artikel)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
-
-	createdArtikel.Admin = *admin
 
 	c.JSON(http.StatusCreated, gin.H{
 		"message": "Artikel berhasil ditambahkan",
@@ -67,19 +59,11 @@ func (ac *ArtikelController) Update(c *gin.Context) {
 	artikel.ID = existingArtikel.ID
 	artikel.CreatedAt = existingArtikel.CreatedAt
 
-	admin, err := ac.service.GetAdminByID(artikel.AdminID)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "ID admin tidak valid"})
-		return
-	}
-
 	updatedArtikel, err := ac.service.Update(&artikel)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Terjadi kesalahan saat memperbarui artikel"})
 		return
 	}
-
-	updatedArtikel.Admin = *admin
 
 	c.JSON(http.StatusOK, gin.H{
 		"message": "Artikel berhasil diperbarui",
@@ -171,7 +155,7 @@ func (ac *ArtikelController) GetAllForUser(c *gin.Context) {
 }
 
 func (ac *ArtikelController) FindAll(c *gin.Context) {
-	nama := c.Query("nama")
+	judul := c.Query("judul")
 	kategori := c.Query("kategori")
 	pageStr := c.Query("page")
 	limitStr := c.Query("limit")
@@ -186,7 +170,7 @@ func (ac *ArtikelController) FindAll(c *gin.Context) {
 		limit = 9
 	}
 
-	artikels, err := ac.service.FindAll(nama, kategori, page, limit)
+	artikels, err := ac.service.FindAll(judul, kategori, page, limit)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Terjadi kesalahan saat mencari artikel"})
 		return

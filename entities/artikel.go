@@ -9,6 +9,4 @@ type Artikel struct {
 	Deskripsi string
 	Kategori  string
 	CreatedAt time.Time
-	AdminID   int
-	Admin     Admin
 }
