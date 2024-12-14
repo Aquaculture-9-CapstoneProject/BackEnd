@@ -32,7 +32,8 @@ func (ac *ArtikelController) Create(c *gin.Context) {
 		return
 	}
 
-	artikel.Gambar = filePath
+	linkFile := "https://www.bluebay.my.id/uploads/" + file.Filename
+	artikel.Gambar = linkFile
 	artikel.Judul = c.PostForm("judul")
 	artikel.Deskripsi = c.PostForm("deskripsi")
 	artikel.Kategori = c.PostForm("kategori")
