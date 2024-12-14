@@ -96,6 +96,7 @@ func Routes(authControl *controllers.AuthCotroller, produkcontrol *controllers.P
 	artikelRoutes := route.Group("/artikel")
 	{
 		artikelRoutes.GET("/page/:id", artikelControl.GetAllForUser)
+		artikelRoutes.GET("", artikelControl.FindAll)
 		artikelRoutes.GET("/:id", artikelControl.GetDetails)
 	}
 
