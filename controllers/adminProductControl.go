@@ -51,7 +51,7 @@ func (ac *AdminProductController) CreateAdminProduct(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusCreated, gin.H{
-		"message": "Produk Berhasil Ditambahkan",
+		"message": "Produk berhasil ditambahkan",
 		"data":    createdProduct,
 	})
 }
