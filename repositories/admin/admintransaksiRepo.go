@@ -9,7 +9,7 @@ import (
 )
 
 type AdminTransaksiRepo interface {
-	GetPaymentDetails() ([]map[string]interface{}, error)
+	GetPaymentDetails(limit, offset int) ([]map[string]interface{}, error)
 	DeletePaymentByID(id int) error
 }
 
@@ -21,11 +21,13 @@ func NewAdminTransaksiRepo(db *gorm.DB) AdminTransaksiRepo {
 	return &adminTransaksiRepo{db: db}
 }
 
-func (ar *adminTransaksiRepo) GetPaymentDetails() ([]map[string]interface{}, error) {
+func (ar *adminTransaksiRepo) GetPaymentDetails(limit, offset int) ([]map[string]interface{}, error) {
 	var results []map[string]interface{}
 	err := ar.db.Table("payments").
 		Select("payments.id, payments.invoice_id as id_pesanan, orders.metode_pembayaran, payments.status, orders.created_at").
 		Joins("JOIN orders ON orders.id = payments.order_id").
+		Limit(limit).
+		Offset(offset).
 		Scan(&results).Error
 
 	if err != nil {
