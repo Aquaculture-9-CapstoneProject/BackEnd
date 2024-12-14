@@ -110,6 +110,36 @@ func (ac *ArtikelController) Delete(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"message": "Artikel berhasil dihapus"})
 }
 
+func (ac *ArtikelController) GetAll(c *gin.Context) {
+	id := c.Param("id")
+	page, err := strconv.Atoi(id)
+	limit := 10
+
+	artikels, err := ac.service.GetAll(page, limit)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Terjadi kesalahan saat mengambil artikel"})
+		return
+	}
+
+	totalItems, err := ac.service.Count()
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Terjadi kesalahan saat menghitung total artikel"})
+		return
+	}
+
+	totalPages := int((totalItems + int64(limit) - 1) / int64(limit))
+
+	c.JSON(http.StatusOK, gin.H{
+		"pagination": entities.Pagination{
+			CurrentPage: page,
+			TotalPages:  totalPages,
+			TotalItems:  totalItems,
+		},
+		"data":    artikels,
+		"message": "Artikel berhasil ditampilkan",
+	})
+}
+
 func (ac *ArtikelController) FindAll(c *gin.Context) {
 	nama := c.Query("nama")
 	kategori := c.Query("kategori")
