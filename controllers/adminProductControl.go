@@ -32,11 +32,6 @@ func (ac *AdminProductController) CreateAdminProduct(c *gin.Context) {
 		return
 	}
 
-	if err := c.ShouldBindJSON(&product); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
-
 	createdProduct, err := ac.service.CreateAdminProduct(&product)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
