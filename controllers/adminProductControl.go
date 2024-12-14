@@ -77,6 +77,7 @@ func (ac *AdminProductController) UpdateAdminProduct(c *gin.Context) {
 	}
 
 	product.ID = existingProduct.ID
+	product.Gambar = existingProduct.Gambar
 	product.Rating = existingProduct.Rating
 	product.TotalReview = existingProduct.TotalReview
 	product.Terjual = existingProduct.Terjual
