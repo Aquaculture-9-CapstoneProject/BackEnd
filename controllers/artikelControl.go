@@ -63,9 +63,13 @@ func (ac *ArtikelController) Update(c *gin.Context) {
 		return
 	}
 
+	var bindFile struct {
+		File *multipart.FileHeader `form:"gambar"`
+	}
+
 	var artikel entities.Artikel
-	if err := c.ShouldBindJSON(&artikel); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Gagal mengikat data JSON"})
+	if err := c.ShouldBind(&bindFile); err != nil && bindFile.File != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Gagal mengikat file: " + err.Error()})
 		return
 	}
 
@@ -73,6 +77,18 @@ func (ac *ArtikelController) Update(c *gin.Context) {
 	if err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": "Artikel tidak ditemukan"})
 		return
+	}
+
+	if bindFile.File != nil {
+		file := bindFile.File
+		filePath := "./uploads/" + file.Filename
+		if err := c.SaveUploadedFile(file, filePath); err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Gagal menyimpan gambar"})
+			return
+		}
+		artikel.Gambar = "https://www.bluebay.my.id/uploads/" + file.Filename
+	} else {
+		artikel.Gambar = existingArtikel.Gambar
 	}
 
 	artikel.ID = existingArtikel.ID
