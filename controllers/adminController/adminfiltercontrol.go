@@ -28,12 +28,14 @@ func (ctrl *AdminFilterController) GetPaymentsByStatus(c *gin.Context) {
 	for _, payment := range payments {
 		// Membuat objek baru hanya dengan id dan nama
 		responsePayments = append(responsePayments, gin.H{
-			"id":           payment.ID,
-			"id_pesanan":   payment.InvoiceID,
-			"status":       payment.Status,
-			"statusbarang": payment.StatusBarang,
-			"jumlah":       payment.Jumlah,
-			"orderid":      payment.OrderID,
+			"id":                payment.ID,
+			"id_pesanan":        payment.InvoiceID,
+			"status":            payment.Status,
+			"statusbarang":      payment.StatusBarang,
+			"jumlah":            payment.Jumlah,
+			"orderid":           payment.OrderID,
+			"created_at":        payment.Order.CreatedAt,
+			"metode_pembayaran": payment.Order.MetodePembayaran,
 		})
 	}
 
