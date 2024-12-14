@@ -46,12 +46,12 @@ func (ac *AdminProductController) CreateAdminProduct(c *gin.Context) {
 
 	createdProduct, err := ac.service.CreateAdminProduct(&product)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Terjadi kesalahan saat menambah produk"})
 		return
 	}
 
 	c.JSON(http.StatusCreated, gin.H{
-		"message": "Product added successfully",
+		"message": "Produk Berhasil Ditambahkan",
 		"data":    createdProduct,
 	})
 }
@@ -60,19 +60,19 @@ func (ac *AdminProductController) UpdateAdminProduct(c *gin.Context) {
 	id := c.Param("id")
 	intID, err := strconv.Atoi(id)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid ID"})
+		c.JSON(http.StatusBadRequest, gin.H{"error": "ID tidak valid"})
 		return
 	}
 
 	var product entities.Product
 	if err := c.ShouldBindJSON(&product); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Gagal mengikat data JSON"})
 		return
 	}
 
 	existingProduct, err := ac.service.FindByAdminProductID(intID)
 	if err != nil {
-		c.JSON(http.StatusNotFound, gin.H{"error": "Product not found"})
+		c.JSON(http.StatusNotFound, gin.H{"error": "Produk tidak ditemukan"})
 		return
 	}
 
@@ -84,12 +84,12 @@ func (ac *AdminProductController) UpdateAdminProduct(c *gin.Context) {
 
 	updatedProduct, err := ac.service.UpdateAdminProduct(&product)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Terjadi kesalahan saat memperbarui produk"})
 		return
 	}
 
 	c.JSON(http.StatusOK, gin.H{
-		"message": "Product update successfully",
+		"message": "Produk berhasil diperbarui",
 		"data":    updatedProduct,
 	})
 }
@@ -98,40 +98,40 @@ func (ac *AdminProductController) DeleteAdminProduct(c *gin.Context) {
 	id := c.Param("id")
 	intID, err := strconv.Atoi(id)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid ID"})
+		c.JSON(http.StatusBadRequest, gin.H{"error": "ID tidak valid"})
 		return
 	}
 
 	product, err := ac.service.FindByAdminProductID(intID)
 	if err != nil {
-		c.JSON(http.StatusNotFound, gin.H{"error": "Product not found"})
+		c.JSON(http.StatusNotFound, gin.H{"error": "Produk tidak ditemukan"})
 		return
 	}
 
 	err = ac.service.DeleteAdminProduct(product.ID)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Terjadi kesalahan saat menghapus produk"})
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"message": "Product deleted successfully"})
+	c.JSON(http.StatusOK, gin.H{"message": "Produk berhasil dihapus"})
 }
 
 func (ac *AdminProductController) GetAdminProductDetails(c *gin.Context) {
 	id := c.Param("id")
 	intID, err := strconv.Atoi(id)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid ID"})
+		c.JSON(http.StatusBadRequest, gin.H{"error": "ID tidak valid"})
 		return
 	}
 
 	product, err := ac.service.FindByAdminProductID(intID)
 	if err != nil {
-		c.JSON(http.StatusNotFound, gin.H{"error": "Product not found"})
+		c.JSON(http.StatusNotFound, gin.H{"error": "Produk tidak ditemukan"})
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"data": product})
+	c.JSON(http.StatusOK, gin.H{"message": "Produk berhasil ditampilkan", "data": product})
 }
 
 func (ac *AdminProductController) GetAllAdminProducts(c *gin.Context) {
@@ -141,13 +141,13 @@ func (ac *AdminProductController) GetAllAdminProducts(c *gin.Context) {
 
 	products, err := ac.service.GetAllAdminProducts(page, limit)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Terjadi kesalahan saat mengambil produk"})
 		return
 	}
 
 	totalItems, err := ac.service.GetAdminProductCount()
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Terjadi kesalahan saat menghitung total produk"})
 		return
 	}
 
@@ -159,7 +159,8 @@ func (ac *AdminProductController) GetAllAdminProducts(c *gin.Context) {
 			TotalPages:  totalPages,
 			TotalItems:  totalItems,
 		},
-		"data": products,
+		"data":    products,
+		"message": "Produk berhasil ditampilkan",
 	})
 }
 
@@ -181,13 +182,13 @@ func (ac *AdminProductController) SearchAdminProducts(c *gin.Context) {
 
 	products, err := ac.service.SearchAdminProducts(nama, kategori, page, limit)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Terjadi kesalahan saat mencari produk"})
 		return
 	}
 
 	totalItems, err := ac.service.GetAdminProductCount()
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Terjadi kesalahan saat menghitung total produk"})
 		return
 	}
 
@@ -199,6 +200,7 @@ func (ac *AdminProductController) SearchAdminProducts(c *gin.Context) {
 			TotalPages:  totalPages,
 			TotalItems:  totalItems,
 		},
-		"data": products,
+		"data":    products,
+		"message": "Produk berhasil ditampilkan",
 	})
 }
