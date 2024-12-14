@@ -31,7 +31,7 @@ func (pr *adminFilterRepo) GetPaymentsByStatus(status string) ([]entities.Paymen
 
 func (pr *adminFilterRepo) GetPaymentsByStatusBarang(statusBarang string) ([]entities.Payment, error) {
 	var payments []entities.Payment
-	err := pr.db.Where("status_barang = ?", statusBarang).Find(&payments).Error
+	err := pr.db.Preload("Order").Preload("Order.Details.Product").Where("status_barang = ?", statusBarang).Find(&payments).Error
 	if err != nil {
 		return nil, errors.New("gagal mengambil data pembayaran: " + err.Error())
 	}
