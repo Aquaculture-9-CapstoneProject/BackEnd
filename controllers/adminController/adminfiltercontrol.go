@@ -2,7 +2,6 @@ package admincontroller
 
 import (
 	"net/http"
-	"strconv"
 
 	adminservices "github.com/Aquaculture-9-CapstoneProject/BackEnd.git/services/adminServices"
 	"github.com/gin-gonic/gin"
@@ -58,13 +57,13 @@ func (ctrl *AdminFilterController) GetPaymentsByStatusBarang(c *gin.Context) {
 		// Default nama pengguna, produk, dan kuantitas jika tidak ada
 		namapengguna := "Unknown"
 		namaproduk := "Unknown"
-		kuantitas := "Unknown"
+		kuantitas := 0
 
 		// Mengakses detail dari OrderDetail pertama, jika ada
 		if len(payment.Order.Details) > 0 {
 			namapengguna = payment.Order.Details[0].User.NamaLengkap
 			namaproduk = payment.Order.Details[0].Product.Nama
-			kuantitas = strconv.Itoa(payment.Order.Details[0].Kuantitas)
+			kuantitas = payment.Order.Details[0].Kuantitas
 		}
 
 		// Membuat response JSON
