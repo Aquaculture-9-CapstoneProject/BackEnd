@@ -19,6 +19,19 @@ func NewArtikelController(service services.ArtikelUseCase) *ArtikelController {
 
 func (ac *ArtikelController) Create(c *gin.Context) {
 	var artikel entities.Artikel
+
+	file, err := c.FormFile("gambar")
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Gambar tidak ditemukan"})
+		return
+	}
+
+	filePath := "./uploads/" + file.Filename
+	if err := c.SaveUploadedFile(file, filePath); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Gagal menyimpan gambar"})
+		return
+	}
+
 	if err := c.ShouldBindJSON(&artikel); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
