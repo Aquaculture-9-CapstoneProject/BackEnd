@@ -9,7 +9,7 @@ import (
 )
 
 type AdminTransaksiRepo interface {
-	GetPaymentDetails(limit, offset int) ([]map[string]interface{}, error)
+	GetPaymentDetails(page, perPage int) ([]map[string]interface{}, int64, error)
 	DeletePaymentByID(id int) error
 }
 
@@ -21,26 +21,40 @@ func NewAdminTransaksiRepo(db *gorm.DB) AdminTransaksiRepo {
 	return &adminTransaksiRepo{db: db}
 }
 
-func (ar *adminTransaksiRepo) GetPaymentDetails(limit, offset int) ([]map[string]interface{}, error) {
+func (ar *adminTransaksiRepo) GetPaymentDetails(page, perPage int) ([]map[string]interface{}, int64, error) {
 	var results []map[string]interface{}
-	err := ar.db.Table("payments").
-		Select("payments.id, payments.invoice_id as id_pesanan, orders.metode_pembayaran, payments.status, orders.created_at").
-		Joins("JOIN orders ON orders.id = payments.order_id").
-		Limit(limit).
-		Offset(offset).
-		Scan(&results).Error
+	var totalItems int64
 
+	// Hitung total items
+	err := ar.db.Table("payments").
+		Joins("JOIN orders ON orders.id = payments.order_id").
+		Count(&totalItems).Error
 	if err != nil {
-		return nil, errors.New("gagal mengambil detail pembayaran: " + err.Error())
+		return nil, 0, errors.New("gagal menghitung total item: " + err.Error())
 	}
 
+	// Hitung offset berdasarkan page dan per_page
+	offset := (page - 1) * perPage
+
+	// Ambil data pembayaran dengan per_page dan offset
+	err = ar.db.Table("payments").
+		Select("payments.id, payments.invoice_id as id_pesanan, orders.metode_pembayaran, payments.status, orders.created_at").
+		Joins("JOIN orders ON orders.id = payments.order_id").
+		Limit(perPage).
+		Offset(offset).
+		Scan(&results).Error
+	if err != nil {
+		return nil, 0, errors.New("gagal mengambil detail pembayaran: " + err.Error())
+	}
+
+	// Format created_at
 	for _, result := range results {
 		if createdAt, ok := result["created_at"].(time.Time); ok {
 			result["created_at"] = createdAt.Format("2006-01-02 15:04:05")
 		}
 	}
 
-	return results, nil
+	return results, totalItems, nil
 }
 
 func (ar *adminTransaksiRepo) DeletePaymentByID(id int) error {

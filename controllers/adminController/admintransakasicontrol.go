@@ -18,34 +18,34 @@ func NewAdminTransaksiController(adminServicesTransaksi adminservices.AdminTrans
 
 func (ctrl *AdminTransaksiControl) GetPaymentDetails(c *gin.Context) {
 	// Mendapatkan parameter pagination dari query
-	limitStr := c.DefaultQuery("limit", "10")
 	pageStr := c.DefaultQuery("page", "1")
+	perPageStr := c.DefaultQuery("per_page", "10")
 
-	// Konversi limit dan page menjadi integer
-	limit, err := strconv.Atoi(limitStr)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Limit harus berupa angka"})
-		return
-	}
-
+	// Konversi page dan per_page menjadi integer
 	page, err := strconv.Atoi(pageStr)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Page harus berupa angka"})
 		return
 	}
 
-	// Menghitung offset berdasarkan page dan limit
-	offset := (page - 1) * limit
+	perPage, err := strconv.Atoi(perPageStr)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Per_page harus berupa angka"})
+		return
+	}
 
 	// Memanggil service untuk mendapatkan detail pembayaran dengan pagination
-	details, err := ctrl.adminServicesTransaksi.GetPaymentDetails(limit, offset)
+	response, err := ctrl.adminServicesTransaksi.GetPaymentDetails(page, perPage)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 
-	// Mengembalikan response dengan status OK dan data detail pembayaran
-	c.JSON(http.StatusOK, gin.H{"meta": gin.H{"message": "Berhasil", "code": 200, "status": "Berhasil"}, "data": details})
+	// Mengembalikan response dengan status OK dan data detail pembayaran serta pagination
+	c.JSON(http.StatusOK, gin.H{
+		"meta": gin.H{"message": "Berhasil", "code": 200, "status": "Berhasil"},
+		"data": response,
+	})
 }
 
 func (ctrl *AdminTransaksiControl) DeletePaymentByID(c *gin.Context) {

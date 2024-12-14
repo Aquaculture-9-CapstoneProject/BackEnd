@@ -7,7 +7,7 @@ import (
 )
 
 type AdminTransaksiService interface {
-	GetPaymentDetails(limit, offset int) ([]map[string]interface{}, error)
+	GetPaymentDetails(page, perPage int) (map[string]interface{}, error)
 	DeletePaymentByID(id int) error
 }
 
@@ -19,12 +19,27 @@ func NewAdminTransaksiServices(repoadminTransaksi admin.AdminTransaksiRepo) Admi
 	return &adminTransaksiService{repoadminTransaksi: repoadminTransaksi}
 }
 
-func (ps *adminTransaksiService) GetPaymentDetails(limit, offset int) ([]map[string]interface{}, error) {
-	details, err := ps.repoadminTransaksi.GetPaymentDetails(limit, offset)
+func (ps *adminTransaksiService) GetPaymentDetails(page, perPage int) (map[string]interface{}, error) {
+	details, totalItems, err := ps.repoadminTransaksi.GetPaymentDetails(page, perPage)
 	if err != nil {
 		return nil, errors.New("gagal mendapatkan detail pembayaran: " + err.Error())
 	}
-	return details, nil
+
+	// Hitung pagination
+	currentPage := page
+	totalPages := int((totalItems + int64(perPage) - 1) / int64(perPage))
+
+	// Struktur hasil dengan pagination
+	response := map[string]interface{}{
+		"data": details,
+		"pagination": map[string]interface{}{
+			"CurrentPage": currentPage,
+			"TotalPages":  totalPages,
+			"TotalItems":  totalItems,
+		},
+	}
+
+	return response, nil
 }
 
 func (ps *adminTransaksiService) DeletePaymentByID(id int) error {
