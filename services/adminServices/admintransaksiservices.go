@@ -7,7 +7,7 @@ import (
 )
 
 type AdminTransaksiService interface {
-	GetPaymentDetails() ([]map[string]interface{}, error)
+	GetPaymentDetails(limit, offset int) ([]map[string]interface{}, error)
 	DeletePaymentByID(id int) error
 }
 
@@ -19,8 +19,8 @@ func NewAdminTransaksiServices(repoadminTransaksi admin.AdminTransaksiRepo) Admi
 	return &adminTransaksiService{repoadminTransaksi: repoadminTransaksi}
 }
 
-func (ps *adminTransaksiService) GetPaymentDetails() ([]map[string]interface{}, error) {
-	details, err := ps.repoadminTransaksi.GetPaymentDetails()
+func (ps *adminTransaksiService) GetPaymentDetails(limit, offset int) ([]map[string]interface{}, error) {
+	details, err := ps.repoadminTransaksi.GetPaymentDetails(limit, offset)
 	if err != nil {
 		return nil, errors.New("gagal mendapatkan detail pembayaran: " + err.Error())
 	}

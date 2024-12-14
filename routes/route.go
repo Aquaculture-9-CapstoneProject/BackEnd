@@ -111,6 +111,7 @@ func Routes(authControl *controllers.AuthCotroller, produkcontrol *controllers.P
 	adminRoute.GET("/totalpesanan/selesai", dasboard.GetJumlahPesananDiterima)
 	adminRoute.GET("/produkterbanyak", dasboard.GetProdukDenganKategoriStokTerbanyak)
 	//Transaksi
+	//GET /admintransaksi?limit=10&page=2
 	adminRoute.GET("/admintransaksi", adminTransaksi.GetPaymentDetails)
 	adminRoute.DELETE("/hapustransaksi/:id", adminTransaksi.DeletePaymentByID)
 	//Pesanan
