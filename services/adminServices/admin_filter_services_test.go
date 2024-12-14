@@ -1,6 +1,7 @@
 package adminservices
 
 import (
+	"fmt"
 	"testing"
 
 	"github.com/Aquaculture-9-CapstoneProject/BackEnd.git/entities"
@@ -15,11 +16,19 @@ type MockAdminFilterRepo struct {
 
 func (m *MockAdminFilterRepo) GetPaymentsByStatus(status string) ([]entities.Payment, error) {
 	args := m.Called(status)
+	// Mengembalikan nil dan error jika terjadi error
+	if args.Get(0) == nil {
+		return nil, args.Error(1)
+	}
 	return args.Get(0).([]entities.Payment), args.Error(1)
 }
 
 func (m *MockAdminFilterRepo) GetPaymentsByStatusBarang(statusBarang string) ([]entities.Payment, error) {
 	args := m.Called(statusBarang)
+	// Mengembalikan nil dan error jika terjadi error
+	if args.Get(0) == nil {
+		return nil, args.Error(1)
+	}
 	return args.Get(0).([]entities.Payment), args.Error(1)
 }
 
@@ -63,5 +72,107 @@ func TestAdminFilterServices_GetPaymentsByStatusBarang(t *testing.T) {
 	assert.NoError(t, err)
 	assert.Len(t, result, 2)
 	assert.Equal(t, "in_stock", result[0].StatusBarang)
+	mockRepo.AssertExpectations(t)
+}
+
+func TestAdminFilterServices_GetPaymentsByStatus_Error(t *testing.T) {
+	mockRepo := new(MockAdminFilterRepo)
+	service := NewAdminFilterServices(mockRepo)
+
+	// Setup ekspektasi untuk error
+	status := "failed"
+	mockRepo.On("GetPaymentsByStatus", status).Return(nil, fmt.Errorf("database error"))
+
+	// Panggil metode
+	result, err := service.GetPaymentsByStatus(status)
+
+	// Validasi hasil
+	assert.Error(t, err)
+	assert.Nil(t, result) // Memastikan hasil adalah nil
+	mockRepo.AssertExpectations(t)
+}
+
+func TestAdminFilterServices_GetPaymentsByStatusBarang_Error(t *testing.T) {
+	mockRepo := new(MockAdminFilterRepo)
+	service := NewAdminFilterServices(mockRepo)
+
+	// Setup ekspektasi untuk error
+	statusBarang := "out_of_stock"
+	mockRepo.On("GetPaymentsByStatusBarang", statusBarang).Return(nil, fmt.Errorf("database error"))
+
+	// Panggil metode
+	result, err := service.GetPaymentsByStatusBarang(statusBarang)
+
+	// Validasi hasil
+	assert.Error(t, err)
+	assert.Nil(t, result) // Memastikan hasil adalah nil
+	mockRepo.AssertExpectations(t)
+}
+
+func TestAdminFilterServices_GetPaymentsByStatus_EmptyResult(t *testing.T) {
+	mockRepo := new(MockAdminFilterRepo)
+	service := NewAdminFilterServices(mockRepo)
+
+	// Setup ekspektasi untuk hasil kosong
+	status := "unpaid"
+	mockRepo.On("GetPaymentsByStatus", status).Return([]entities.Payment{}, nil)
+
+	// Panggil metode
+	result, err := service.GetPaymentsByStatus(status)
+
+	// Validasi hasil
+	assert.NoError(t, err)
+	assert.Len(t, result, 0)
+	mockRepo.AssertExpectations(t)
+}
+
+func TestAdminFilterServices_GetPaymentsByStatusBarang_EmptyResult(t *testing.T) {
+	mockRepo := new(MockAdminFilterRepo)
+	service := NewAdminFilterServices(mockRepo)
+
+	// Setup ekspektasi untuk hasil kosong
+	statusBarang := "out_of_stock"
+	mockRepo.On("GetPaymentsByStatusBarang", statusBarang).Return([]entities.Payment{}, nil)
+
+	// Panggil metode
+	result, err := service.GetPaymentsByStatusBarang(statusBarang)
+
+	// Validasi hasil
+	assert.NoError(t, err)
+	assert.Len(t, result, 0)
+	mockRepo.AssertExpectations(t)
+}
+
+func TestAdminFilterServices_GetPaymentsByStatus_EmptyInput(t *testing.T) {
+	mockRepo := new(MockAdminFilterRepo)
+	service := NewAdminFilterServices(mockRepo)
+
+	// Setup ekspektasi untuk input kosong
+	status := ""
+	mockRepo.On("GetPaymentsByStatus", status).Return(nil, fmt.Errorf("invalid input"))
+
+	// Panggil metode
+	result, err := service.GetPaymentsByStatus(status)
+
+	// Validasi hasil
+	assert.Error(t, err)
+	assert.Nil(t, result)
+	mockRepo.AssertExpectations(t)
+}
+
+func TestAdminFilterServices_GetPaymentsByStatusBarang_EmptyInput(t *testing.T) {
+	mockRepo := new(MockAdminFilterRepo)
+	service := NewAdminFilterServices(mockRepo)
+
+	// Setup ekspektasi untuk input kosong
+	statusBarang := ""
+	mockRepo.On("GetPaymentsByStatusBarang", statusBarang).Return(nil, fmt.Errorf("invalid input"))
+
+	// Panggil metode
+	result, err := service.GetPaymentsByStatusBarang(statusBarang)
+
+	// Validasi hasil
+	assert.Error(t, err)
+	assert.Nil(t, result)
 	mockRepo.AssertExpectations(t)
 }
