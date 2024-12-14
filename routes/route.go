@@ -136,7 +136,8 @@ func Routes(authControl *controllers.AuthCotroller, produkcontrol *controllers.P
 	adminRoute.POST("/products", adminProductControl.CreateAdminProduct)
 	adminRoute.PUT("/products/:id", adminProductControl.UpdateAdminProduct)
 	adminRoute.DELETE("/products/:id", adminProductControl.DeleteAdminProduct)
-	//cek gambar yang sudah diupload
+
+	//cek gambar yang sudah diupload untuk artikel dan produk
 	r.Static("/uploads", "./uploads")
 
 	//export
