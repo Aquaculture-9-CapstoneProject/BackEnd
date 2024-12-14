@@ -92,7 +92,9 @@ func (ac *ArtikelController) Update(c *gin.Context) {
 	}
 
 	artikel.ID = existingArtikel.ID
-	artikel.Gambar = existingArtikel.Gambar
+	artikel.Judul = c.PostForm("judul")
+	artikel.Deskripsi = c.PostForm("deskripsi")
+	artikel.Kategori = c.PostForm("kategori")
 	artikel.CreatedAt = existingArtikel.CreatedAt
 
 	updatedArtikel, err := ac.service.Update(&artikel)
