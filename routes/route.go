@@ -95,7 +95,7 @@ func Routes(authControl *controllers.AuthCotroller, produkcontrol *controllers.P
 
 	artikelRoutes := route.Group("/artikel")
 	{
-		artikelRoutes.GET("", artikelControl.GetAll)
+		//artikelRoutes.GET("", artikelControl.GetAll)
 		artikelRoutes.GET("/:id", artikelControl.GetDetails)
 	}
 
@@ -121,7 +121,7 @@ func Routes(authControl *controllers.AuthCotroller, produkcontrol *controllers.P
 	adminRoute.GET("payment", adminfilter.GetPaymentsByStatusBarang)
 
 	//manage artikel
-	adminRoute.GET("/artikel", artikelControl.GetAll)
+	adminRoute.GET("/artikel", artikelControl.FindAll)
 	adminRoute.GET("/artikel/:id", artikelControl.GetDetails)
 	adminRoute.POST("/artikel", artikelControl.Create)
 	adminRoute.PUT("/artikel/:id", artikelControl.Update)

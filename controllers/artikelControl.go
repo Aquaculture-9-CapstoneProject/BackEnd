@@ -110,7 +110,7 @@ func (ac *ArtikelController) Delete(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"message": "Artikel deleted successfully"})
 }
 
-func (ac *ArtikelController) GetAll(c *gin.Context) {
+func (ac *ArtikelController) FindAll(c *gin.Context) {
 	nama := c.Query("nama")
 	kategori := c.Query("kategori")
 	pageStr := c.Query("page")
@@ -126,7 +126,7 @@ func (ac *ArtikelController) GetAll(c *gin.Context) {
 		limit = 9
 	}
 
-	artikels, err := ac.service.GetAll(nama, kategori, page, limit)
+	artikels, err := ac.service.FindAll(nama, kategori, page, limit)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
