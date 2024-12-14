@@ -95,7 +95,8 @@ func Routes(authControl *controllers.AuthCotroller, produkcontrol *controllers.P
 
 	artikelRoutes := route.Group("/artikel")
 	{
-		artikelRoutes.GET("", artikelControl.GetAll)
+		artikelRoutes.GET("/page/:id", artikelControl.GetAllForUser)
+		artikelRoutes.GET("", artikelControl.FindAll)
 		artikelRoutes.GET("/:id", artikelControl.GetDetails)
 	}
 
@@ -122,7 +123,8 @@ func Routes(authControl *controllers.AuthCotroller, produkcontrol *controllers.P
 	adminRoute.GET("payment", adminfilter.GetPaymentsByStatusBarang)
 
 	//manage artikel
-	adminRoute.GET("/artikel", artikelControl.GetAll)
+	adminRoute.GET("/artikel", artikelControl.FindAll)
+	adminRoute.GET("/artikel/page/:id", artikelControl.GetAllForAdmin)
 	adminRoute.GET("/artikel/:id", artikelControl.GetDetails)
 	adminRoute.POST("/artikel", artikelControl.Create)
 	adminRoute.PUT("/artikel/:id", artikelControl.Update)
@@ -130,10 +132,13 @@ func Routes(authControl *controllers.AuthCotroller, produkcontrol *controllers.P
 
 	//manage product
 	adminRoute.GET("/products", adminProductControl.SearchAdminProducts)
+	adminRoute.GET("/products/page/:id", adminProductControl.GetAllAdminProducts)
 	adminRoute.GET("/products/:id", adminProductControl.GetAdminProductDetails)
 	adminRoute.POST("/products", adminProductControl.CreateAdminProduct)
 	adminRoute.PUT("/products/:id", adminProductControl.UpdateAdminProduct)
 	adminRoute.DELETE("/products/:id", adminProductControl.DeleteAdminProduct)
+	//cek gambar yang sudah diupload
+	r.Static("/uploads", "./uploads")
 
 	//export
 	adminRoute.GET("/exportcsv", export.ExportToCSV)

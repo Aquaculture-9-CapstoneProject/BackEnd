@@ -11,6 +11,7 @@ type AdminProductRepoInterface interface {
 	DeleteAdminProduct(id int) error
 	FindByAdminProductID(id int) (*entities.Product, error)
 	GetAdminProductCount() (int64, error)
+	GetAllAdminProducts(page int, limit int) ([]entities.Product, error)
 	SearchAdminProducts(nama string, kategori string, page int, limit int) ([]entities.Product, error)
 }
 
@@ -54,6 +55,16 @@ func (r *adminProductRepo) GetAdminProductCount() (int64, error) {
 		return 0, err
 	}
 	return count, nil
+}
+
+func (r *adminProductRepo) GetAllAdminProducts(page int, limit int) ([]entities.Product, error) {
+	var products []entities.Product
+	offset := (page - 1) * limit
+	err := r.db.Limit(limit).Offset(offset).Find(&products).Error
+	if err != nil {
+		return nil, err
+	}
+	return products, nil
 }
 
 func (r *adminProductRepo) SearchAdminProducts(nama string, kategori string, page int, limit int) ([]entities.Product, error) {
