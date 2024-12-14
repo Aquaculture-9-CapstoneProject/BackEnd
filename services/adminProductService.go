@@ -11,6 +11,7 @@ type AdminProductUseCase interface {
 	DeleteAdminProduct(id int) error
 	FindByAdminProductID(id int) (*entities.Product, error)
 	GetAdminProductCount() (int64, error)
+	GetAllAdminProducts(page int, limit int) ([]entities.Product, error)
 	SearchAdminProducts(nama string, kategori string, page int, limit int) ([]entities.Product, error)
 }
 
@@ -40,6 +41,10 @@ func (s *adminProductUseCase) FindByAdminProductID(id int) (*entities.Product, e
 
 func (s *adminProductUseCase) GetAdminProductCount() (int64, error) {
 	return s.repo.GetAdminProductCount()
+}
+
+func (s *adminProductUseCase) GetAllAdminProducts(page int, limit int) ([]entities.Product, error) {
+	return s.repo.GetAllAdminProducts(page, limit)
 }
 
 func (s *adminProductUseCase) SearchAdminProducts(nama string, kategori string, page int, limit int) ([]entities.Product, error) {
