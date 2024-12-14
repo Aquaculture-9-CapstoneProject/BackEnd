@@ -1,7 +1,10 @@
 package controllers
 
 import (
+	"fmt"
+	"mime/multipart"
 	"net/http"
+	"path/filepath"
 	"strconv"
 
 	"github.com/Aquaculture-9-CapstoneProject/BackEnd.git/entities"
@@ -19,14 +22,17 @@ func NewAdminProductController(service services.AdminProductUseCase) *AdminProdu
 
 func (ac *AdminProductController) CreateAdminProduct(c *gin.Context) {
 	var product entities.Product
+	var bindFile struct {
+		File *multipart.FileHeader `form:"gambar" binding:"required"`
+	}
 
-	file, err := c.FormFile("gambar")
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Gambar tidak ditemukan"})
+	if err := c.ShouldBind(&bindFile); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": fmt.Sprintf("Gagal mengikat file: %s", err.Error())})
 		return
 	}
 
-	filePath := "./uploads/" + file.Filename
+	file := bindFile.File
+	filePath := filepath.Base(file.Filename)
 	if err := c.SaveUploadedFile(file, filePath); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Gagal menyimpan gambar"})
 		return
