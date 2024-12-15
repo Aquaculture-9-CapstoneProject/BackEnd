@@ -8,7 +8,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func Routes(authControl *controllers.AuthCotroller, produkcontrol *controllers.ProductIkanController, filterproduk *controllers.ProductFilterControl, detailproduk *controllers.ProductDetailControl, cartProduk *controllers.KeranjangControl, orderProduk *controllers.OrderControl, payment *controllers.PaymentControl, review *controllers.ReviewController, dasboard *admincontroller.AdminPaymentController, artikelControl *controllers.ArtikelController, chatControl *controllers.ChatController, adminProductControl *controllers.AdminProductController, adminTransaksi *admincontroller.AdminTransaksiControl, adminPesanan *admincontroller.AdminPesananController, adminfilter *admincontroller.AdminFilterController, profil *controllers.ProfileController, export *admincontroller.ProductExportController) *gin.Engine {
+func Routes(authControl *controllers.AuthCotroller, produkcontrol *controllers.ProductIkanController, filterproduk *controllers.ProductFilterControl, detailproduk *controllers.ProductDetailControl, cartProduk *controllers.KeranjangControl, orderProduk *controllers.OrderControl, payment *controllers.PaymentControl, review *controllers.ReviewController, dasboard *admincontroller.AdminPaymentController, artikelControl *controllers.ArtikelController, chatControl *controllers.ChatController, adminProductControl *admincontroller.AdminProductController, adminTransaksi *admincontroller.AdminTransaksiControl, adminPesanan *admincontroller.AdminPesananController, adminfilter *admincontroller.AdminFilterController, profil *controllers.ProfileController, export *admincontroller.ProductExportController) *gin.Engine {
 	r := gin.Default()
 
 	// Tambahkan middleware CORS

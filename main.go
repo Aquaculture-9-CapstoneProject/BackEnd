@@ -69,9 +69,9 @@ func main() {
 	artikelService := services.NewArtikelService(artikelRepo)
 	artikelController := controllers.NewArtikelController(artikelService)
 
-	adminProductRepo := repositories.NewAdminProductRepo(db)
-	adminProductService := services.NewAdminProductService(adminProductRepo)
-	adminProductController := controllers.NewAdminProductController(adminProductService)
+	adminProductRepo := admin.NewAdminProductRepo(db)
+	adminProductService := adminservices.NewAdminProductService(adminProductRepo)
+	adminProductController := admincontroller.NewAdminProductController(adminProductService)
 
 	r := routes.Routes(authControl, productController, filterController, detailProdukControl, CartController, OrderDetailController, PaymentController, ReviewController, adminDasboardController, artikelController, chatController, adminProductController, adminTransakasiController, adminPesananController, adminFilterController, profileController, ExportController)
 
