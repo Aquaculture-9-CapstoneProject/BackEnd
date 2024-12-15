@@ -7,6 +7,7 @@ import (
 
 type ArtikelUseCase interface {
 	GetAll(page int, limit int) ([]entities.Artikel, error)
+	Top3(limit int) ([]entities.Artikel, error)
 	FindAll(judul string, kategori string, page int, limit int) ([]entities.Artikel, error)
 	FindByID(id int) (*entities.Artikel, error)
 	Count() (int64, error)
@@ -22,6 +23,10 @@ func NewArtikelService(repo repositories.ArtikelRepoInterface) *artikelUseCase {
 
 func (s *artikelUseCase) GetAll(page int, limit int) ([]entities.Artikel, error) {
 	return s.repo.GetAll(page, limit)
+}
+
+func (s *artikelUseCase) Top3(limit int) ([]entities.Artikel, error) {
+	return s.repo.Top3(limit)
 }
 
 func (s *artikelUseCase) FindAll(judul string, kategori string, page int, limit int) ([]entities.Artikel, error) {
