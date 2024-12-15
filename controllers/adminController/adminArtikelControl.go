@@ -134,7 +134,7 @@ func (ac *AdminArtikelController) Delete(c *gin.Context) {
 
 func (ac *AdminArtikelController) GetAll(c *gin.Context) {
 	id := c.Param("id")
-	page, err := strconv.Atoi(id)
+	page, _ := strconv.Atoi(id)
 	limit := 10
 
 	artikels, err := ac.service.GetAll(page, limit)

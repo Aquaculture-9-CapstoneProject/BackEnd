@@ -167,7 +167,7 @@ func (ac *AdminProductController) GetAdminProductDetails(c *gin.Context) {
 
 func (ac *AdminProductController) GetAllAdminProducts(c *gin.Context) {
 	id := c.Param("id")
-	page, err := strconv.Atoi(id)
+	page, _ := strconv.Atoi(id)
 	limit := 15
 
 	products, err := ac.service.GetAllAdminProducts(page, limit)

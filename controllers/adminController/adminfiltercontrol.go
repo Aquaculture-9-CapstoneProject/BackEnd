@@ -92,9 +92,6 @@ func (ctrl *AdminFilterController) GetPaymentsByStatusBarang(c *gin.Context) {
 
 	var responseData []gin.H
 	for _, payment := range payments {
-		// Default alamat jika tidak ada
-		alamat := "Unknown"
-		// Menyusun produk dalam order
 		var produkData []gin.H
 		for _, orderDetail := range payment.Order.Details {
 			produkData = append(produkData, gin.H{
@@ -114,7 +111,7 @@ func (ctrl *AdminFilterController) GetPaymentsByStatusBarang(c *gin.Context) {
 
 		// Membuat response JSON untuk setiap payment
 		responseData = append(responseData, gin.H{
-			"alamat":          alamat,
+			"alamat":          userData["alamat"],
 			"namapengguna":    userData["namapengguna"],
 			"order_id":        payment.Order.ID,
 			"payment_id":      payment.ID,
