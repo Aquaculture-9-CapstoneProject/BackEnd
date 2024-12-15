@@ -6,10 +6,8 @@ import (
 )
 
 type ArtikelUseCase interface {
-	Create(artikel *entities.Artikel) (*entities.Artikel, error)
-	Update(artikel *entities.Artikel) (*entities.Artikel, error)
-	Delete(id int) error
 	GetAll(page int, limit int) ([]entities.Artikel, error)
+	Top3(limit int) ([]entities.Artikel, error)
 	FindAll(judul string, kategori string, page int, limit int) ([]entities.Artikel, error)
 	FindByID(id int) (*entities.Artikel, error)
 	Count() (int64, error)
@@ -23,20 +21,12 @@ func NewArtikelService(repo repositories.ArtikelRepoInterface) *artikelUseCase {
 	return &artikelUseCase{repo: repo}
 }
 
-func (s *artikelUseCase) Create(artikel *entities.Artikel) (*entities.Artikel, error) {
-	return s.repo.Create(artikel)
-}
-
-func (s *artikelUseCase) Update(artikel *entities.Artikel) (*entities.Artikel, error) {
-	return s.repo.Update(artikel)
-}
-
-func (s *artikelUseCase) Delete(id int) error {
-	return s.repo.Delete(id)
-}
-
 func (s *artikelUseCase) GetAll(page int, limit int) ([]entities.Artikel, error) {
 	return s.repo.GetAll(page, limit)
+}
+
+func (s *artikelUseCase) Top3(limit int) ([]entities.Artikel, error) {
+	return s.repo.Top3(limit)
 }
 
 func (s *artikelUseCase) FindAll(judul string, kategori string, page int, limit int) ([]entities.Artikel, error) {

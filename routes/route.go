@@ -8,7 +8,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func Routes(authControl *controllers.AuthCotroller, produkcontrol *controllers.ProductIkanController, filterproduk *controllers.ProductFilterControl, detailproduk *controllers.ProductDetailControl, cartProduk *controllers.KeranjangControl, orderProduk *controllers.OrderControl, payment *controllers.PaymentControl, review *controllers.ReviewController, dasboard *admincontroller.AdminPaymentController, artikelControl *controllers.ArtikelController, chatControl *controllers.ChatController, adminProductControl *controllers.AdminProductController, adminTransaksi *admincontroller.AdminTransaksiControl, adminPesanan *admincontroller.AdminPesananController, adminfilter *admincontroller.AdminFilterController, profil *controllers.ProfileController, export *admincontroller.ProductExportController) *gin.Engine {
+func Routes(authControl *controllers.AuthCotroller, produkcontrol *controllers.ProductIkanController, filterproduk *controllers.ProductFilterControl, detailproduk *controllers.ProductDetailControl, cartProduk *controllers.KeranjangControl, orderProduk *controllers.OrderControl, payment *controllers.PaymentControl, review *controllers.ReviewController, dasboard *admincontroller.AdminPaymentController, artikelControl *controllers.ArtikelController, chatControl *controllers.ChatController, adminProductControl *admincontroller.AdminProductController, adminTransaksi *admincontroller.AdminTransaksiControl, adminPesanan *admincontroller.AdminPesananController, adminfilter *admincontroller.AdminFilterController, profil *controllers.ProfileController, export *admincontroller.ProductExportController, adminArtikelControl *admincontroller.AdminArtikelController) *gin.Engine {
 	r := gin.Default()
 
 	// Tambahkan middleware CORS
@@ -95,7 +95,8 @@ func Routes(authControl *controllers.AuthCotroller, produkcontrol *controllers.P
 
 	artikelRoutes := route.Group("/artikel")
 	{
-		artikelRoutes.GET("/page/:id", artikelControl.GetAllForUser)
+		artikelRoutes.GET("/page/:id", artikelControl.GetAll)
+		artikelRoutes.GET("/top", artikelControl.TopArtikel)
 		artikelRoutes.GET("", artikelControl.FindAll)
 		artikelRoutes.GET("/:id", artikelControl.GetDetails)
 	}
@@ -123,12 +124,12 @@ func Routes(authControl *controllers.AuthCotroller, produkcontrol *controllers.P
 	adminRoute.GET("/payment", adminfilter.GetPaymentsByStatusBarang)
 
 	//manage artikel
-	adminRoute.GET("/artikel", artikelControl.FindAll)
-	adminRoute.GET("/artikel/page/:id", artikelControl.GetAllForAdmin)
-	adminRoute.GET("/artikel/:id", artikelControl.GetDetails)
-	adminRoute.POST("/artikel", artikelControl.Create)
-	adminRoute.PUT("/artikel/:id", artikelControl.Update)
-	adminRoute.DELETE("/artikel/:id", artikelControl.Delete)
+	adminRoute.GET("/artikel", adminArtikelControl.FindAll)
+	adminRoute.GET("/artikel/page/:id", adminArtikelControl.GetAll)
+	adminRoute.GET("/artikel/:id", adminArtikelControl.GetDetails)
+	adminRoute.POST("/artikel", adminArtikelControl.Create)
+	adminRoute.PUT("/artikel/:id", adminArtikelControl.Update)
+	adminRoute.DELETE("/artikel/:id", adminArtikelControl.Delete)
 
 	//manage product
 	adminRoute.GET("/products", adminProductControl.SearchAdminProducts)

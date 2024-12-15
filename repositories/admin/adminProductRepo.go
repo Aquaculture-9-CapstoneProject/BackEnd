@@ -1,4 +1,4 @@
-package repositories
+package admin
 
 import (
 	"github.com/Aquaculture-9-CapstoneProject/BackEnd.git/entities"

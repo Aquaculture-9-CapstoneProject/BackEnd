@@ -6,10 +6,8 @@ import (
 )
 
 type ArtikelRepoInterface interface {
-	Create(artikel *entities.Artikel) (*entities.Artikel, error)
-	Update(artikel *entities.Artikel) (*entities.Artikel, error)
-	Delete(id int) error
 	GetAll(page int, limit int) ([]entities.Artikel, error)
+	Top3(limit int) ([]entities.Artikel, error)
 	FindAll(judul string, kategori string, page int, limit int) ([]entities.Artikel, error)
 	FindByID(id int) (*entities.Artikel, error)
 	Count() (int64, error)
@@ -23,24 +21,6 @@ func NewArtikelRepo(db *gorm.DB) *artikelRepo {
 	return &artikelRepo{db: db}
 }
 
-func (r *artikelRepo) Create(artikel *entities.Artikel) (*entities.Artikel, error) {
-	if err := r.db.Create(artikel).Error; err != nil {
-		return nil, err
-	}
-	return artikel, nil
-}
-
-func (r *artikelRepo) Update(artikel *entities.Artikel) (*entities.Artikel, error) {
-	if err := r.db.Save(artikel).Error; err != nil {
-		return nil, err
-	}
-	return artikel, nil
-}
-
-func (r *artikelRepo) Delete(id int) error {
-	return r.db.Delete(&entities.Artikel{}, id).Error
-}
-
 func (r *artikelRepo) GetAll(page int, limit int) ([]entities.Artikel, error) {
 	var artikels []entities.Artikel
 	offset := (page - 1) * limit
@@ -48,6 +28,19 @@ func (r *artikelRepo) GetAll(page int, limit int) ([]entities.Artikel, error) {
 	if err != nil {
 		return nil, err
 	}
+	return artikels, nil
+}
+
+func (r *artikelRepo) Top3(limit int) ([]entities.Artikel, error) {
+	var artikels []entities.Artikel
+	db := r.db.Model(&entities.Artikel{})
+	db = db.Where("kategori LIKE ?", "%resep%")
+
+	err := db.Limit(limit).Find(&artikels).Error
+	if err != nil {
+		return nil, err
+	}
+
 	return artikels, nil
 }
 
