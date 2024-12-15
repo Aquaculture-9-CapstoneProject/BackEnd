@@ -34,8 +34,10 @@ func (pr *adminPesananRepo) GetDetailedOrders(page, perPage int) ([]map[string]i
 	offset := (page - 1) * perPage
 	err := pr.db.Table("payments").
 		Select(`
+			payments.id AS payment_id,      
 			orders.id AS order_id, 
 			users.nama_lengkap AS namapengguna, 
+			products.variasi AS variasi,
 			products.nama AS produk, 
 			order_details.kuantitas AS kuantitas,   
 			orders.created_at AS tanggaldanwaktu, 
