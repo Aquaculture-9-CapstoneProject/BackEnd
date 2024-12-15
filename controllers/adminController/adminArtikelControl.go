@@ -132,40 +132,10 @@ func (ac *AdminArtikelController) Delete(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"message": "Artikel berhasil dihapus"})
 }
 
-func (ac *AdminArtikelController) GetAllForAdmin(c *gin.Context) {
+func (ac *AdminArtikelController) GetAll(c *gin.Context) {
 	id := c.Param("id")
 	page, err := strconv.Atoi(id)
 	limit := 10
-
-	artikels, err := ac.service.GetAll(page, limit)
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Terjadi kesalahan saat mengambil artikel"})
-		return
-	}
-
-	totalItems, err := ac.service.Count()
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Terjadi kesalahan saat menghitung total artikel"})
-		return
-	}
-
-	totalPages := int((totalItems + int64(limit) - 1) / int64(limit))
-
-	c.JSON(http.StatusOK, gin.H{
-		"pagination": entities.Pagination{
-			CurrentPage: page,
-			TotalPages:  totalPages,
-			TotalItems:  totalItems,
-		},
-		"data":    artikels,
-		"message": "Artikel berhasil ditampilkan",
-	})
-}
-
-func (ac *AdminArtikelController) GetAllForUser(c *gin.Context) {
-	id := c.Param("id")
-	page, err := strconv.Atoi(id)
-	limit := 9
 
 	artikels, err := ac.service.GetAll(page, limit)
 	if err != nil {
