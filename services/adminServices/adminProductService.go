@@ -1,8 +1,8 @@
-package services
+package adminservices
 
 import (
 	"github.com/Aquaculture-9-CapstoneProject/BackEnd.git/entities"
-	"github.com/Aquaculture-9-CapstoneProject/BackEnd.git/repositories"
+	"github.com/Aquaculture-9-CapstoneProject/BackEnd.git/repositories/admin"
 )
 
 type AdminProductUseCase interface {
@@ -16,10 +16,10 @@ type AdminProductUseCase interface {
 }
 
 type adminProductUseCase struct {
-	repo repositories.AdminProductRepoInterface
+	repo admin.AdminProductRepoInterface
 }
 
-func NewAdminProductService(repo repositories.AdminProductRepoInterface) *adminProductUseCase {
+func NewAdminProductService(repo admin.AdminProductRepoInterface) *adminProductUseCase {
 	return &adminProductUseCase{repo: repo}
 }
 
