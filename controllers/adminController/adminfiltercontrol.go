@@ -43,6 +43,44 @@ func (ctrl *AdminFilterController) GetPaymentsByStatus(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"data": responsePayments})
 }
 
+// func (ctrl *AdminFilterController) GetPaymentsByStatusBarang(c *gin.Context) {
+// 	statusBarang := c.DefaultQuery("status_barang", "DIKIRIM")
+
+// 	payments, err := ctrl.service.GetPaymentsByStatusBarang(statusBarang)
+// 	if err != nil {
+// 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Gagal mengambil data pembayaran"})
+// 		return
+// 	}
+
+// 	var responsePayments []gin.H
+// 	for _, payment := range payments {
+// 		// Default nama pengguna, produk, dan kuantitas jika tidak ada
+// 		namapengguna := "Unknown"
+// 		namaproduk := "Unknown"
+// 		kuantitas := 0
+
+// 		// Mengakses detail dari OrderDetail pertama, jika ada
+// 		if len(payment.Order.Details) > 0 {
+// 			namapengguna = payment.Order.Details[0].User.NamaLengkap
+// 			namaproduk = payment.Order.Details[0].Product.Nama
+// 			kuantitas = payment.Order.Details[0].Kuantitas
+// 		}
+
+// 		// Membuat response JSON
+// 		responsePayments = append(responsePayments, gin.H{
+// 			"order_id":        payment.ID,
+// 			"kuantitas":       kuantitas,
+// 			"namapengguna":    namapengguna,
+// 			"statusbarang":    payment.StatusBarang,
+// 			"nominal":         payment.Jumlah,
+// 			"produk":          namaproduk,
+// 			"status":          payment.StatusBarang,
+// 			"tanggaldanwaktu": payment.Order.CreatedAt,
+// 		})
+// 	}
+// 	c.JSON(http.StatusOK, gin.H{"data": responsePayments})
+// }
+
 func (ctrl *AdminFilterController) GetPaymentsByStatusBarang(c *gin.Context) {
 	statusBarang := c.DefaultQuery("status_barang", "DIKIRIM")
 
@@ -52,31 +90,47 @@ func (ctrl *AdminFilterController) GetPaymentsByStatusBarang(c *gin.Context) {
 		return
 	}
 
-	var responsePayments []gin.H
+	var responseData []gin.H
 	for _, payment := range payments {
-		// Default nama pengguna, produk, dan kuantitas jika tidak ada
-		namapengguna := "Unknown"
-		namaproduk := "Unknown"
-		kuantitas := 0
-
-		// Mengakses detail dari OrderDetail pertama, jika ada
-		if len(payment.Order.Details) > 0 {
-			namapengguna = payment.Order.Details[0].User.NamaLengkap
-			namaproduk = payment.Order.Details[0].Product.Nama
-			kuantitas = payment.Order.Details[0].Kuantitas
+		// Default alamat jika tidak ada
+		alamat := "Unknown"
+		// Menyusun produk dalam order
+		var produkData []gin.H
+		for _, orderDetail := range payment.Order.Details {
+			produkData = append(produkData, gin.H{
+				"kuantitas": orderDetail.Kuantitas,
+				"nama":      orderDetail.Product.Nama,
+				"nominal":   int(orderDetail.Product.Harga) * orderDetail.Kuantitas,
+				"variasi":   orderDetail.Product.Variasi,
+			})
 		}
 
-		// Membuat response JSON
-		responsePayments = append(responsePayments, gin.H{
-			"order_id":        payment.ID,
-			"kuantitas":       kuantitas,
-			"namapengguna":    namapengguna,
-			"statusbarang":    payment.StatusBarang,
-			"nominal":         payment.Jumlah,
-			"produk":          namaproduk,
+		// Mengambil data user dari OrderDetail
+		user := payment.Order.Details[0].User // Mengambil user dari order detail pertama
+		userData := gin.H{
+			"namapengguna": user.NamaLengkap,
+			"alamat":       user.Alamat,
+		}
+
+		// Membuat response JSON untuk setiap payment
+		responseData = append(responseData, gin.H{
+			"alamat":          alamat,
+			"namapengguna":    userData["namapengguna"],
+			"order_id":        payment.Order.ID,
+			"payment_id":      payment.ID,
+			"produk":          produkData,
 			"status":          payment.StatusBarang,
-			"tanggaldanwaktu": payment.Order.CreatedAt,
+			"tanggaldanwaktu": payment.Order.CreatedAt, // Menggunakan CreatedAt dari Order
 		})
 	}
-	c.JSON(http.StatusOK, gin.H{"data": responsePayments})
+
+	// Response tanpa pagination
+	c.JSON(http.StatusOK, gin.H{
+		"data": responseData,
+		"meta": gin.H{
+			"code":    200,
+			"message": "Berhasil",
+			"status":  "Berhasil",
+		},
+	})
 }
