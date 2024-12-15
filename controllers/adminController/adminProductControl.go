@@ -1,4 +1,4 @@
-package controllers
+package admincontroller
 
 import (
 	"fmt"
@@ -7,15 +7,15 @@ import (
 	"strconv"
 
 	"github.com/Aquaculture-9-CapstoneProject/BackEnd.git/entities"
-	"github.com/Aquaculture-9-CapstoneProject/BackEnd.git/services"
+	adminservices "github.com/Aquaculture-9-CapstoneProject/BackEnd.git/services/adminServices"
 	"github.com/gin-gonic/gin"
 )
 
 type AdminProductController struct {
-	service services.AdminProductUseCase
+	service adminservices.AdminProductUseCase
 }
 
-func NewAdminProductController(service services.AdminProductUseCase) *AdminProductController {
+func NewAdminProductController(service adminservices.AdminProductUseCase) *AdminProductController {
 	return &AdminProductController{service: service}
 }
 
