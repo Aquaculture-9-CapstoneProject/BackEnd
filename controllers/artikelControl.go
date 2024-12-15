@@ -31,7 +31,7 @@ func (ac *ArtikelController) TopArtikel(c *gin.Context) {
 	})
 }
 
-func (ac *ArtikelController) GetAllForUser(c *gin.Context) {
+func (ac *ArtikelController) GetAll(c *gin.Context) {
 	id := c.Param("id")
 	page, err := strconv.Atoi(id)
 	limit := 9
