@@ -7,7 +7,7 @@ import (
 )
 
 type AdminPesananServices interface {
-	GetDetailedOrders() ([]map[string]interface{}, error)
+	GetDetailedOrders(page, perPage int) ([]map[string]interface{}, int64, error)
 }
 
 type adminPesananServices struct {
@@ -18,11 +18,11 @@ func NewPesananServices(repopesanan admin.AdminPesananRepo) AdminPesananServices
 	return &adminPesananServices{repopesanan: repopesanan}
 }
 
-func (ps *adminPesananServices) GetDetailedOrders() ([]map[string]interface{}, error) {
-	// Panggil repository untuk mendapatkan detail pesanan
-	details, err := ps.repopesanan.GetDetailedOrders()
+func (ps *adminPesananServices) GetDetailedOrders(page, perPage int) ([]map[string]interface{}, int64, error) {
+	// Panggil repository untuk mendapatkan detail pesanan dengan pagination
+	details, totalItems, err := ps.repopesanan.GetDetailedOrders(page, perPage)
 	if err != nil {
-		return nil, errors.New("gagal mendapatkan detail pesanan: " + err.Error())
+		return nil, 0, errors.New("gagal mendapatkan detail pesanan: " + err.Error())
 	}
-	return details, nil
+	return details, totalItems, nil
 }
