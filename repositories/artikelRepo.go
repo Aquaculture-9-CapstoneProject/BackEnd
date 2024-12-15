@@ -7,6 +7,7 @@ import (
 
 type ArtikelRepoInterface interface {
 	GetAll(page int, limit int) ([]entities.Artikel, error)
+	Top3(limit int) ([]entities.Artikel, error)
 	FindAll(judul string, kategori string, page int, limit int) ([]entities.Artikel, error)
 	FindByID(id int) (*entities.Artikel, error)
 	Count() (int64, error)
@@ -27,6 +28,19 @@ func (r *artikelRepo) GetAll(page int, limit int) ([]entities.Artikel, error) {
 	if err != nil {
 		return nil, err
 	}
+	return artikels, nil
+}
+
+func (r *artikelRepo) Top3(limit int) ([]entities.Artikel, error) {
+	var artikels []entities.Artikel
+	db := r.db.Model(&entities.Artikel{})
+	db = db.Where("kategori LIKE ?", "%resep%")
+
+	err := db.Limit(limit).Find(&artikels).Error
+	if err != nil {
+		return nil, err
+	}
+
 	return artikels, nil
 }
 
