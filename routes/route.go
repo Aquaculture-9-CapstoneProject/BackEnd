@@ -147,5 +147,3 @@ func Routes(authControl *controllers.AuthCotroller, produkcontrol *controllers.P
 
 	return r
 }
-
-//buat tabel daftar pesanan
