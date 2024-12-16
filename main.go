@@ -81,6 +81,3 @@ func main() {
 
 	r.Run(":8000")
 }
-
-// BESOK CRUD PRODUK DAN UNIT TES
-// export csv pada produk done

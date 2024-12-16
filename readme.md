@@ -20,19 +20,21 @@
 # CARA MENGGUNAKAN BE NYA 
 1. git clone https://github.com/Aquaculture-9-CapstoneProject/BackEnd.git
 2. Karena ini menggunakan golang jadi go mod tidy 
-   -> Tujuan go mod tidy adalah agar membersihkan dan memperbarui file go.mod dan go.sum dalam proyek Go.
+   - Tujuan go mod tidy adalah agar membersihkan dan memperbarui file go.mod dan go.sum dalam proyek Go.
 3. Setelah itu kamu bisa menjalankan nya dengan 
-   -> go run . / go run main.go
+   - go run . / go run main.go
 
+# LINK ERD 
+   - https://app.diagrams.net/#G1_P6B0SCQDu0e91m7xB4ZkjObb5WGN8F-#%7B%22pageId%22%3A%22QHjruTFgCI3kk_8LIDTT%22%7D
 
 # DOKUMENTASI API 
-   -> https://docs.google.com/document/d/1frC1Boex5B1QzmxcWLd0_vab1uFQgppnDyA3gndUMQY/edit?tab=t.0
+   - https://docs.google.com/document/d/1frC1Boex5B1QzmxcWLd0_vab1uFQgppnDyA3gndUMQY/edit?tab=t.0
 
 # LINK WEBSITE 
-   -> https://blue-bay.vercel.app/
+   - https://blue-bay.vercel.app/
 
 # DEVELOPER BACKEND BLUEBAY
-   -> MICHAEL SITANGGANG
-   -> ALDIAN EKA K
+   - MICHAEL SITANGGANG
+   - ALDIAN EKA K
 
 - MONDAY , 16 - DESEMBER - 2024
