@@ -52,12 +52,12 @@ func (cuc *chatService) ProccessChat(userID int, userInput string) (entities.Cha
 	}
 
 	// Cek jika input mengandung permintaan tentang detail produk
-	if strings.HasPrefix(userInput, "detail produk") {
-		// Ambil query produk (nama atau ID produk)
-		query := strings.TrimSpace(strings.TrimPrefix(userInput, "detail produk"))
+	if strings.HasPrefix(userInput, "detail produk dari") {
+		// Ambil nama produk setelah "detail produk dari"
+		productName := strings.TrimSpace(strings.TrimPrefix(userInput, "detail produk dari"))
 
-		// Cari produk berdasarkan query
-		product, err := cuc.chatRepo.GetProductDetails(query)
+		// Cari produk berdasarkan nama
+		product, err := cuc.chatRepo.GetProductDetails(productName)
 		if err != nil {
 			return entities.Chat{}, err
 		}
