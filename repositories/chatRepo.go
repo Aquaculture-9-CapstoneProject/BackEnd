@@ -1,9 +1,6 @@
 package repositories
 
 import (
-	"fmt"
-	"strconv"
-
 	"github.com/Aquaculture-9-CapstoneProject/BackEnd.git/entities"
 
 	"gorm.io/gorm"
@@ -14,7 +11,7 @@ type ChatRepoInterface interface {
 	GetAllChat(userID int) ([]entities.Chat, error)
 	GetChatByID(chatID int) (entities.Chat, error)
 	GetRecommendedProducts() ([]entities.Product, error)
-	GetProductDetails(query string) (entities.Product, error)
+	GetProductByName(productName string) (entities.Product, error)
 }
 
 type chatRepository struct {
@@ -58,23 +55,12 @@ func (repo *chatRepository) GetRecommendedProducts() ([]entities.Product, error)
 	return products, nil
 }
 
-// Fungsi di repositori untuk mencari produk berdasarkan ID atau nama
-func (repo *chatRepository) GetProductDetails(query string) (entities.Product, error) {
+func (repo *chatRepository) GetProductByName(productName string) (entities.Product, error) {
+	// Cari produk berdasarkan nama dalam database
 	var product entities.Product
-
-	// Jika query berupa angka (ID produk)
-	if id, err := strconv.Atoi(query); err == nil {
-		err := repo.db.First(&product, id).Error
-		if err != nil {
-			return product, fmt.Errorf("produk dengan ID %d tidak ditemukan", id)
-		}
-		return product, nil
-	}
-
-	// Jika query berupa nama produk
-	err := repo.db.Where("name LIKE ?", "%"+query+"%").First(&product).Error
+	err := repo.db.Where("nama LIKE ?", "%"+productName+"%").First(&product).Error
 	if err != nil {
-		return product, fmt.Errorf("produk dengan nama %s tidak ditemukan", query)
+		return product, err
 	}
 	return product, nil
 }

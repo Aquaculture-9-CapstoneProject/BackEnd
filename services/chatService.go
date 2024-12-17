@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"os"
+	"regexp"
 	"strings"
 
 	"github.com/Aquaculture-9-CapstoneProject/BackEnd.git/entities"
@@ -27,7 +28,7 @@ func NewChatService(chatRepo repositories.ChatRepoInterface) *chatService {
 }
 
 func (cuc *chatService) ProccessChat(userID int, userInput string) (entities.Chat, error) {
-	// Cek jika input mengandung permintaan tentang rekomendasi produk
+	// Cek apakah pertanyaan mengandung "rekomendasi produk"
 	if userInput == "rekomendasi produk apa ?" || userInput == "rekomendasi produk" {
 		products, err := cuc.chatRepo.GetRecommendedProducts()
 		if err != nil {
@@ -51,22 +52,18 @@ func (cuc *chatService) ProccessChat(userID int, userInput string) (entities.Cha
 		return savedChat, nil
 	}
 
-	// Cek jika input mengandung permintaan tentang detail produk
-	if strings.HasPrefix(userInput, "detail produk dari") {
-		// Ambil nama produk setelah "detail produk dari"
-		productName := strings.TrimSpace(strings.TrimPrefix(userInput, "detail produk dari"))
-
-		// Cari produk berdasarkan nama
-		product, err := cuc.chatRepo.GetProductDetails(productName)
+	// Cek apakah pertanyaan menyebutkan detail produk tertentu
+	productName := extractProductName(userInput)
+	if productName != "" {
+		product, err := cuc.chatRepo.GetProductByName(productName)
 		if err != nil {
 			return entities.Chat{}, err
 		}
 
-		// Format response detail produk
-		aiResponse := fmt.Sprintf("Detail Produk:\nNama: %s\nKategori: %s\nDeskripsi: %s\nHarga: %.2f\nRating: %.2f",
-			product.Nama, product.Kategori, product.Deskripsi, product.Harga, product.Rating)
+		// Generate response tentang detail produk
+		aiResponse := fmt.Sprintf("Berikut adalah detail produk %s:\nNama: %s\nKategori: %s\nHarga: %.2f\nRating: %.2f\nDeskripsi: %s\n",
+			product.Nama, product.Nama, product.Kategori, product.Harga, product.Rating, product.Deskripsi)
 
-		// Simpan percakapan dengan respons detail produk
 		chat := entities.Chat{
 			UserID:    userID,
 			UserInput: userInput,
@@ -81,7 +78,7 @@ func (cuc *chatService) ProccessChat(userID int, userInput string) (entities.Cha
 		return savedChat, nil
 	}
 
-	// Jika input bukan tentang rekomendasi produk atau detail produk, gunakan AI generatif
+	// Jika bukan pertanyaan produk, lakukan proses dengan API AI
 	ctx := context.Background()
 	client, err := genai.NewClient(ctx, option.WithAPIKey(os.Getenv("GEMINI_API_KEY")))
 	if err != nil {
@@ -129,4 +126,15 @@ func (cts *chatService) GetAllChats(userID int) ([]entities.Chat, error) {
 
 func (cts *chatService) GetChatByID(chatID int) (entities.Chat, error) {
 	return cts.chatRepo.GetChatByID(chatID)
+}
+
+func extractProductName(userInput string) string {
+	// Misalnya, mencari nama produk dengan regex atau pemrosesan string sederhana
+	re := regexp.MustCompile(`detail produk (.*)`)
+	matches := re.FindStringSubmatch(strings.ToLower(userInput))
+
+	if len(matches) > 1 {
+		return matches[1]
+	}
+	return ""
 }
