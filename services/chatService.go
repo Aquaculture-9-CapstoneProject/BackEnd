@@ -28,7 +28,6 @@ func NewChatService(chatRepo repositories.ChatRepoInterface) *chatService {
 }
 
 func (cuc *chatService) ProccessChat(userID int, userInput string) (entities.Chat, error) {
-	// Cek apakah pertanyaan mengandung "rekomendasi produk"
 	if userInput == "rekomendasi produk apa ?" || userInput == "rekomendasi produk" {
 		products, err := cuc.chatRepo.GetRecommendedProducts()
 		if err != nil {
@@ -52,7 +51,6 @@ func (cuc *chatService) ProccessChat(userID int, userInput string) (entities.Cha
 		return savedChat, nil
 	}
 
-	// Cek apakah pertanyaan menyebutkan detail produk tertentu
 	productName := extractProductName(userInput)
 	if productName != "" {
 		product, err := cuc.chatRepo.GetProductByName(productName)
@@ -60,7 +58,6 @@ func (cuc *chatService) ProccessChat(userID int, userInput string) (entities.Cha
 			return entities.Chat{}, err
 		}
 
-		// Generate response tentang detail produk
 		aiResponse := fmt.Sprintf("Berikut adalah detail produk %s:\nNama: %s\nKategori: %s\nHarga: %.2f\nRating: %.2f\nDeskripsi: %s\n",
 			product.Nama, product.Nama, product.Kategori, product.Harga, product.Rating, product.Deskripsi)
 
@@ -78,7 +75,7 @@ func (cuc *chatService) ProccessChat(userID int, userInput string) (entities.Cha
 		return savedChat, nil
 	}
 
-	// Jika bukan pertanyaan produk, lakukan proses dengan API AI
+	// Jika bukan pertanyaan produk ljt ke api gemin
 	ctx := context.Background()
 	client, err := genai.NewClient(ctx, option.WithAPIKey(os.Getenv("GEMINI_API_KEY")))
 	if err != nil {
@@ -129,8 +126,8 @@ func (cts *chatService) GetChatByID(chatID int) (entities.Chat, error) {
 }
 
 func extractProductName(userInput string) string {
-	// Misalnya, mencari nama produk dengan regex atau pemrosesan string sederhana
-	re := regexp.MustCompile(`detail produk (.*)`)
+	// mencari nama produk dengan pemrosesan string sederhana atau disbt regex
+	re := regexp.MustCompile(`detail produk dari (.*)`)
 	matches := re.FindStringSubmatch(strings.ToLower(userInput))
 
 	if len(matches) > 1 {
