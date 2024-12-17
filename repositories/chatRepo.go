@@ -10,6 +10,7 @@ type ChatRepoInterface interface {
 	SaveChat(chat entities.Chat) (entities.Chat, error)
 	GetAllChat(userID int) ([]entities.Chat, error)
 	GetChatByID(chatID int) (entities.Chat, error)
+	GetRecommendedProducts() ([]entities.Product, error)
 }
 
 type chatRepository struct {
@@ -41,4 +42,14 @@ func (r *chatRepository) GetChatByID(chatID int) (entities.Chat, error) {
 		return entities.Chat{}, err
 	}
 	return chat, nil
+}
+
+func (repo *chatRepository) GetRecommendedProducts() ([]entities.Product, error) {
+	var products []entities.Product
+	err := repo.db.Where("rating >= ?", 4.0).Order("rating desc").Find(&products).Error
+	if err != nil {
+		return nil, err
+	}
+
+	return products, nil
 }

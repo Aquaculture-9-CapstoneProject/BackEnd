@@ -103,7 +103,7 @@ func (ctrl *AdminFilterController) GetPaymentsByStatusBarang(c *gin.Context) {
 		}
 
 		// Mengambil data user dari OrderDetail
-		user := payment.Order.Details[0].User // Mengambil user dari order detail pertama
+		user := payment.Order.Details[0].User// Mengambil user dari order detail pertama
 		userData := gin.H{
 			"namapengguna": user.NamaLengkap,
 			"alamat":       user.Alamat,

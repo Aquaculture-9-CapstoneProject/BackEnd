@@ -8,5 +8,5 @@ type Order struct {
 	BiayaOngkir      float64
 	MetodePembayaran string
 	CreatedAt        string
-	Details          []OrderDetail `gorm:"foreignKey:OrderID" json:"details"`
+	Details          []OrderDetail `gorm:"foreignKey:" json:"details"`
 }
