@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"os"
+	"strings"
 
 	"github.com/Aquaculture-9-CapstoneProject/BackEnd.git/entities"
 	"github.com/Aquaculture-9-CapstoneProject/BackEnd.git/repositories"
@@ -26,15 +27,12 @@ func NewChatService(chatRepo repositories.ChatRepoInterface) *chatService {
 }
 
 func (cuc *chatService) ProccessChat(userID int, userInput string) (entities.Chat, error) {
-	// Logika awal untuk menangani chat biasa
+	// Cek jika input mengandung permintaan tentang rekomendasi produk
 	if userInput == "rekomendasi produk apa ?" || userInput == "rekomendasi produk" {
-		// Jika permintaan adalah rekomendasi produk, maka kita ambil produk berdasarkan kriteria
 		products, err := cuc.chatRepo.GetRecommendedProducts()
 		if err != nil {
 			return entities.Chat{}, err
 		}
-
-		// Buat response berupa daftar produk
 		aiResponse := "Berikut adalah beberapa rekomendasi produk untuk Anda:\n"
 		for _, product := range products {
 			aiResponse += fmt.Sprintf("Nama: %s, Kategori: %s, Rating: %.2f\n", product.Nama, product.Kategori, product.Rating)
@@ -53,7 +51,37 @@ func (cuc *chatService) ProccessChat(userID int, userInput string) (entities.Cha
 		return savedChat, nil
 	}
 
-	// Jika input bukan untuk rekomendasi produk, lanjutkan dengan logika yang ada (contoh generative AI)
+	// Cek jika input mengandung permintaan tentang detail produk
+	if strings.HasPrefix(userInput, "detail produk") {
+		// Ambil query produk (nama atau ID produk)
+		query := strings.TrimSpace(strings.TrimPrefix(userInput, "detail produk"))
+
+		// Cari produk berdasarkan query
+		product, err := cuc.chatRepo.GetProductDetails(query)
+		if err != nil {
+			return entities.Chat{}, err
+		}
+
+		// Format response detail produk
+		aiResponse := fmt.Sprintf("Detail Produk:\nNama: %s\nKategori: %s\nDeskripsi: %s\nHarga: %.2f\nRating: %.2f",
+			product.Nama, product.Kategori, product.Deskripsi, product.Harga, product.Rating)
+
+		// Simpan percakapan dengan respons detail produk
+		chat := entities.Chat{
+			UserID:    userID,
+			UserInput: userInput,
+			AiRespon:  aiResponse,
+		}
+
+		savedChat, err := cuc.chatRepo.SaveChat(chat)
+		if err != nil {
+			return entities.Chat{}, err
+		}
+
+		return savedChat, nil
+	}
+
+	// Jika input bukan tentang rekomendasi produk atau detail produk, gunakan AI generatif
 	ctx := context.Background()
 	client, err := genai.NewClient(ctx, option.WithAPIKey(os.Getenv("GEMINI_API_KEY")))
 	if err != nil {
